@@ -33,7 +33,12 @@ function LandingPage() {
                 variant="destructive-primary"
                 size="large"
                 icon={<FeatherZap />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                onClick={() => {
+                  window.open(
+                    "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                    "_blank"
+                  );
+                }}
               >
                 Join The Waitlist
               </Button>
@@ -54,7 +59,12 @@ function LandingPage() {
                 className="h-10 w-full flex-none"
                 variant="destructive-primary"
                 size="large"
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                onClick={() => {
+                  window.open(
+                    "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                    "_blank"
+                  );
+                }}
               >
                 SIGN UP NOW
               </Button>
@@ -83,9 +93,12 @@ function LandingPage() {
                     </div>
                     <Button
                       icon={<FeatherArrowRight />}
-                      onClick={(
-                        event: React.MouseEvent<HTMLButtonElement>
-                      ) => {}}
+                      onClick={() => {
+                        window.open(
+                          "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                          "_blank"
+                        );
+                      }}
                     >
                       Learn More
                     </Button>
@@ -108,9 +121,12 @@ function LandingPage() {
                     </div>
                     <Button
                       icon={<FeatherArrowRight />}
-                      onClick={(
-                        event: React.MouseEvent<HTMLButtonElement>
-                      ) => {}}
+                      onClick={() => {
+                        window.open(
+                          "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                          "_blank"
+                        );
+                      }}
                     >
                       Learn More
                     </Button>
@@ -133,9 +149,12 @@ function LandingPage() {
                     </div>
                     <Button
                       icon={<FeatherArrowRight />}
-                      onClick={(
-                        event: React.MouseEvent<HTMLButtonElement>
-                      ) => {}}
+                      onClick={() => {
+                        window.open(
+                          "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                          "_blank"
+                        );
+                      }}
                     >
                       Learn More
                     </Button>
@@ -158,9 +177,12 @@ function LandingPage() {
                     </div>
                     <Button
                       icon={<FeatherArrowRight />}
-                      onClick={(
-                        event: React.MouseEvent<HTMLButtonElement>
-                      ) => {}}
+                      onClick={() => {
+                        window.open(
+                          "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                          "_blank"
+                        );
+                      }}
                     >
                       Learn More
                     </Button>
@@ -171,7 +193,12 @@ function LandingPage() {
             <Button
               size="large"
               icon={<FeatherArrowRightCircle />}
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+              onClick={() => {
+                window.open(
+                  "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                  "_blank"
+                );
+              }}
             >
               All Games
             </Button>
@@ -198,7 +225,12 @@ function LandingPage() {
                   </span>
                   <Button
                     variant="destructive-primary"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    onClick={() => {
+                      window.open(
+                        "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                        "_blank"
+                      );
+                    }}
                   >
                     Book Session
                   </Button>
@@ -219,7 +251,12 @@ function LandingPage() {
                   </span>
                   <Button
                     variant="destructive-primary"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    onClick={() => {
+                      window.open(
+                        "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                        "_blank"
+                      );
+                    }}
                   >
                     Book Session
                   </Button>
@@ -240,7 +277,12 @@ function LandingPage() {
                   </span>
                   <Button
                     variant="destructive-primary"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    onClick={() => {
+                      window.open(
+                        "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                        "_blank"
+                      );
+                    }}
                   >
                     Book Session
                   </Button>
@@ -261,7 +303,12 @@ function LandingPage() {
               <Button
                 size="large"
                 icon={<FeatherArrowRight />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                onClick={() => {
+                  window.open(
+                    "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                    "_blank"
+                  );
+                }}
               >
                 Start Coaching
               </Button>
