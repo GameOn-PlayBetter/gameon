@@ -1,9 +1,9 @@
 "use client";
 /*
  * Documentation:
- * Bold footer — https://app.subframe.com/library?component=Bold+footer_e35cb674-a3fb-4906-9ea1-3241dc9704d3
- * Link Button — https://app.subframe.com/library?component=Link+Button_a4ee726a-774c-4091-8c49-55b659356024
- * Icon Button — https://app.subframe.com/library?component=Icon+Button_af9405b1-8c54-4e01-9786-5aad308224f6
+ * Bold footer — https://app.subframe.com/2dcb043d3f5e/library?component=Bold+footer_e35cb674-a3fb-4906-9ea1-3241dc9704d3
+ * Link Button — https://app.subframe.com/2dcb043d3f5e/library?component=Link+Button_a4ee726a-774c-4091-8c49-55b659356024
+ * Icon Button — https://app.subframe.com/2dcb043d3f5e/library?component=Icon+Button_af9405b1-8c54-4e01-9786-5aad308224f6
  */
 
 import React from "react";

@@ -1,8 +1,8 @@
 "use client";
 /*
  * Documentation:
- * Modern navbar — https://app.subframe.com/library?component=Modern+navbar_cba8555a-1e5a-4a57-8c3d-6ad67c2ef976
- * Button — https://app.subframe.com/library?component=Button_3b777358-b86b-40af-9327-891efc6826fe
+ * Modern navbar — https://app.subframe.com/2dcb043d3f5e/library?component=Modern+navbar_cba8555a-1e5a-4a57-8c3d-6ad67c2ef976
+ * Button — https://app.subframe.com/2dcb043d3f5e/library?component=Button_3b777358-b86b-40af-9327-891efc6826fe
  */
 
 import React from "react";

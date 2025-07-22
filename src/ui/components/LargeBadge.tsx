@@ -1,7 +1,7 @@
 "use client";
 /*
  * Documentation:
- * Large Badge — https://app.subframe.com/library?component=Large+Badge_f003eb3b-6b6f-483f-8f2e-f6fcd63ad117
+ * Large Badge — https://app.subframe.com/2dcb043d3f5e/library?component=Large+Badge_f003eb3b-6b6f-483f-8f2e-f6fcd63ad117
  */
 
 import React from "react";

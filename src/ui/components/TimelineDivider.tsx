@@ -1,7 +1,7 @@
 "use client";
 /*
  * Documentation:
- * Timeline Divider — https://app.subframe.com/library?component=Timeline+Divider_c388f693-3fdb-4403-b46d-41c16f1b213a
+ * Timeline Divider — https://app.subframe.com/2dcb043d3f5e/library?component=Timeline+Divider_c388f693-3fdb-4403-b46d-41c16f1b213a
  */
 
 import React from "react";

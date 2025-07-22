@@ -1,7 +1,7 @@
 "use client";
 /*
  * Documentation:
- * Discord — https://app.subframe.com/library?component=Discord_f3d437d7-5f39-45a2-a000-a9614abe00ba
+ * Discord — https://app.subframe.com/2dcb043d3f5e/library?component=Discord_f3d437d7-5f39-45a2-a000-a9614abe00ba
  */
 
 import React from "react";
