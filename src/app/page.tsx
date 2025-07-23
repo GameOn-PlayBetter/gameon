@@ -1,79 +1,23 @@
 "use client";
 
 import React from "react";
-import { Tooltip } from "@/ui/components/Tooltip";
-import * as SubframeCore from "@subframe/core";
+import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { Button } from "@/ui/components/Button";
-import { FeatherCoins } from "@subframe/core";
-import { IconButton } from "@/ui/components/IconButton";
-import { FeatherMenu } from "@subframe/core";
 import { FeatherZap } from "@subframe/core";
 import { FeatherArrowRight } from "@subframe/core";
 import { FeatherArrowRightCircle } from "@subframe/core";
 import { Avatar } from "@/ui/components/Avatar";
 import { Badge } from "@/ui/components/Badge";
-import { FeatherInstagram } from "@subframe/core";
-import { FeatherTwitch } from "@subframe/core";
-import { FeatherX } from "@subframe/core";
-import { FeatherCloud } from "@subframe/core";
-import { FeatherMessageCircle } from "@subframe/core";
 import { BoldFooter } from "@/ui/components/BoldFooter";
-import { DrawerLayout } from "@/ui/layouts/DrawerLayout";
+import { IconButton } from '@/ui/components/IconButton';
 
 function LandingPage() {
   return (
-    <DrawerLayout open={false} onOpenChange={() => {}}>
-      <div className="flex w-full flex-col items-center bg-black min-h-screen">
-        <div className="flex w-full items-center justify-between border-b border-solid border-neutral-border px-6 py-4">
-          <div className="flex max-w-[1024px] grow shrink-0 basis-0 items-center justify-between mx-auto">
-            <img
-              className="h-12 flex-none object-contain"
-              src="https://res.cloudinary.com/subframe/image/upload/v1752180871/uploads/19984/xz0wrne7nh62oxklt6fo.png"
-            />
-            <SubframeCore.Tooltip.Provider>
-              <SubframeCore.Tooltip.Root>
-                <SubframeCore.Tooltip.Trigger asChild={true}>
-                  <Button
-                    size="small"
-                    icon={<FeatherCoins />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  >
-                    Buy Tokens
-                  </Button>
-                </SubframeCore.Tooltip.Trigger>
-                <SubframeCore.Tooltip.Portal>
-                  <SubframeCore.Tooltip.Content
-                    side="bottom"
-                    align="center"
-                    sideOffset={4}
-                    asChild={true}
-                  >
-                    <Tooltip>Click here to buy more tokens</Tooltip>
-                  </SubframeCore.Tooltip.Content>
-                </SubframeCore.Tooltip.Portal>
-              </SubframeCore.Tooltip.Root>
-            </SubframeCore.Tooltip.Provider>
-            <div className="flex items-center gap-4 mobile:hidden">
-              <span className="text-body font-body text-default-font">
-                Home
-              </span>
-              <span className="text-body font-body text-default-font">
-                Earn Tokens
-              </span>
-              <span className="text-body font-body text-default-font">
-                Login
-              </span>
-            </div>
-            <IconButton
-              className="hidden mobile:flex"
-              icon={<FeatherMenu />}
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-            />
-          </div>
-        </div>
+    <DefaultPageLayout>
+      <div className="flex w-full flex-col items-center bg-black h-screen">
         <div className="flex w-full grow shrink-0 basis-0 flex-col items-start bg-black">
           <div className="flex w-full flex-col items-center justify-center gap-3 bg-black px-6 py-6">
-            <div className="flex w-full max-w-[1024px] flex-col items-center justify-center">
+            <div className="flex w-full max-w-[1024px] flex-col items-center justify-center gap-3">
               <img
                 className="h-96 w-full flex-none object-contain"
                 src="https://res.cloudinary.com/subframe/image/upload/v1752180871/uploads/19984/xz0wrne7nh62oxklt6fo.png"
@@ -90,7 +34,12 @@ function LandingPage() {
                 variant="destructive-primary"
                 size="large"
                 icon={<FeatherZap />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                onClick={() => {
+                  window.open(
+                    "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                    "_blank"
+                  );
+                }}
               >
                 Join The Waitlist
               </Button>
@@ -98,7 +47,7 @@ function LandingPage() {
           </div>
           <div className="flex w-full flex-col items-center justify-center gap-6 px-6 py-12">
             <div className="flex w-full max-w-[448px] flex-col items-center gap-6 rounded-lg border border-solid border-neutral-border bg-default-background px-8 py-8 shadow-lg">
-              <div className="flex w-full items-start justify-center gap-4">
+              <div className="flex w-full items-center gap-4">
                 <span className="text-heading-1 font-heading-1 text-success-600">
                   JOIN THE WAITLIST
                 </span>
@@ -111,7 +60,12 @@ function LandingPage() {
                 className="h-10 w-full flex-none"
                 variant="destructive-primary"
                 size="large"
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                onClick={() => {
+                  window.open(
+                    "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                    "_blank"
+                  );
+                }}
               >
                 SIGN UP NOW
               </Button>
@@ -126,7 +80,7 @@ function LandingPage() {
                 <div className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-lg">
                   <img
                     className="h-64 w-full flex-none object-cover"
-                    src="https://res.cloudinary.com/subframe/image/upload/v1753278662/uploads/19984/m77supwrvtgqnsvkzxup.webp"
+                    src="https://placehold.co/800x400/000000/FFFFFF.png?text=Minecraft"
                   />
                   <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
                     <div className="flex w-full flex-col items-start gap-2">
@@ -140,9 +94,12 @@ function LandingPage() {
                     </div>
                     <Button
                       icon={<FeatherArrowRight />}
-                      onClick={(
-                        event: React.MouseEvent<HTMLButtonElement>
-                      ) => {}}
+                      onClick={() => {
+                        window.open(
+                          "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                          "_blank"
+                        );
+                      }}
                     >
                       Learn More
                     </Button>
@@ -151,7 +108,7 @@ function LandingPage() {
                 <div className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-lg">
                   <img
                     className="h-64 w-full flex-none object-cover"
-                    src="https://res.cloudinary.com/subframe/image/upload/v1753278671/uploads/19984/zpdm7vpfodvethzws5oo.jpg"
+                    src="https://placehold.co/800x400/000000/FFFFFF.png?text=Dead+By+Daylight"
                   />
                   <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
                     <div className="flex w-full flex-col items-start gap-2">
@@ -165,9 +122,12 @@ function LandingPage() {
                     </div>
                     <Button
                       icon={<FeatherArrowRight />}
-                      onClick={(
-                        event: React.MouseEvent<HTMLButtonElement>
-                      ) => {}}
+                      onClick={() => {
+                        window.open(
+                          "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                          "_blank"
+                        );
+                      }}
                     >
                       Learn More
                     </Button>
@@ -176,7 +136,7 @@ function LandingPage() {
                 <div className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-lg">
                   <img
                     className="h-64 w-full flex-none object-cover"
-                    src="https://res.cloudinary.com/subframe/image/upload/v1753278651/uploads/19984/jdz5c8o2khxxfkxaruof.jpg"
+                    src="https://placehold.co/800x400/000000/FFFFFF.png?text=League+of+Legends"
                   />
                   <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
                     <div className="flex w-full flex-col items-start gap-2">
@@ -190,9 +150,12 @@ function LandingPage() {
                     </div>
                     <Button
                       icon={<FeatherArrowRight />}
-                      onClick={(
-                        event: React.MouseEvent<HTMLButtonElement>
-                      ) => {}}
+                      onClick={() => {
+                        window.open(
+                          "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                          "_blank"
+                        );
+                      }}
                     >
                       Learn More
                     </Button>
@@ -201,7 +164,7 @@ function LandingPage() {
                 <div className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-lg">
                   <img
                     className="h-64 w-full flex-none object-cover"
-                    src="https://res.cloudinary.com/subframe/image/upload/v1753278635/uploads/19984/iweltd05or4rpwp9njfl.jpg"
+                    src="https://placehold.co/800x400/000000/FFFFFF.png?text=Valorant"
                   />
                   <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
                     <div className="flex w-full flex-col items-start gap-2">
@@ -215,9 +178,12 @@ function LandingPage() {
                     </div>
                     <Button
                       icon={<FeatherArrowRight />}
-                      onClick={(
-                        event: React.MouseEvent<HTMLButtonElement>
-                      ) => {}}
+                      onClick={() => {
+                        window.open(
+                          "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                          "_blank"
+                        );
+                      }}
                     >
                       Learn More
                     </Button>
@@ -228,7 +194,12 @@ function LandingPage() {
             <Button
               size="large"
               icon={<FeatherArrowRightCircle />}
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+              onClick={() => {
+                window.open(
+                  "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                  "_blank"
+                );
+              }}
             >
               All Games
             </Button>
@@ -242,7 +213,7 @@ function LandingPage() {
                 <div className="flex min-w-[288px] grow shrink-0 basis-0 flex-col items-center gap-6 rounded-[32px] bg-brand-50 px-8 py-12">
                   <Avatar
                     size="x-large"
-                    image="https://res.cloudinary.com/subframe/image/upload/v1711417514/shared/ubsk7cs5hnnaj798efej.jpg"
+                    image="https://placehold.co/200x200/000000/FFFFFF.png?text=Coach+A"
                   >
                     A
                   </Avatar>
@@ -255,7 +226,12 @@ function LandingPage() {
                   </span>
                   <Button
                     variant="destructive-primary"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    onClick={() => {
+                      window.open(
+                        "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                        "_blank"
+                      );
+                    }}
                   >
                     Book Session
                   </Button>
@@ -263,7 +239,7 @@ function LandingPage() {
                 <div className="flex min-w-[288px] grow shrink-0 basis-0 flex-col items-center gap-6 rounded-[32px] bg-brand-50 px-8 py-12">
                   <Avatar
                     size="x-large"
-                    image="https://res.cloudinary.com/subframe/image/upload/v1711417507/shared/fychrij7dzl8wgq2zjq9.avif"
+                    image="https://placehold.co/200x200/000000/FFFFFF.png?text=Coach+S"
                   >
                     S
                   </Avatar>
@@ -276,7 +252,12 @@ function LandingPage() {
                   </span>
                   <Button
                     variant="destructive-primary"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    onClick={() => {
+                      window.open(
+                        "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                        "_blank"
+                      );
+                    }}
                   >
                     Book Session
                   </Button>
@@ -284,7 +265,7 @@ function LandingPage() {
                 <div className="flex min-w-[288px] grow shrink-0 basis-0 flex-col items-center gap-6 rounded-[32px] bg-brand-50 px-8 py-12">
                   <Avatar
                     size="x-large"
-                    image="https://res.cloudinary.com/subframe/image/upload/v1711417513/shared/kwut7rhuyivweg8tmyzl.jpg"
+                    image="https://placehold.co/200x200/000000/FFFFFF.png?text=Coach+M"
                   >
                     M
                   </Avatar>
@@ -297,7 +278,12 @@ function LandingPage() {
                   </span>
                   <Button
                     variant="destructive-primary"
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                    onClick={() => {
+                      window.open(
+                        "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                        "_blank"
+                      );
+                    }}
                   >
                     Book Session
                   </Button>
@@ -318,48 +304,53 @@ function LandingPage() {
               <Button
                 size="large"
                 icon={<FeatherArrowRight />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                onClick={() => {
+                  window.open(
+                    "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
+                    "_blank"
+                  );
+                }}
               >
                 Start Coaching
               </Button>
             </div>
-          </div>
-          <div className="flex w-full flex-col items-center justify-center gap-8 px-6 py-12">
-            <span className="font-['Orbitron'] text-[24px] font-[700] leading-[28px] text-success-700">
-              Connect With Us
-            </span>
-            <div className="flex items-center gap-4">
-              <IconButton
-                variant="brand-secondary"
-                icon={<FeatherInstagram />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-              />
-              <IconButton
-                variant="brand-secondary"
-                icon={<FeatherTwitch />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-              />
-              <IconButton
-                variant="brand-secondary"
-                icon={<FeatherX />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-              />
-              <IconButton
-                variant="brand-secondary"
-                icon={<FeatherCloud />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-              />
-              <IconButton
-                variant="brand-secondary"
-                icon={<FeatherMessageCircle />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-              />
-            </div>
+<div className="flex w-full flex-col items-center justify-center gap-8 px-6 py-12">
+  <span className="font-['Orbitron'] text-[24px] font-[700] leading-[28px] text-success-700">
+    Connect With Us
+  </span>
+  <div className="flex items-center gap-4">
+    <IconButton 
+      variant="brand-secondary" 
+      icon="FeatherInstagram"
+      onClick={() => window.open('https://www.instagram.com/gameon_playbetter_together1/', '_blank')}
+    />
+    <IconButton 
+      variant="brand-secondary" 
+      icon="FeatherCloud" 
+      onClick={() => window.open('https://bsky.app', '_blank')}
+    />
+    <IconButton 
+      variant="brand-secondary" 
+      icon="FeatherX" 
+      onClick={() => window.open('https://x.com/game_on74276', '_blank')}
+    />
+    <IconButton 
+      variant="brand-secondary" 
+      icon="FeatherMessageCircle"
+      onClick={() => window.open('https://discord.com/channels/1389283723412902080/1392593158369443941', '_blank')}
+    />
+    <IconButton 
+      variant="brand-secondary" 
+      icon="FeatherReddit"
+      onClick={() => window.open('https://www.reddit.com/r/GameOn_PlayBetter/', '_blank')}
+    />
+  </div>
+</div>
           </div>
           <BoldFooter />
         </div>
       </div>
-    </DrawerLayout>
+    </DefaultPageLayout>
   );
 }
 

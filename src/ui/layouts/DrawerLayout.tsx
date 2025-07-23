@@ -23,7 +23,7 @@ const DrawerLayoutRoot = React.forwardRef<HTMLElement, DrawerLayoutRootProps>(
       <Drawer className={className} ref={ref as any} {...otherProps}>
         <Drawer.Content>
           {children ? (
-            <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-8">
+    <div className="flex w-full flex-col items-start gap-8 min-h-screen overflow-y-auto">
               {children}
             </div>
           ) : null}
