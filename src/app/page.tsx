@@ -318,32 +318,22 @@ function LandingPage() {
   <span className="font-['Orbitron'] text-[24px] font-[700] leading-[28px] text-success-700">
     Connect With Us
   </span>
-  <div className="flex items-center gap-4">
-    <IconButton 
-      variant="brand-secondary" 
-      icon="FeatherInstagram"
-      onClick={() => window.open('https://www.instagram.com/gameon_playbetter_together1/', '_blank')}
-    />
-    <IconButton 
-      variant="brand-secondary" 
-      icon="FeatherCloud" 
-      onClick={() => window.open('https://bsky.app', '_blank')}
-    />
-    <IconButton 
-      variant="brand-secondary" 
-      icon="FeatherX" 
-      onClick={() => window.open('https://x.com/game_on74276', '_blank')}
-    />
-    <IconButton 
-      variant="brand-secondary" 
-      icon="FeatherMessageCircle"
-      onClick={() => window.open('https://discord.com/channels/1389283723412902080/1392593158369443941', '_blank')}
-    />
-    <IconButton 
-      variant="brand-secondary" 
-      icon="FeatherReddit"
-      onClick={() => window.open('https://www.reddit.com/r/GameOn_PlayBetter/', '_blank')}
-    />
+  <div className="flex flex-wrap items-center justify-center gap-6">
+    <a href="https://www.instagram.com/gameon_playbetter_together1/" target="_blank" rel="noopener noreferrer" className="text-body font-body text-brand-700 cursor-pointer">
+      Instagram
+    </a>
+    <a href="https://x.com/game_on74276" target="_blank" rel="noopener noreferrer" className="text-body font-body text-brand-700 cursor-pointer">
+      Twitter
+    </a>
+    <a href="https://discord.com/channels/1389283723412902080/1392593158369443941" target="_blank" rel="noopener noreferrer" className="text-body font-body text-brand-700 cursor-pointer">
+      Discord
+    </a>
+    <a href="https://www.reddit.com/r/GameOn_PlayBetter/" target="_blank" rel="noopener noreferrer" className="text-body font-body text-brand-700 cursor-pointer">
+      Reddit
+    </a>
+    <a href="https://bsky.app/profile/gameon.bsky.social" target="_blank" rel="noopener noreferrer" className="text-body font-body text-brand-700 cursor-pointer">
+      Bluesky
+    </a>
   </div>
 </div>
           </div>
