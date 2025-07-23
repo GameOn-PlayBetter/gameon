@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { DrawerLayout } from "@/ui/layouts/DrawerLayout";
 import { Tooltip } from "@/ui/components/Tooltip";
 import * as SubframeCore from "@subframe/core";
 import { Button } from "@/ui/components/Button";
