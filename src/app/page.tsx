@@ -18,6 +18,7 @@ import { FeatherX } from "@subframe/core";
 import { FeatherCloud } from "@subframe/core";
 import { FeatherMessageCircle } from "@subframe/core";
 import { BoldFooter } from "@/ui/components/BoldFooter";
+import { DrawerLayout } from "@/ui/layouts/DrawerLayout";
 
 function LandingPage() {
   return (
