@@ -19,7 +19,6 @@ import { FeatherHeart } from "@subframe/core";
 import { Badge } from "@/ui/components/Badge";
 import { FeatherStar } from "@subframe/core";
 import { FeatherChevronLeft } from "@subframe/core";
-import { emojiTagMap } from "@/lib/emojiTagMap"; 
 import { coachData } from "@/lib/coachData";
 
 
@@ -566,17 +565,7 @@ function CoachSearchPage() {
               <Button
                 variant="neutral-secondary"
                 icon={<FeatherChevronLeft />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="brand-secondary"
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-              >
-                Next
-              </Button>
-            </div>
+                onClick={(eve
           </div>
         </div>
       </div>
