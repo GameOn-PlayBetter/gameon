@@ -127,8 +127,6 @@ const DefaultPageLayoutRoot = React.forwardRef<
 <LoginModal
   open={isDrawerOpen}
   onClose={() => setIsDrawerOpen(false)}
-  onEscapeKeyDown={() => setIsDrawerOpen(false)}
-  onPointerDownOutside={() => setIsDrawerOpen(false)}
 />
     </div>
   );
