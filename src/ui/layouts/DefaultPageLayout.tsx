@@ -71,11 +71,6 @@ const DefaultPageLayoutRoot = React.forwardRef<
     alt="GameOn Logo"
   />
 </Link>
-<span onClick={handleEarnTokensClick} className="cursor-pointer hover:brightness-110 transition">
-  <Badge variant="success">
-    Earn Tokens
-  </Badge>
-</span>
           </>
         }
         rightSlot={
@@ -87,7 +82,9 @@ const DefaultPageLayoutRoot = React.forwardRef<
               <TopbarWithRightNav.NavItem onClick={() => setIsDrawerOpen(true)}>
   Login
 </TopbarWithRightNav.NavItem>
-              <TopbarWithRightNav.NavItem>Reports</TopbarWithRightNav.NavItem>
+              <TopbarWithRightNav.NavItem onClick={handleEarnTokensClick}>
+  Earn Tokens
+</TopbarWithRightNav.NavItem>
             </div>
             <SubframeCore.DropdownMenu.Root>
               <SubframeCore.DropdownMenu.Trigger asChild={true}>
