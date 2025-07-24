@@ -1,8 +1,4 @@
 "use client";
-/*
- * Documentation:
- * Avatar — https://app.subframe.com/2dcb043d3f5e/library?component=Avatar_bec25ae6-5010-4485-b46b-cf79e3943ab2
- */
 
 import React from "react";
 import * as SubframeUtils from "../utils";
@@ -49,7 +45,21 @@ const AvatarRoot = React.forwardRef<HTMLElement, AvatarRootProps>(
         ref={ref as any}
         {...otherProps}
       >
-        {children ? (
+        {image ? (
+          <img
+            className={SubframeUtils.twClassNames(
+              "h-8 w-8 flex-none object-cover absolute",
+              {
+                "h-5 w-5 flex-none": size === "x-small",
+                "h-6 w-6 flex-none": size === "small",
+                "h-12 w-12 flex-none": size === "large",
+                "h-16 w-16 flex-none": size === "x-large",
+              }
+            )}
+            src={image}
+            alt="Avatar"
+          />
+        ) : (
           <span
             className={SubframeUtils.twClassNames(
               "line-clamp-1 w-full font-['Inter'] text-[14px] font-[500] leading-[14px] text-brand-800 text-center absolute",
@@ -69,21 +79,7 @@ const AvatarRoot = React.forwardRef<HTMLElement, AvatarRootProps>(
           >
             {children}
           </span>
-        ) : null}
-        {image ? (
-          <img
-            className={SubframeUtils.twClassNames(
-              "h-8 w-8 flex-none object-cover absolute",
-              {
-                "h-5 w-5 flex-none": size === "x-small",
-                "h-6 w-6 flex-none": size === "small",
-                "h-12 w-12 flex-none": size === "large",
-                "h-16 w-16 flex-none": size === "x-large",
-              }
-            )}
-            src={image}
-          />
-        ) : null}
+        )}
       </div>
     );
   }

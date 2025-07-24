@@ -80,7 +80,7 @@ function LandingPage() {
                 <div className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-lg">
                   <img
                     className="h-64 w-full flex-none object-cover"
-                    src="https://placehold.co/800x400/000000/FFFFFF.png?text=Minecraft"
+                    src="/images/minecraft.webp"
                   />
                   <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
                     <div className="flex w-full flex-col items-start gap-2">
@@ -108,7 +108,7 @@ function LandingPage() {
                 <div className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-lg">
                   <img
                     className="h-64 w-full flex-none object-cover"
-                    src="https://placehold.co/800x400/000000/FFFFFF.png?text=Dead+By+Daylight"
+                    src="/images/dbd.jpeg"
                   />
                   <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
                     <div className="flex w-full flex-col items-start gap-2">
@@ -136,7 +136,7 @@ function LandingPage() {
                 <div className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-lg">
                   <img
                     className="h-64 w-full flex-none object-cover"
-                    src="https://placehold.co/800x400/000000/FFFFFF.png?text=League+of+Legends"
+                    src="/images/league_of_legends.jpeg"
                   />
                   <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
                     <div className="flex w-full flex-col items-start gap-2">
@@ -164,7 +164,7 @@ function LandingPage() {
                 <div className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-lg">
                   <img
                     className="h-64 w-full flex-none object-cover"
-                    src="https://placehold.co/800x400/000000/FFFFFF.png?text=Valorant"
+                    src="/images/valorant.jpeg"
                   />
                   <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
                     <div className="flex w-full flex-col items-start gap-2">
@@ -213,12 +213,12 @@ function LandingPage() {
                 <div className="flex min-w-[288px] grow shrink-0 basis-0 flex-col items-center gap-6 rounded-[32px] bg-brand-50 px-8 py-12">
                   <Avatar
                     size="x-large"
-                    image="https://placehold.co/200x200/000000/FFFFFF.png?text=Coach+A"
+                    image="/images/david.jpeg"
                   >
                     A
                   </Avatar>
                   <span className="font-['Orbitron'] text-[24px] font-[700] leading-[28px] text-brand-700 text-center">
-                    Coach Alex
+                    Coach David
                   </span>
                   <Badge>Minecraft Expert</Badge>
                   <span className="text-body font-body text-brand-700 text-center">
@@ -239,7 +239,7 @@ function LandingPage() {
                 <div className="flex min-w-[288px] grow shrink-0 basis-0 flex-col items-center gap-6 rounded-[32px] bg-brand-50 px-8 py-12">
                   <Avatar
                     size="x-large"
-                    image="https://placehold.co/200x200/000000/FFFFFF.png?text=Coach+S"
+image="/images/sarah.jpeg"
                   >
                     S
                   </Avatar>
@@ -265,7 +265,7 @@ function LandingPage() {
                 <div className="flex min-w-[288px] grow shrink-0 basis-0 flex-col items-center gap-6 rounded-[32px] bg-brand-50 px-8 py-12">
                   <Avatar
                     size="x-large"
-                    image="https://placehold.co/200x200/000000/FFFFFF.png?text=Coach+M"
+                    image="/images/michael.jpeg"
                   >
                     M
                   </Avatar>
