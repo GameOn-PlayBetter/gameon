@@ -18,6 +18,10 @@ import { FeatherSettings } from "@subframe/core";
 import { FeatherLogOut } from "@subframe/core";
 import * as SubframeCore from "@subframe/core";
 import { Avatar } from "../components/Avatar";
+import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { LoginModal } from "../components/LoginModal";
 
 interface DefaultPageLayoutRootProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -32,6 +36,22 @@ const DefaultPageLayoutRoot = React.forwardRef<
   { children, className, ...otherProps }: DefaultPageLayoutRootProps,
   ref
 ) {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const router = useRouter();
+
+  const handleEarnTokensClick = () => {
+    const isLoggedIn = false; // Temporary logic
+    if (isLoggedIn) {
+      router.push("/refer-friends");
+    } else {
+      setIsDrawerOpen(true);
+    }
+  };
+
+  const handleDrawerConfirm = () => {
+    setIsDrawerOpen(false);
+    router.push("/refer-friends");
+  };
   return (
     <div
       className={SubframeUtils.twClassNames(
@@ -44,11 +64,18 @@ const DefaultPageLayoutRoot = React.forwardRef<
       <TopbarWithRightNav
         leftSlot={
           <>
-            <img
-              className="h-20 min-w-[24px] flex-none object-cover"
-              src="https://res.cloudinary.com/subframe/image/upload/v1752251109/uploads/19984/hu20lhnnzh1u7drpjg4p.png"
-            />
-            <Badge variant="success">Earn Tokens</Badge>
+            <Link href="/" passHref>
+  <img
+    className="h-20 min-w-[24px] flex-none object-cover cursor-pointer"
+    src="https://res.cloudinary.com/subframe/image/upload/v1752251109/uploads/19984/hu20lhnnzh1u7drpjg4p.png"
+    alt="GameOn Logo"
+  />
+</Link>
+<span onClick={handleEarnTokensClick} className="cursor-pointer hover:brightness-110 transition">
+  <Badge variant="success">
+    Earn Tokens
+  </Badge>
+</span>
           </>
         }
         rightSlot={
@@ -57,7 +84,9 @@ const DefaultPageLayoutRoot = React.forwardRef<
               <TopbarWithRightNav.NavItem selected={true}>
                 Home
               </TopbarWithRightNav.NavItem>
-              <TopbarWithRightNav.NavItem>Login</TopbarWithRightNav.NavItem>
+              <TopbarWithRightNav.NavItem onClick={() => setIsDrawerOpen(true)}>
+  Login
+</TopbarWithRightNav.NavItem>
               <TopbarWithRightNav.NavItem>Reports</TopbarWithRightNav.NavItem>
             </div>
             <SubframeCore.DropdownMenu.Root>
@@ -95,6 +124,12 @@ const DefaultPageLayoutRoot = React.forwardRef<
           {children}
         </div>
       ) : null}
+<LoginModal
+  open={isDrawerOpen}
+  onClose={() => setIsDrawerOpen(false)}
+  onEscapeKeyDown={() => setIsDrawerOpen(false)}
+  onPointerDownOutside={() => setIsDrawerOpen(false)}
+/>
     </div>
   );
 });

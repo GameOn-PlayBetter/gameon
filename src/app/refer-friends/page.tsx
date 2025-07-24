@@ -16,6 +16,7 @@ import { Progress } from "@/ui/components/Progress";
 import { FeatherZap } from "@subframe/core";
 import { FeatherZapOff } from "@subframe/core";
 import { FeatherBolt } from "@subframe/core";
+import { BoldFooter } from "@/ui/components/BoldFooter";
 
 function ReferFriendsPage() {
   return (
