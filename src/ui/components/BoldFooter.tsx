@@ -82,6 +82,9 @@ const BoldFooterRoot = React.forwardRef<HTMLElement, BoldFooterRootProps>(
   <LinkButton href="/cookie-policy">Cookie Policy</LinkButton>
   <LinkButton href="/safety-guidelines">Safety Guidelines</LinkButton>
 </div>
+<div className="flex min-w-[144px] grow shrink-0 basis-0 flex-col items-start gap-4">
+  <LinkButton href="/prohibited-titles">Prohibited Titles</LinkButton>
+</div>
           </div>
           <div className="flex w-full max-w-[768px] flex-col items-center gap-4">
             <span className="font-['Montserrat'] text-[14px] font-[500] leading-[20px] text-subtext-color text-center">
