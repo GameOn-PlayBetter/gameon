@@ -26,35 +26,17 @@ import { FeatherGhost } from "@subframe/core";
 import { FeatherCrown } from "@subframe/core";
 import { Table } from "@/ui/components/Table";
 import { FeatherHome } from "@subframe/core";
-import { FeatherSave } from "@subframe/core";
-import { Tooltip } from "@/ui/components/Tooltip";
-import * as SubframeCore from "@subframe/core";
-import { FeatherEye } from "@subframe/core";
-import { FeatherHelpCircle } from "@subframe/core";
-import { FeatherUsers } from "@subframe/core";
-import { TextField } from "@/ui/components/TextField";
-import { FeatherDollarSign } from "@subframe/core";
-import { Select } from "@/ui/components/Select";
-import { FeatherCalendar } from "@subframe/core";
-import { FeatherCreditCard } from "@subframe/core";
-import { FeatherAlertTriangle } from "@subframe/core";
-import { FeatherBox } from "@subframe/core";
+import { FeatherMessageCircle } from "@subframe/core";
 import { Avatar } from "@/ui/components/Avatar";
+import { FeatherBox } from "@subframe/core";
 import { FeatherPlay } from "@subframe/core";
 import { FeatherSkull } from "@subframe/core";
+import { FeatherCalendar } from "@subframe/core";
 import { FeatherVideo } from "@subframe/core";
 import { FeatherXCircle } from "@subframe/core";
 
 function PlayerProfilePage() {
-   return (
-<>
-  {/* Glowing "DEMO DATA ONLY" banner */}
-  <div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 bg-red-600 px-6 py-2 rounded-md shadow-lg shadow-red-400 pointer-events-none">
-    <span className="font-['Orbitron'] text-white text-[16px] font-bold tracking-widest uppercase drop-shadow-[0_0_6px_#ffffff]">
-      DEMO DATA ONLY
-    </span>
-  </div>
-
+  return (
     <DefaultPageLayout>
       <div className="flex h-full w-full flex-col items-start bg-default-background">
         <div className="flex w-full flex-col items-start gap-8 px-12 pt-12 pb-6">
@@ -296,463 +278,92 @@ function PlayerProfilePage() {
               </Table>
             </div>
           </div>
-          <div className="flex w-full flex-col items-start gap-4">
+          <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
             <div className="flex w-full items-center justify-between">
               <span className="text-heading-3 font-heading-3 text-default-font">
-                Rate Configuration
+                Coach Feedback
               </span>
-              <Button
-                icon={<FeatherSave />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-              >
-                Save Changes
-              </Button>
             </div>
-            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
-              <Alert
-                title="Set your rates and session durations"
-                description="Configure your rates and available durations for each game and category. Market average rates are shown as placeholders."
-                actions={
-                  <IconButton
-                    icon={<FeatherX />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                }
-              />
-              <div className="flex w-full items-center gap-4 border-b border-solid border-neutral-border pb-4">
-                <div className="flex w-48 flex-none items-start" />
-                <div className="flex items-center justify-between px-4 grow">
-                  <SubframeCore.Tooltip.Provider>
-                    <SubframeCore.Tooltip.Root>
-                      <SubframeCore.Tooltip.Trigger asChild={true}>
-                        <Badge icon={<FeatherZap />}>Speedrun</Badge>
-                      </SubframeCore.Tooltip.Trigger>
-                      <SubframeCore.Tooltip.Portal>
-                        <SubframeCore.Tooltip.Content
-                          side="top"
-                          align="center"
-                          sideOffset={4}
-                          asChild={true}
-                        >
-                          <Tooltip>
-                            Help players optimize their game completion time
-                          </Tooltip>
-                        </SubframeCore.Tooltip.Content>
-                      </SubframeCore.Tooltip.Portal>
-                    </SubframeCore.Tooltip.Root>
-                  </SubframeCore.Tooltip.Provider>
-                  <SubframeCore.Tooltip.Provider>
-                    <SubframeCore.Tooltip.Root>
-                      <SubframeCore.Tooltip.Trigger asChild={true}>
-                        <Badge variant="warning" icon={<FeatherEye />}>
-                          Watcher/Friend
-                        </Badge>
-                      </SubframeCore.Tooltip.Trigger>
-                      <SubframeCore.Tooltip.Portal>
-                        <SubframeCore.Tooltip.Content
-                          side="top"
-                          align="center"
-                          sideOffset={4}
-                          asChild={true}
-                        >
-                          <Tooltip>
-                            Watch and provide feedback during gameplay
-                          </Tooltip>
-                        </SubframeCore.Tooltip.Content>
-                      </SubframeCore.Tooltip.Portal>
-                    </SubframeCore.Tooltip.Root>
-                  </SubframeCore.Tooltip.Provider>
-                  <SubframeCore.Tooltip.Provider>
-                    <SubframeCore.Tooltip.Root>
-                      <SubframeCore.Tooltip.Trigger asChild={true}>
-                        <Badge variant="error" icon={<FeatherHelpCircle />}>
-                          Quick Help
-                        </Badge>
-                      </SubframeCore.Tooltip.Trigger>
-                      <SubframeCore.Tooltip.Portal>
-                        <SubframeCore.Tooltip.Content
-                          side="top"
-                          align="center"
-                          sideOffset={4}
-                          asChild={true}
-                        >
-                          <Tooltip>
-                            Short sessions for specific questions
-                          </Tooltip>
-                        </SubframeCore.Tooltip.Content>
-                      </SubframeCore.Tooltip.Portal>
-                    </SubframeCore.Tooltip.Root>
-                  </SubframeCore.Tooltip.Provider>
-                  <SubframeCore.Tooltip.Provider>
-                    <SubframeCore.Tooltip.Root>
-                      <SubframeCore.Tooltip.Trigger asChild={true}>
-                        <Badge variant="success" icon={<FeatherUsers />}>
-                          Co-op Player
-                        </Badge>
-                      </SubframeCore.Tooltip.Trigger>
-                      <SubframeCore.Tooltip.Portal>
-                        <SubframeCore.Tooltip.Content
-                          side="top"
-                          align="center"
-                          sideOffset={4}
-                          asChild={true}
-                        >
-                          <Tooltip>
-                            Play alongside students to teach techniques
-                          </Tooltip>
-                        </SubframeCore.Tooltip.Content>
-                      </SubframeCore.Tooltip.Portal>
-                    </SubframeCore.Tooltip.Root>
-                  </SubframeCore.Tooltip.Provider>
-                </div>
-              </div>
-              <div className="flex w-full flex-col items-start gap-4">
-                <div className="flex w-full items-center gap-4">
-                  <div className="flex w-48 flex-none items-center gap-2">
-                    <Badge>Minecraft</Badge>
-                  </div>
-                  <div className="flex items-center justify-between grow">
-                    <div className="flex flex-col items-start gap-2">
-                      <TextField
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        helpText=""
-                        icon={<FeatherDollarSign />}
-                      >
-                        <TextField.Input
-                          placeholder="45.00"
-                          value=""
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {}}
-                        />
-                      </TextField>
-                      <Select
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        placeholder="Duration"
-                        helpText=""
-                        value={undefined}
-                        onValueChange={(value: string) => {}}
-                      >
-                        <Select.Item value="15">15</Select.Item>
-                        <Select.Item value="30">30</Select.Item>
-                        <Select.Item value="60">60</Select.Item>
-                        <Select.Item value="90">90</Select.Item>
-                      </Select>
-                    </div>
-                    <div className="flex flex-col items-start gap-2">
-                      <TextField
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        helpText=""
-                        icon={<FeatherDollarSign />}
-                      >
-                        <TextField.Input
-                          placeholder="35.00"
-                          value=""
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {}}
-                        />
-                      </TextField>
-                      <Select
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        placeholder="Duration"
-                        helpText=""
-                        value={undefined}
-                        onValueChange={(value: string) => {}}
-                      >
-                        <Select.Item value="15">15</Select.Item>
-                        <Select.Item value="30">30</Select.Item>
-                        <Select.Item value="60">60</Select.Item>
-                        <Select.Item value="90">90</Select.Item>
-                      </Select>
-                    </div>
-                    <div className="flex flex-col items-start gap-2">
-                      <TextField
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        helpText=""
-                        icon={<FeatherDollarSign />}
-                      >
-                        <TextField.Input
-                          placeholder="25.00"
-                          value=""
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {}}
-                        />
-                      </TextField>
-                      <Select
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        placeholder="Duration"
-                        helpText=""
-                        value={undefined}
-                        onValueChange={(value: string) => {}}
-                      >
-                        <Select.Item value="15">15</Select.Item>
-                        <Select.Item value="30">30</Select.Item>
-                        <Select.Item value="60">60</Select.Item>
-                        <Select.Item value="90">90</Select.Item>
-                      </Select>
-                    </div>
-                    <div className="flex flex-col items-start gap-2">
-                      <TextField
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        helpText=""
-                        icon={<FeatherDollarSign />}
-                      >
-                        <TextField.Input
-                          placeholder="40.00"
-                          value=""
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {}}
-                        />
-                      </TextField>
-                      <Select
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        placeholder="Duration"
-                        helpText=""
-                        value={undefined}
-                        onValueChange={(value: string) => {}}
-                      >
-                        <Select.Item value="15">15</Select.Item>
-                        <Select.Item value="30">30</Select.Item>
-                        <Select.Item value="60">60</Select.Item>
-                        <Select.Item value="90">90</Select.Item>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex w-full items-center gap-4">
-                  <div className="flex w-48 flex-none items-center gap-2">
-                    <Badge variant="warning">Dead By Daylight</Badge>
-                  </div>
-                  <div className="flex items-center justify-between grow">
-                    <div className="flex flex-col items-start gap-2">
-                      <TextField
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        helpText=""
-                        icon={<FeatherDollarSign />}
-                      >
-                        <TextField.Input
-                          placeholder="50.00"
-                          value=""
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {}}
-                        />
-                      </TextField>
-                      <Select
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        placeholder="Duration"
-                        helpText=""
-                        value={undefined}
-                        onValueChange={(value: string) => {}}
-                      >
-                        <Select.Item value="15">15</Select.Item>
-                        <Select.Item value="30">30</Select.Item>
-                        <Select.Item value="60">60</Select.Item>
-                        <Select.Item value="90">90</Select.Item>
-                      </Select>
-                    </div>
-                    <div className="flex flex-col items-start gap-2">
-                      <TextField
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        helpText=""
-                        icon={<FeatherDollarSign />}
-                      >
-                        <TextField.Input
-                          placeholder="40.00"
-                          value=""
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {}}
-                        />
-                      </TextField>
-                      <Select
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        placeholder="Duration"
-                        helpText=""
-                        value={undefined}
-                        onValueChange={(value: string) => {}}
-                      >
-                        <Select.Item value="15">15</Select.Item>
-                        <Select.Item value="30">30</Select.Item>
-                        <Select.Item value="60">60</Select.Item>
-                        <Select.Item value="90">90</Select.Item>
-                      </Select>
-                    </div>
-                    <div className="flex flex-col items-start gap-2">
-                      <TextField
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        helpText=""
-                        icon={<FeatherDollarSign />}
-                      >
-                        <TextField.Input
-                          placeholder="30.00"
-                          value=""
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {}}
-                        />
-                      </TextField>
-                      <Select
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        placeholder="Duration"
-                        helpText=""
-                        value={undefined}
-                        onValueChange={(value: string) => {}}
-                      >
-                        <Select.Item value="15">15</Select.Item>
-                        <Select.Item value="30">30</Select.Item>
-                        <Select.Item value="60">60</Select.Item>
-                        <Select.Item value="90">90</Select.Item>
-                      </Select>
-                    </div>
-                    <div className="flex flex-col items-start gap-2">
-                      <TextField
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        helpText=""
-                        icon={<FeatherDollarSign />}
-                      >
-                        <TextField.Input
-                          placeholder="45.00"
-                          value=""
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {}}
-                        />
-                      </TextField>
-                      <Select
-                        className="h-auto w-32 flex-none"
-                        label=""
-                        placeholder="Duration"
-                        helpText=""
-                        value={undefined}
-                        onValueChange={(value: string) => {}}
-                      >
-                        <Select.Item value="15">15</Select.Item>
-                        <Select.Item value="30">30</Select.Item>
-                        <Select.Item value="60">60</Select.Item>
-                        <Select.Item value="90">90</Select.Item>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-full flex-col items-start gap-4">
-            <div className="flex w-full items-center justify-between">
+            <div className="flex w-full items-center gap-2">
+              <IconWithBackground icon={<FeatherMessageCircle />} />
               <span className="text-heading-3 font-heading-3 text-default-font">
-                Calendar Integration
+                Latest Notes
               </span>
-              <Button
-                variant="brand-secondary"
-                icon={<FeatherCalendar />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-              >
-                Sync Calendar
-              </Button>
             </div>
-            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
-              <Alert
-                title="Your Google calendar is synced"
-                description="Book available sessions with coaches "
-                actions={
-                  <IconButton
-                    icon={<FeatherX />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                }
-              />
-              <div className="flex w-full items-center justify-between">
-                <Button
-                  icon={<FeatherCalendar />}
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                >
-                  Schedule New
-                </Button>
-              </div>
-              <div className="flex w-full items-center gap-4">
-                <IconWithBackground
-                  size="large"
-                  icon={<FeatherCalendar />}
-                  square={true}
-                />
-                <div className="flex flex-col items-start gap-1 grow">
-                  <span className="text-heading-3 font-heading-3 text-default-font">
-                    Google Calendar
+            <Table
+              header={
+                <Table.HeaderRow>
+                  <Table.HeaderCell>Coach</Table.HeaderCell>
+                  <Table.HeaderCell>Game</Table.HeaderCell>
+                  <Table.HeaderCell>Feedback</Table.HeaderCell>
+                  <Table.HeaderCell>Action Items</Table.HeaderCell>
+                  <Table.HeaderCell>Date</Table.HeaderCell>
+                </Table.HeaderRow>
+              }
+            >
+              <Table.Row>
+                <Table.Cell>
+                  <div className="flex items-center gap-2">
+                    <Avatar
+                      size="small"
+                      image="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3"
+                    >
+                      A
+                    </Avatar>
+                    <span className="text-body font-body text-default-font">
+                      Coach Alex
+                    </span>
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge>Minecraft</Badge>
+                </Table.Cell>
+                <Table.Cell>
+                  <span className="text-body font-body text-default-font">
+                    Excellent progress on building techniques
                   </span>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge variant="warning">Practice Redstone</Badge>
+                </Table.Cell>
+                <Table.Cell>
                   <span className="text-body font-body text-subtext-color">
-                    Manage your calendar
+                    2h ago
                   </span>
-                </div>
-                <Badge variant="success" icon={<FeatherCheck />}>
-                  Connected
-                </Badge>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-full flex-col items-start gap-4">
-            <div className="flex w-full items-center justify-between">
-              <span className="text-heading-3 font-heading-3 text-default-font">
-                Payment Settings
-              </span>
-              <Button
-                variant="brand-secondary"
-                icon={<FeatherCreditCard />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-              >
-                Purchase Coaching Session Tokens
-              </Button>
-            </div>
-            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
-              <div className="flex w-full items-center gap-4">
-                <IconWithBackground
-                  size="large"
-                  icon={<FeatherCreditCard />}
-                  square={true}
-                />
-                <div className="flex flex-col items-start gap-1 grow">
-                  <span className="text-heading-3 font-heading-3 text-default-font">
-                    Stripe Account
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>
+                  <div className="flex items-center gap-2">
+                    <Avatar
+                      size="small"
+                      image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3"
+                    >
+                      S
+                    </Avatar>
+                    <span className="text-body font-body text-default-font">
+                      Coach Sarah
+                    </span>
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge variant="warning">Dead By Daylight</Badge>
+                </Table.Cell>
+                <Table.Cell>
+                  <span className="text-body font-body text-default-font">
+                    Good map awareness, needs work on timing
                   </span>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge variant="warning">Practice Loops</Badge>
+                </Table.Cell>
+                <Table.Cell>
                   <span className="text-body font-body text-subtext-color">
-                    Buy tokens to redeem for coaching sessions
+                    1d ago
                   </span>
-                </div>
-                <Badge variant="error" icon={<FeatherX />}>
-                  Not Connected
-                </Badge>
-              </div>
-              <Alert
-                variant="warning"
-                icon={<FeatherAlertTriangle />}
-                title="Connect your Stripe account"
-                description="You need to connect a Stripe account to make payments from your account. This is required before you can start scheduling coaching sessions."
-                actions={
-                  <IconButton
-                    icon={<FeatherX />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                }
-              />
-            </div>
+                </Table.Cell>
+              </Table.Row>
+            </Table>
           </div>
           <div className="flex w-full flex-col items-start gap-4">
             <div className="flex w-full items-center justify-between">
@@ -962,7 +573,6 @@ function PlayerProfilePage() {
         </div>
       </div>
     </DefaultPageLayout>
-</>
   );
 }
 
