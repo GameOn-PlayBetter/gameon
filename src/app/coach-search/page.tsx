@@ -24,8 +24,6 @@ import { coachData } from "@/lib/coachData";
 import { FeatherChevronRight } from "@subframe/core";
 
 function CoachSearchPage() {
-  const [starRatingFilter, setStarRatingFilter] = useState<string>("");
-
   return (
     <>
       {/* Glowing "DEMO DATA ONLY" banner */}
