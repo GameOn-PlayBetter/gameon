@@ -19,6 +19,10 @@ import { FeatherHeart } from "@subframe/core";
 import { Badge } from "@/ui/components/Badge";
 import { FeatherStar } from "@subframe/core";
 import { FeatherChevronLeft } from "@subframe/core";
+import { emojiTagMap } from "@/lib/emojiTagMap"; 
+import { coachData } from "@/lib/coachData";
+import { FeatherChevronRight } from "@subframe/core";
+
 
 function CoachSearchPage() {
   return (
@@ -257,7 +261,7 @@ function CoachSearchPage() {
                         David Chen
                       </span>
                       <span className="text-body font-body text-subtext-color">
-                        Career Coach
+                        Speedrun Coach
                       </span>
                     </div>
                   </div>
@@ -266,13 +270,15 @@ function CoachSearchPage() {
                     onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                   />
                 </div>
-                <div className="flex flex-wrap items-start gap-2">
-                  <Badge>Leadership</Badge>
-                  <Badge>Career Growth</Badge>
-                </div>
+<div className="flex flex-wrap items-start gap-2">
+  {["Leadership", "Speedrun"].map((tag) => (
+    <Badge key={tag}>
+      {emojiTagMap[tag] ? `${emojiTagMap[tag]} ${tag}` : tag}
+    </Badge>
+  ))}
+</div>
                 <span className="text-body font-body text-default-font">
-                  15+ years helping professionals navigate career transitions
-                  and advance in tech leadership roles.
+                  15+ years helping gamers improve their speedrunning stats.
                 </span>
                 <div className="flex w-full items-center justify-between">
                   <div className="flex items-center gap-1">
@@ -285,7 +291,7 @@ function CoachSearchPage() {
                     </span>
                   </div>
                   <span className="text-body-bold font-body-bold text-default-font">
-                    $150/hr
+                    50 tokens/hr
                   </span>
                 </div>
                 <Button
@@ -310,7 +316,7 @@ function CoachSearchPage() {
                         Sarah Johnson
                       </span>
                       <span className="text-body font-body text-subtext-color">
-                        Business Coach
+                        Team Tactics Coach
                       </span>
                     </div>
                   </div>
@@ -319,13 +325,15 @@ function CoachSearchPage() {
                     onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                   />
                 </div>
-                <div className="flex flex-wrap items-start gap-2">
-                  <Badge>Entrepreneurship</Badge>
-                  <Badge>Strategy</Badge>
-                </div>
+<div className="flex flex-wrap items-start gap-2">
+  {["Co-op", "Strategy"].map((tag) => (
+    <Badge key={tag}>
+      {emojiTagMap[tag] ? `${emojiTagMap[tag]} ${tag}` : tag}
+    </Badge>
+  ))}
+</div>
                 <span className="text-body font-body text-default-font">
-                  Experienced business strategist helping entrepreneurs scale
-                  their companies and optimize operations.
+                  Veteran team player helping squads dominate multiplayer titles with expert strategy, callouts, and co-op synergy.
                 </span>
                 <div className="flex w-full items-center justify-between">
                   <div className="flex items-center gap-1">
@@ -338,7 +346,7 @@ function CoachSearchPage() {
                     </span>
                   </div>
                   <span className="text-body-bold font-body-bold text-default-font">
-                    $200/hr
+                    60 tokens/hr
                   </span>
                 </div>
                 <Button
@@ -363,7 +371,7 @@ function CoachSearchPage() {
                         Michael Torres
                       </span>
                       <span className="text-body font-body text-subtext-color">
-                        Life Coach
+                        Mind Game Coach
                       </span>
                     </div>
                   </div>
@@ -372,13 +380,15 @@ function CoachSearchPage() {
                     onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                   />
                 </div>
-                <div className="flex flex-wrap items-start gap-2">
-                  <Badge>Personal Growth</Badge>
-                  <Badge>Mindfulness</Badge>
-                </div>
+<div className="flex flex-wrap items-start gap-2">
+  {["Tilt Control", "Focus Training"].map((tag) => (
+    <Badge key={tag}>
+      {emojiTagMap[tag] ? `${emojiTagMap[tag]} ${tag}` : tag}
+    </Badge>
+  ))}
+</div>
                 <span className="text-body font-body text-default-font">
-                  Dedicated to helping individuals find purpose, balance, and
-                  fulfillment in their personal and professional lives.
+                  Guiding players to overcome mental tilt, stay calm under pressure, and master focus for high-stakes matches.
                 </span>
                 <div className="flex w-full items-center justify-between">
                   <div className="flex items-center gap-1">
@@ -391,7 +401,7 @@ function CoachSearchPage() {
                     </span>
                   </div>
                   <span className="text-body-bold font-body-bold text-default-font">
-                    $175/hr
+                    50 tokens/hr
                   </span>
                 </div>
                 <Button
@@ -416,7 +426,7 @@ function CoachSearchPage() {
                         Rachel Kim
                       </span>
                       <span className="text-body font-body text-subtext-color">
-                        Executive Coach
+                        Rank-Up Coach
                       </span>
                     </div>
                   </div>
@@ -425,13 +435,15 @@ function CoachSearchPage() {
                     onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                   />
                 </div>
-                <div className="flex flex-wrap items-start gap-2">
-                  <Badge>Leadership</Badge>
-                  <Badge>Executive</Badge>
-                </div>
+<div className="flex flex-wrap items-start gap-2">
+  {["Meta Mastery", "Role Optimization"].map((tag) => (
+    <Badge key={tag}>
+      {emojiTagMap[tag] ? `${emojiTagMap[tag]} ${tag}` : tag}
+    </Badge>
+  ))}
+</div>
                 <span className="text-body font-body text-default-font">
-                  Empowering executives and leaders to develop their potential
-                  and drive organizational success.
+                  Boosting players to climb ranked ladders by perfecting game knowledge, adapting to patch cycles, and refining roles.
                 </span>
                 <div className="flex w-full items-center justify-between">
                   <div className="flex items-center gap-1">
@@ -444,7 +456,7 @@ function CoachSearchPage() {
                     </span>
                   </div>
                   <span className="text-body-bold font-body-bold text-default-font">
-                    $250/hr
+                    25 tokens/hr
                   </span>
                 </div>
                 <Button
@@ -469,7 +481,7 @@ function CoachSearchPage() {
                         James Wilson
                       </span>
                       <span className="text-body font-body text-subtext-color">
-                        Performance Coach
+                        Pro Circuit Coach
                       </span>
                     </div>
                   </div>
@@ -478,13 +490,14 @@ function CoachSearchPage() {
                     onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                   />
                 </div>
-                <div className="flex flex-wrap items-start gap-2">
-                  <Badge>Athletics</Badge>
-                  <Badge>Mental Game</Badge>
-                </div>
-                <span className="text-body font-body text-default-font">
-                  Former pro athlete helping others achieve peak performance
-                  through mental and physical training.
+<div className="flex flex-wrap items-start gap-2">
+  {["Esports Prep", "Performance Under Pressure"].map((tag) => (
+    <Badge key={tag}>
+      {emojiTagMap[tag] ? `${emojiTagMap[tag]} ${tag}` : tag}
+    </Badge>
+  ))}
+</div>                <span className="text-body font-body text-default-font">
+                  Ex-pro turning grinders into contenders with scrim-ready drills, mental fortitude, and tournament pacing strategies.
                 </span>
                 <div className="flex w-full items-center justify-between">
                   <div className="flex items-center gap-1">
@@ -497,7 +510,7 @@ function CoachSearchPage() {
                     </span>
                   </div>
                   <span className="text-body-bold font-body-bold text-default-font">
-                    $180/hr
+                    80 tokens/hr
                   </span>
                 </div>
                 <Button
@@ -522,7 +535,7 @@ function CoachSearchPage() {
                         Emma Martinez
                       </span>
                       <span className="text-body font-body text-subtext-color">
-                        Creative Coach
+                        Creative Builder Coach
                       </span>
                     </div>
                   </div>
@@ -531,13 +544,14 @@ function CoachSearchPage() {
                     onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
                   />
                 </div>
-                <div className="flex flex-wrap items-start gap-2">
-                  <Badge>Innovation</Badge>
-                  <Badge>Creativity</Badge>
-                </div>
-                <span className="text-body font-body text-default-font">
-                  Helping creative professionals unlock their full potential and
-                  overcome creative blocks.
+<div className="flex flex-wrap items-start gap-2">
+  {["Sandbox Games", "World Design"].map((tag) => (
+    <Badge key={tag}>
+      {emojiTagMap[tag] ? `${emojiTagMap[tag]} ${tag}` : tag}
+    </Badge>
+  ))}
+</div>                <span className="text-body font-body text-default-font">
+                  Helping players craft jaw-dropping builds in Minecraft, Fortnite Creative, and other sandbox titles with style and flair.
                 </span>
                 <div className="flex w-full items-center justify-between">
                   <div className="flex items-center gap-1">
@@ -550,7 +564,7 @@ function CoachSearchPage() {
                     </span>
                   </div>
                   <span className="text-body-bold font-body-bold text-default-font">
-                    $160/hr
+                    60 tokens/hr
                   </span>
                 </div>
                 <Button
