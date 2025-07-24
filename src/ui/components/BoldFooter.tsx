@@ -84,6 +84,7 @@ const BoldFooterRoot = React.forwardRef<HTMLElement, BoldFooterRootProps>(
 </div>
 <div className="flex min-w-[144px] grow shrink-0 basis-0 flex-col items-start gap-4">
   <LinkButton href="/prohibited-titles">Prohibited Titles</LinkButton>
+<LinkButton href="/contact">Contact</LinkButton>
 </div>
           </div>
           <div className="flex w-full max-w-[768px] flex-col items-center gap-4">

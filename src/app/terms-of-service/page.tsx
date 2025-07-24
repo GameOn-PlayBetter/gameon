@@ -42,25 +42,19 @@ export default function TermsOfServicePage() {
           <li>We may update these terms at any time. Continued use indicates acceptance.</li>
         </ul>
 
-        <h2 className="text-xl font-semibold mt-10 mb-2 text-yellow-400">
-          ⚠️ Sessions in Unsupported or Restricted Games
-        </h2>
-        <p className="text-lg mb-4">
-          GameOn coaches may offer sessions in a wide variety of games, including titles not officially supported by the platform. Sessions involving prohibited content, ESRB Adults Only (AO) ratings, or games banned by major streaming platforms may not be recorded or monetized, and may be blocked from certain platform features.
-        </p>
-        <p className="text-lg mb-6">
-          GameOn is not liable for session content related to unsupported or restricted games. It is the responsibility of the player and coach to ensure the session complies with local laws, platform rules (e.g., GameOn Terms of Service), and GameOn’s Community Guidelines.
-        </p>
-        <p className="mt-4 text-lg">
-          For a list of prohibited or flagged titles, please visit our{" "}
-          <a href="/prohibited-titles" className="underline text-blue-400 hover:text-blue-300">
-            Prohibited Titles page
-          </a>.
-        </p>
+        <h2 className="text-2xl font-semibold mt-8 mb-2">6. Session Restrictions</h2>
+        <ul className="list-disc pl-6 space-y-2 text-lg">
+          <li>
+            GameOn coaches may offer sessions in a wide variety of games, including titles not officially supported by the platform. Sessions involving prohibited content, ESRB Adults Only (AO) ratings, or games banned by streaming platforms may not be recorded or monetized, and may be blocked from certain platform features. GameOn is not liable for session content related to unsupported or restricted games. It is the responsibility of the player and coach to ensure the session complies with local laws, platform rules (e.g. GameOn Terms of Service), and GameOn’s Community Guidelines.
+          </li>
+        </ul>
 
-        <p className="mt-8 text-sm text-gray-400">
-          Questions? Contact us at gameon_playbetter@gmail.com
-        </p>
+        <h2 className="text-2xl font-semibold mt-8 mb-2">7. Contact Us</h2>
+        <ul className="list-disc pl-6 space-y-2 text-lg">
+          <li>
+            If you have any questions or concerns about these terms, please contact us at gameon_playbetter@gmail.com
+          </li>
+        </ul>
       </div>
       <BoldFooter />
     </DefaultPageLayout>
