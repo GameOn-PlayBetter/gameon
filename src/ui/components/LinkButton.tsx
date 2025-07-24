@@ -17,6 +17,7 @@ interface LinkButtonRootProps
   iconRight?: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
+  href?: string;
 }
 
 const LinkButtonRoot = React.forwardRef<HTMLElement, LinkButtonRootProps>(
@@ -29,21 +30,19 @@ const LinkButtonRoot = React.forwardRef<HTMLElement, LinkButtonRootProps>(
       iconRight = null,
       className,
       type = "button",
+      href,
       ...otherProps
     }: LinkButtonRootProps,
     ref
   ) {
-    return (
-      <button
-        className={SubframeUtils.twClassNames(
-          "group/a4ee726a flex cursor-pointer items-center gap-1 border-none bg-transparent",
-          { "flex-row flex-nowrap gap-1": size === "large" },
-          className
-        )}
-        ref={ref as any}
-        type={type}
-        {...otherProps}
-      >
+    const commonClasses = SubframeUtils.twClassNames(
+      "group/a4ee726a flex cursor-pointer items-center gap-1 border-none bg-transparent",
+      { "flex-row flex-nowrap gap-1": size === "large" },
+      className
+    );
+
+    const contents = (
+      <>
         {icon ? (
           <SubframeCore.IconWrapper
             className={SubframeUtils.twClassNames(
@@ -95,6 +94,30 @@ const LinkButtonRoot = React.forwardRef<HTMLElement, LinkButtonRootProps>(
             {iconRight}
           </SubframeCore.IconWrapper>
         ) : null}
+      </>
+    );
+
+    if (href) {
+      return (
+        <a
+          className={commonClasses}
+          href={href}
+          ref={ref as any}
+          {...(otherProps as any)}
+        >
+          {contents}
+        </a>
+      );
+    }
+
+    return (
+      <button
+        className={commonClasses}
+        type={type}
+        ref={ref as any}
+        {...otherProps}
+      >
+        {contents}
       </button>
     );
   }

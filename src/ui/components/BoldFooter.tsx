@@ -8,6 +8,7 @@
 import React from "react";
 import * as SubframeUtils from "../utils";
 import { LinkButton } from "./LinkButton";
+import Link from "next/link";
 
 interface BoldFooterRootProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -69,18 +70,18 @@ const BoldFooterRoot = React.forwardRef<HTMLElement, BoldFooterRootProps>(
                 src="https://res.cloudinary.com/subframe/image/upload/v1752180871/uploads/19984/xz0wrne7nh62oxklt6fo.png"
               />
             </div>
-            <div className="flex min-w-[144px] grow shrink-0 basis-0 flex-col items-start gap-4">
-              <LinkButton>Legal</LinkButton>
-              <LinkButton>Give Feedback</LinkButton>
-            </div>
-            <div className="flex min-w-[144px] grow shrink-0 basis-0 flex-col items-start gap-4">
-              <LinkButton>Privacy Policy</LinkButton>
-              <LinkButton>Terms of Service</LinkButton>
-            </div>
-            <div className="flex min-w-[144px] grow shrink-0 basis-0 flex-col items-start gap-4">
-              <LinkButton>Cookie Policy</LinkButton>
-              <LinkButton>Site Map</LinkButton>
-            </div>
+           <div className="flex min-w-[144px] grow shrink-0 basis-0 flex-col items-start gap-4">
+  <LinkButton href="/legal">Legal</LinkButton>
+  <LinkButton href="/coach-requirements-eligibility">Coach Requirements and Eligibility</LinkButton>
+</div>
+<div className="flex min-w-[144px] grow shrink-0 basis-0 flex-col items-start gap-4">
+  <LinkButton href="/privacy-policy">Privacy Policy</LinkButton>
+  <LinkButton href="/terms-of-service">Terms of Service</LinkButton>
+</div>
+<div className="flex min-w-[144px] grow shrink-0 basis-0 flex-col items-start gap-4">
+  <LinkButton href="/cookie-policy">Cookie Policy</LinkButton>
+  <LinkButton href="/safety-guidelines">Safety Guidelines</LinkButton>
+</div>
           </div>
           <div className="flex w-full max-w-[768px] flex-col items-center gap-4">
             <span className="font-['Montserrat'] text-[14px] font-[500] leading-[20px] text-subtext-color text-center">
