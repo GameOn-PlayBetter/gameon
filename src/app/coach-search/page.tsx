@@ -90,7 +90,9 @@ function CoachSearchPage() {
                   </div>
                   <IconButton size="md" icon={<FeatherHeart />} />
                 </div>
-                <Button iconRight={<FeatherChevronRight />}>View Profile</Button>
+                <Button iconRight={<FeatherChevronRight />}>
+                  View Profile
+                </Button>
               </div>
             ))}
           </div>
