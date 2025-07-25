@@ -23,6 +23,14 @@ import { BoldFooter } from "@/ui/components/BoldFooter";
 
 function CoachSearchPage() {
   return (
+<>
+{/* Glowing "DEMO DATA ONLY" banner */}
+<div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 bg-red-600 px-6 py-2 rounded-md shadow-lg shadow-red-400 pointer-events-none">
+  <span className="font-['Orbitron'] text-white text-[16px] font-bold tracking-widest uppercase drop-shadow-[0_0_6px_#ffffff]">
+    DEMO DATA ONLY
+  </span>
+</div>
+
     <DefaultPageLayout>
       <div className="container max-w-none flex h-full w-full flex-col items-start gap-12 bg-default-background py-12">
         <div className="flex w-full flex-col items-center justify-center gap-6">
@@ -737,6 +745,7 @@ function CoachSearchPage() {
         <BoldFooter />
       </div>
     </DefaultPageLayout>
+   </>
   );
 }
 

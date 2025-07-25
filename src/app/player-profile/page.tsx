@@ -39,6 +39,14 @@ import { FeatherXCircle } from "@subframe/core";
 
 function PlayerProfilePage() {
   return (
+    <>
+      {/* Glowing "DEMO DATA ONLY" banner */}
+<div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 bg-red-600 px-6 py-2 rounded-md shadow-lg shadow-red-400 pointer-events-none">
+  <span className="font-['Orbitron'] text-white text-[16px] font-bold tracking-widest uppercase drop-shadow-[0_0_6px_#ffffff]">
+    DEMO DATA ONLY
+  </span>
+</div>
+
     <DefaultPageLayout>
       <div className="flex h-full w-full flex-col items-start bg-default-background">
         <div className="flex w-full flex-col items-start gap-8 px-12 pt-12 pb-6">
@@ -575,6 +583,7 @@ function PlayerProfilePage() {
         </div>
       </div>
     </DefaultPageLayout>
+   </>
   );
 }
 
