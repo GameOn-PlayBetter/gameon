@@ -19,7 +19,7 @@ import { FeatherHeart } from "@subframe/core";
 import { Badge } from "@/ui/components/Badge";
 import { FeatherStar } from "@subframe/core";
 import { FeatherChevronLeft } from "@subframe/core";
-import { BoldFooter } from "../../ui/components/BoldFooter";
+import { BoldFooter } from "@/ui/components/BoldFooter";
 
 function CoachSearchPage() {
   return (
