@@ -20,6 +20,7 @@ import { Badge } from "@/ui/components/Badge";
 import { FeatherStar } from "@subframe/core";
 import { FeatherChevronLeft } from "@subframe/core";
 import { coachData } from "@/lib/coachData";
+import { FeatherChevronRight } from "@subframe/core";
 
 function CoachSearchPage() {
   return (
