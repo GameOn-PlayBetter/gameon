@@ -88,7 +88,7 @@ function PlayerProfilePage() {
                   <span className="text-body-bold font-body-bold text-default-font">
                     Total Sessions
                   </span>
-                  <span className="line-clamp-1 w-full text-caption font-caption text-brand-500">
+                  <span className="line-clamp-1 w-full text-heading-3 font-caption text-brand-500">
                     48 Completed
                   </span>
                 </div>
@@ -96,7 +96,7 @@ function PlayerProfilePage() {
                   <span className="text-body-bold font-body-bold text-default-font">
                     Favorite Game
                   </span>
-                  <span className="line-clamp-1 w-full text-caption font-caption text-brand-600">
+                  <span className="line-clamp-1 w-full text-heading-3 font-caption text-brand-600">
                     Minecraft
                   </span>
                 </div>
@@ -105,10 +105,10 @@ function PlayerProfilePage() {
                     Next Sessions
                   </span>
                   <div className="flex flex-col items-start gap-1">
-                    <span className="line-clamp-1 w-full text-caption font-caption text-brand-600 cursor-pointer">
+                    <span className="line-clamp-1 w-full text-heading-3 font-caption text-brand-600 cursor-pointer">
                       Today at 4:00 PM
                     </span>
-                    <span className="line-clamp-1 w-full text-caption font-caption text-brand-600 cursor-pointer">
+                    <span className="line-clamp-1 w-full text-heading-3 font-caption text-brand-600 cursor-pointer">
                       Tomorrow at 2:00 PM
                     </span>
                   </div>
@@ -141,7 +141,11 @@ function PlayerProfilePage() {
                 variant="success"
                 icon={<FeatherAward />}
                 title="Achievement Unlocked!"
-                description="You've completed all homework assignments from your last 3 sessions."
+                description={
+  <span className="text-heading-3 font-heading-3 text-default-font">
+    You've completed all homework assignments from your last 3 sessions.
+  </span>
+}
                 actions={
                   <IconButton
                     icon={<FeatherX />}
