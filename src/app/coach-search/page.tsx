@@ -71,7 +71,7 @@ function CoachSearchPage() {
                   sideOffset={4}
                   asChild={true}
                 >
-                  <DropdownMenu>
+                  <DropdownMenu />
                     <ToggleGroup
                       className="h-auto w-full flex-none"
                       value=""
@@ -90,7 +90,7 @@ function CoachSearchPage() {
                         Support Play
                       </ToggleGroup.Item>
                     </ToggleGroup>
-                  </DropdownMenu>
+               
                 </SubframeCore.DropdownMenu.Content>
               </SubframeCore.DropdownMenu.Portal>
             </SubframeCore.DropdownMenu.Root>
@@ -112,7 +112,7 @@ function CoachSearchPage() {
                   sideOffset={4}
                   asChild={true}
                 >
-                  <DropdownMenu>
+                  <DropdownMenu />
                     <ToggleGroup
                       className="h-auto w-full flex-none"
                       value=""
@@ -128,7 +128,7 @@ function CoachSearchPage() {
                         Expert
                       </ToggleGroup.Item>
                     </ToggleGroup>
-                  </DropdownMenu>
+                  
                 </SubframeCore.DropdownMenu.Content>
               </SubframeCore.DropdownMenu.Portal>
             </SubframeCore.DropdownMenu.Root>
@@ -150,7 +150,7 @@ function CoachSearchPage() {
                   sideOffset={4}
                   asChild={true}
                 >
-                  <DropdownMenu>
+                  <DropdownMenu />
                     <div className="flex w-full flex-col items-start gap-4 px-4 py-4">
                       <Slider
                         value={[]}
@@ -186,7 +186,7 @@ function CoachSearchPage() {
                         </TextField>
                       </div>
                     </div>
-                  </DropdownMenu>
+                  
                 </SubframeCore.DropdownMenu.Content>
               </SubframeCore.DropdownMenu.Portal>
             </SubframeCore.DropdownMenu.Root>
@@ -213,7 +213,7 @@ function CoachSearchPage() {
                       sideOffset={4}
                       asChild={true}
                     >
-                      <DropdownMenu>
+                      <DropdownMenu />
                         <DropdownMenu.DropdownItem icon={<FeatherTrendingUp />}>
                           Most Relevant
                         </DropdownMenu.DropdownItem>
@@ -223,7 +223,7 @@ function CoachSearchPage() {
                         <DropdownMenu.DropdownItem icon={<FeatherClock />}>
                           Recently Active
                         </DropdownMenu.DropdownItem>
-                      </DropdownMenu>
+                      
                     </SubframeCore.DropdownMenu.Content>
                   </SubframeCore.DropdownMenu.Portal>
                 </SubframeCore.DropdownMenu.Root>
