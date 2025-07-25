@@ -143,7 +143,7 @@ function PlayerProfilePage() {
                 title="Achievement Unlocked!"
                 description={
   <span className="text-heading-3 font-heading-3 text-default-font">
-    You've completed all homework assignments from your last 3 sessions.
+    You&apos;ve completed all homework assignments from your last 3 sessions.
   </span>
 }
                 actions={
