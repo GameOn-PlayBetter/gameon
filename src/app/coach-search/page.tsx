@@ -570,6 +570,7 @@ function CoachSearchPage() {
           </div>
         </div>
       </div>
+     </div> {/*
     </DefaultPageLayout>
   );
 }
