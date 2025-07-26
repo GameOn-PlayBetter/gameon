@@ -12,7 +12,7 @@ const brands = [
     description: "Level up your gaming with expert coaching",
     image:
       "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80",
-    href: "/gameon",
+    href: "/",       // <-- Change this from "/gameon" to "/"
     variant: "error",
     live: true,
   },
@@ -23,7 +23,7 @@ const brands = [
     image:
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80",
     href: "",
-    variant: "secondary",
+    variant: "neutral",
     live: false,
   },
   {
@@ -33,7 +33,7 @@ const brands = [
     image:
       "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80",
     href: "",
-    variant: "secondary",
+    variant: "neutral",
     live: false,
   },
   {
@@ -43,7 +43,7 @@ const brands = [
     image:
       "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80",
     href: "",
-    variant: "secondary",
+    variant: "neutral",
     live: false,
   },
   {
@@ -53,7 +53,7 @@ const brands = [
     image:
       "https://images.unsplash.com/photo-1468071174046-657d9d351a40?auto=format&fit=crop&q=80",
     href: "",
-    variant: "secondary",
+    variant: "neutral",
     live: false,
   },
   {
@@ -63,7 +63,7 @@ const brands = [
     image:
       "https://images.unsplash.com/photo-1554284126-2ddefdd764c7?auto=format&fit=crop&q=80",
     href: "",
-    variant: "secondary",
+    variant: "neutral",
     live: false,
   },
   {
@@ -73,7 +73,7 @@ const brands = [
     image:
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80",
     href: "",
-    variant: "secondary",
+    variant: "neutral",
     live: false,
   },
   {
@@ -83,7 +83,7 @@ const brands = [
     image:
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80",
     href: "",
-    variant: "secondary",
+    variant: "neutral",
     live: false,
   },
   {
@@ -93,7 +93,7 @@ const brands = [
     image:
       "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80",
     href: "",
-    variant: "secondary",
+    variant: "neutral",
     live: false,
   },
   {
@@ -103,7 +103,7 @@ const brands = [
     image:
       "https://images.unsplash.com/photo-1542223616-42b8de2d4c3f?auto=format&fit=crop&q=80",
     href: "",
-    variant: "secondary",
+    variant: "neutral",
     live: false,
   },
 ];
