@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Badge } from "@/ui/components/Badge";
-import { BoldFooter } from "@/ui/components/BoldFooter";
+import { SkilleryFooter } from "../../ui/components/SkilleryFooter";
 
 type BadgeVariant = "brand" | "neutral" | "error" | "warning" | "success";
 
@@ -145,7 +145,8 @@ export default function OnBrandsPage() {
                       <a
                         key={brand.name}
                         href={brand.href}
-                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-lg hover:shadow-2xl transition-shadow duration-300"
+                          className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EE9E3A] transition-shadow duration-300"
+
                       >
                         <img
                           className="h-64 w-full flex-none object-cover"
@@ -173,7 +174,7 @@ export default function OnBrandsPage() {
                     ) : (
                       <div
                         key={brand.name}
-                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-gray-800 shadow-lg opacity-60 cursor-not-allowed select-none"
+                          className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EF5716] transition-shadow duration-300"
                       >
                         <img
                           className="h-64 w-full flex-none object-cover"
@@ -198,8 +199,7 @@ export default function OnBrandsPage() {
               </div>
             </div>
           </div>
-
-          <BoldFooter />
+          <SkilleryFooter />
         </div>
       </div>
   );
