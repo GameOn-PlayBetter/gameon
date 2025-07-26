@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { Badge } from "@/ui/components/Badge";
 import { BoldFooter } from "@/ui/components/BoldFooter";
 
@@ -122,8 +121,7 @@ const brands: Brand[] = [
 
 export default function OnBrandsPage() {
   return (
-    <DefaultPageLayout>
-      <div className="flex w-full flex-col items-center bg-[#010818] min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#010818]">
 <div className="flex w-full grow shrink-0 basis-0 flex-col items-start bg-[#010818]">
           <div className="flex w-full flex-col items-center justify-center gap-6 px-6 py-24">
             <div className="flex w-full max-w-[1024px] flex-col items-center justify-center gap-6">
@@ -204,6 +202,5 @@ export default function OnBrandsPage() {
           <BoldFooter />
         </div>
       </div>
-    </DefaultPageLayout>
   );
 }
