@@ -13,7 +13,7 @@ const brands = [
     image:
       "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80",
     href: "/",       // <-- Change this from "/gameon" to "/"
-    variant: "error",
+    variant: "neutral",
     live: true,
   },
   {
