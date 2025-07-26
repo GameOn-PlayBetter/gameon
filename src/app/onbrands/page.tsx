@@ -3,6 +3,7 @@
 import React from "react";
 import { Badge } from "@/ui/components/Badge";
 import { SkilleryFooter } from "../../ui/components/SkilleryFooter";
+import RotatingSearchInput from "@/ui/components/RotatingSearchInput"; // adjust path as needed
 
 type BadgeVariant = "brand" | "neutral" | "error" | "warning" | "success";
 
@@ -130,9 +131,17 @@ export default function OnBrandsPage() {
   alt="Skillery Logo"
   className="max-w-[400px] w-full h-auto object-contain"
 />
-              <span className="w-full max-w-[576px] text-[24px] font-[500] leading-[32px] text-neutral-600 text-center">
-                {"What Do You Want To Master Today?"}
-              </span>
+<p className="text-white text-2xl font-semibold text-center tracking-wide">
+  What Do{" "}
+  <span className="text-orange-400 font-bold animate-[pulse-once_0.6s_ease-in-out]">
+    You
+  </span>{" "}
+  Want To Master Today?
+</p>
+
+<RotatingSearchInput />
+
+
             </div>
           </div>
 
