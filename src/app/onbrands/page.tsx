@@ -5,14 +5,26 @@ import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { Badge } from "@/ui/components/Badge";
 import { BoldFooter } from "@/ui/components/BoldFooter";
 
-const brands = [
+type BadgeVariant = "brand" | "neutral" | "error" | "warning" | "success";
+
+interface Brand {
+  name: string;
+  badge: string;
+  description: string;
+  image: string;
+  href: string;
+  variant: BadgeVariant;
+  live: boolean;
+}
+
+const brands: Brand[] = [
   {
     name: "GameOn",
     badge: "Gaming",
     description: "Level up your gaming with expert coaching",
     image:
       "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80",
-    href: "/",       // <-- Change this from "/gameon" to "/"
+    href: "/",
     variant: "neutral",
     live: true,
   },
