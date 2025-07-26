@@ -23,17 +23,17 @@ const brands: Brand[] = [
     badge: "Gaming",
     description: "Level up your gaming with expert coaching",
     image:
-      "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80",
+      "images/gameongaming2.avif",
     href: "/",
     variant: "neutral",
     live: true,
   },
   {
     name: "FixOn",
-    badge: "Home & Auto",
-    description: "Live expert help for repairs",
+    badge: "Home, Pool & Auto",
+    description: "Live expert help for repairs or advice",
     image:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80",
+      "images/fixonhomerepair.jpg",
     href: "",
     variant: "neutral",
     live: false,
@@ -43,7 +43,7 @@ const brands: Brand[] = [
     badge: "Music",
     description: "Music coaching and live lessons",
     image:
-      "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80",
+      "images/jamonmusicscrolls.jpg",
     href: "",
     variant: "neutral",
     live: false,
@@ -53,7 +53,7 @@ const brands: Brand[] = [
     badge: "Tutoring",
     description: "Tutoring and study help",
     image:
-      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80",
+      "images/learnonphonemath.jpg",
     href: "",
     variant: "neutral",
     live: false,
@@ -63,7 +63,7 @@ const brands: Brand[] = [
     badge: "Gardening",
     description: "Gardening and outdoor coaching",
     image:
-      "https://images.unsplash.com/photo-1468071174046-657d9d351a40?auto=format&fit=crop&q=80",
+      "images/growonpansies.jpg",
     href: "",
     variant: "neutral",
     live: false,
@@ -73,7 +73,7 @@ const brands: Brand[] = [
     badge: "Health & Fitness",
     description: "Health coaching and fitness tracking",
     image:
-      "https://images.unsplash.com/photo-1554284126-2ddefdd764c7?auto=format&fit=crop&q=80",
+      "images/fitness.jpg",
     href: "",
     variant: "neutral",
     live: false,
@@ -83,7 +83,7 @@ const brands: Brand[] = [
     badge: "Coding",
     description: "Live coding sessions and mentorship",
     image:
-      "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80",
+      "images/codeoncode1.jpg",
     href: "",
     variant: "neutral",
     live: false,
@@ -93,7 +93,7 @@ const brands: Brand[] = [
     badge: "Cooking",
     description: "Live cooking lessons and recipes",
     image:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80",
+      "images/cookonsushi.jpg",
     href: "",
     variant: "neutral",
     live: false,
@@ -101,9 +101,9 @@ const brands: Brand[] = [
   {
     name: "StyleOn",
     badge: "Fashion",
-    description: "Personal styling and fashion advice",
+    description: "Personal styling, makeup and fashion advice",
     image:
-      "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&q=80",
+      "images/styleonglamorwoman.jpg",
     href: "",
     variant: "neutral",
     live: false,
@@ -113,7 +113,7 @@ const brands: Brand[] = [
     badge: "Finance",
     description: "Personal finance and budgeting coaching",
     image:
-      "https://images.unsplash.com/photo-1542223616-42b8de2d4c3f?auto=format&fit=crop&q=80",
+      "images/moneyonbitcoin2.jpg",
     href: "",
     variant: "neutral",
     live: false,
@@ -123,15 +123,17 @@ const brands: Brand[] = [
 export default function OnBrandsPage() {
   return (
     <DefaultPageLayout>
-      <div className="flex w-full flex-col items-center bg-black min-h-screen">
-        <div className="flex w-full grow shrink-0 basis-0 flex-col items-start bg-black">
+      <div className="flex w-full flex-col items-center bg-[#010818] min-h-screen">
+<div className="flex w-full grow shrink-0 basis-0 flex-col items-start bg-[#010818]">
           <div className="flex w-full flex-col items-center justify-center gap-6 px-6 py-24">
             <div className="flex w-full max-w-[1024px] flex-col items-center justify-center gap-6">
-              <span className="w-full max-w-[768px] whitespace-pre-wrap font-['Orbitron'] text-[72px] font-[900] leading-[80px] text-default-font text-center">
-                {"The ON Family"}
-              </span>
+              <img
+  src="/images/skillery_logo_wheadline.png"
+  alt="Skillery Logo"
+  className="max-w-[400px] w-full h-auto object-contain"
+/>
               <span className="w-full max-w-[576px] text-[24px] font-[500] leading-[32px] text-neutral-600 text-center">
-                {"A unified brand system for expert coaching and guidance"}
+                {"What Do You Want To Master Today?"}
               </span>
             </div>
           </div>
