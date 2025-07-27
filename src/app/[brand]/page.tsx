@@ -70,7 +70,7 @@ export default function BrandLandingPage() {
       <Button
         className="mt-4 bg-orange-500 hover:bg-orange-600 text-white"
         size="medium"
-        variant="secondary"
+        variant="neutral-secondary"
         icon={<FeatherArrowRightCircle />}
       >
         Find Help
@@ -81,21 +81,29 @@ export default function BrandLandingPage() {
 </div>
 
         {/* Trusted Experts */}
-        <div className="w-full max-w-6xl text-center">
-          <h2 className="text-3xl font-bold mb-4">Trusted Experts</h2>
+       <div className="w-full max-w-6xl mt-20">
+  <h2 className="text-3xl font-bold mb-6 uppercase text-left">TRUSTED EXPERTS</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
   <div
     key={i}
 className="bg-[#1a1a1a] rounded-2xl overflow-hidden border border-gray-700 transition-all duration-300 flex flex-col items-center p-6"
   >
-    <Avatar size="xl" src={`/images/fixon/expert${i}.png`} />
+<img
+  src="/images/fixon/placeholder.jpg"
+  alt={`Expert ${i}`}
+  className="w-24 h-24 object-cover rounded-full mb-4"
+/>
+{/* 
+  // TODO: Switch to actual expert image once available
+  // <Avatar size="xl" src={`/images/fixon/expert${i}.png`} />
+*/}
     <h3 className="mt-4 text-xl font-bold">Expert {i}</h3>
     <p className="opacity-80 text-sm text-center">Specialist in home repairs, tools, and hands-on help.</p>
     <Button
       className="mt-4"
       size="small"
-      variant="secondary"
+      variant="neutral-secondary"
       icon={<FeatherArrowRightCircle />}
     >
       View Profile
