@@ -114,11 +114,21 @@ className="bg-[#1a1a1a] rounded-2xl overflow-hidden border border-gray-700 trans
         </div>
 
         {/* Join the Elite */}
-        <div className="w-full max-w-4xl bg-gradient-to-r from-pink-500 to-blue-600 p-8 rounded-2xl text-center">
-          <h2 className="text-3xl font-bold text-black mb-2">Become a FixOn Expert</h2>
-          <p className="text-black opacity-90 mb-4">Help others fix it right — live. Apply to join our expert team today.</p>
-          <Button size="large" variant="destructive" icon={<FeatherArrowRight />}>Apply Now</Button>
-        </div>
+<div className="w-full max-w-4xl mt-24 mb-16 bg-[#1a1a1a] border border-gray-700 shadow-[0_0_12px_rgba(255,255,255,0.1)] p-8 rounded-3xl text-center">
+  <h2 className="text-3xl font-bold text-white mb-2 uppercase">Become A FixOn Expert</h2>
+  <p className="text-white opacity-80 mb-4">
+    Help others fix it right — live. Apply to join our expert team today.
+  </p>
+<div className="flex justify-center">
+  <Button
+    size="large"
+    className="bg-orange-500 hover:bg-orange-600 text-white"
+    icon={<FeatherArrowRight />}
+  >
+    Apply Now
+  </Button>
+</div>
+</div>
 
         {/* Connect With Us */}
         <div className="text-center mt-12">
