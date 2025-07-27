@@ -29,11 +29,11 @@ export default function RotatingSearchInput() {
   useEffect(() => {
     if (isFocused) return;
 
-    const fadeOut = setTimeout(() => setFade(false), 7000); // fade out at 7s
+    const fadeOut = setTimeout(() => setFade(false), 7000);
     const changePhrase = setTimeout(() => {
       setIndex((prev) => (prev + 1) % phrases.length);
       setFade(true);
-    }, 9000); // switch phrase at 9s
+    }, 9000);
 
     return () => {
       clearTimeout(fadeOut);
@@ -48,7 +48,7 @@ export default function RotatingSearchInput() {
           type="text"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className="w-full rounded-full bg-[#0F172A] text-white px-6 pr-28 py-3 text-base border-none shadow-none focus:outline-none focus:shadow-[0_0_14px_#EE9E3A] transition"
+          className="w-full rounded-full bg-transparent text-white px-6 pr-28 py-3 text-base border border-white/30 focus:outline-none focus:shadow-[0_0_14px_#EE9E3A] transition"
           placeholder=""
         />
         {!isFocused && (
