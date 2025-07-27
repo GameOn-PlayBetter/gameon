@@ -10,11 +10,16 @@ import { Badge } from "@/ui/components/Badge";
 import { IconButton } from "@/ui/components/IconButton";
 import { FeatherZap, FeatherArrowRight, FeatherArrowRightCircle } from "@subframe/core";
 import RotatingSearchInput from "@/ui/components/RotatingSearchInput";
+import { Twitter, Instagram } from "lucide-react";
+import { FaDiscord, FaTwitter, FaInstagram, FaReddit } from "react-icons/fa";
+import { SiBluesky } from "react-icons/si";
 
 export default function BrandLandingPage() {
   const { brand } = useParams();
-  const brandConfig = brands[brand as keyof typeof brands];
-  if (!brandConfig) return notFound();
+  const brandKey = brand as keyof typeof brands;
+  const brandConfig = brands[brandKey];
+
+  if (!brandConfig) notFound(); // ⬅️ this is all you need
 
   return (
     <BrandPageLayout
@@ -115,7 +120,7 @@ className="bg-[#1a1a1a] rounded-2xl overflow-hidden border border-gray-700 trans
 
         {/* Join the Elite */}
 <div className="w-full max-w-4xl mt-24 mb-16 bg-[#1a1a1a] border border-gray-700 shadow-[0_0_12px_rgba(255,255,255,0.1)] p-8 rounded-3xl text-center">
-  <h2 className="text-3xl font-bold text-white mb-2 uppercase">Become A FixOn Expert</h2>
+<h2 className="text-3xl font-bold text-white mb-2">Become a FixOn expert</h2>
   <p className="text-white opacity-80 mb-4">
     Help others fix it right — live. Apply to join our expert team today.
   </p>
@@ -130,16 +135,17 @@ className="bg-[#1a1a1a] rounded-2xl overflow-hidden border border-gray-700 trans
 </div>
 </div>
 
-        {/* Connect With Us */}
-        <div className="text-center mt-12">
-          <h2 className="text-2xl font-bold mb-2">Connect With Us</h2>
-          <p className="opacity-80 mb-4">Follow FixOn for updates, live demos, and DIY inspiration.</p>
-          <div className="flex justify-center gap-4">
-            <IconButton icon="discord" />
-            <IconButton icon="twitter" />
-            <IconButton icon="instagram" />
-          </div>
-        </div>
+{/* Connect With Us */}
+<div className="flex flex-col items-center gap-4 mt-16">
+  <h3 className="text-2xl font-bold text-white">Connect With Us</h3>
+  <div className="flex justify-center gap-4">
+    <IconButton icon={<FaDiscord size={24} />} />
+    <IconButton icon={<FaTwitter size={24} />} />
+    <IconButton icon={<FaInstagram size={24} />} />
+    <IconButton icon={<SiBluesky size={24} />} />
+    <IconButton icon={<FaReddit size={24} />} />
+  </div>
+</div>
       </div>
     </BrandPageLayout>
   );
