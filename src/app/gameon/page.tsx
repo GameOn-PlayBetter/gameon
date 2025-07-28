@@ -363,6 +363,7 @@ image="/images/sarah.jpeg"
   logoSrc="/images/gameon/logo.png"
   primaryColor="#FF00C8"
 />
-  );
+</BrandPageLayout>  {/* ✅ Closing tag added */}
+);
 }
 
