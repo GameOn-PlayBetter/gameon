@@ -8,7 +8,7 @@ import { FeatherArrowRight } from "@subframe/core";
 import { FeatherArrowRightCircle } from "@subframe/core";
 import { Avatar } from "@/ui/components/Avatar";
 import { Badge } from "@/ui/components/Badge";
-import { BoldFooter } from "@/ui/components/BoldFooter";
+import { BrandedFooter } from "@/ui/components/BrandedFooter"; // Add to imports at top
 import { IconButton } from '@/ui/components/IconButton';
 
 export default function LandingPage() {
@@ -340,10 +340,29 @@ image="/images/sarah.jpeg"
   </div>
 </div>
           </div>
-          <BoldFooter />
+<BoldFooter
+  brandName="Skillery"
+  company="Skillery, LLC"
+  year={2025}
+  legalLinks={[
+    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Terms of Use", href: "/terms" },
+  ]}
+/>
         </div>
       </div>
-    </BrandPageLayout>
+<BrandedFooter
+  brandName="GameOn"
+  description="Empowering experts and learners across every field."
+  legalLinks={[
+    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Terms of Use", href: "/terms" },
+  ]}
+  bottomText="A brand of Skillery LLC."
+  companyName="Skillery LLC"
+  logoSrc="/images/gameon/logo.png"
+  primaryColor="#FF00C8"
+/>
   );
 }
 

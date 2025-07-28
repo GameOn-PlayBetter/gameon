@@ -1,49 +1,48 @@
+// src/ui/layouts/BrandPageLayout.tsx
 import React from "react";
-import FixonHeader from "@/ui/components/FixonHeader";
-import { BoldFooter } from "@/ui/components/BoldFooter";
-import Image from "next/image";
+import BrandedFooter from "@/ui/components/BrandedFooter";
+
+interface LinkItem {
+  label: string;
+  href: string;
+}
 
 interface BrandPageLayoutProps {
   children: React.ReactNode;
-  logo?: string;
-  backgroundColor?: string;
+  brandName: string;
+  description: string;
+  legalLinks: LinkItem[];
+  bottomText?: string;
+  companyName?: string;
+  logoSrc?: string;
+  primaryColor?: string;
+  rightColumnContent?: React.ReactNode;
 }
 
 export default function BrandPageLayout({
   children,
-  logo,
-  backgroundColor = "#0A0A0A",
+  brandName,
+  description,
+  legalLinks,
+  bottomText,
+  companyName,
+  logoSrc,
+  primaryColor,
+  rightColumnContent,
 }: BrandPageLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor }}>
-      <FixonHeader />
-      <main className="flex flex-col items-center flex-grow">
-        {logo && (
-          <div className="w-full flex justify-center">
-            <Image
-              src={logo}
-              alt="Brand Logo"
-              width={480}
-              height={180}
-              className="w-full max-w-[480px] h-auto px-6 mb-8"
-            />
-          </div>
-        )}
-        {children}
-      </main>
-<BoldFooter
-  logoUrl="/images/fixon/fixonlogo_cropped.png"
-  brandName="FixOn"
-  company="Skillery, LLC"
-  year={new Date().getFullYear()}
-  legalLinks={[
-    { label: "Contact", href: "/contact" },
-    { label: "Privacy", href: "/privacy" },
-    { label: "Terms", href: "/terms" },
-    { label: "Safety", href: "/safety" },
-  ]}
-  disclaimer={`FixOn is a digital platform for live DIY repair help. All sessions are user-initiated.\nFixOn is not liable for property damage or injuries resulting from unsupervised repairs.`}
-/>
+    <div className="flex flex-col min-h-screen bg-[#0A0A0A] text-white">
+      <main className="flex-grow">{children}</main>
+      <BrandedFooter
+        brandName={brandName}
+        description={description}
+        legalLinks={legalLinks}
+        bottomText={bottomText}
+        companyName={companyName}
+        logoSrc={logoSrc}
+        primaryColor={primaryColor}
+        rightColumnContent={rightColumnContent}
+      />
     </div>
   );
 }

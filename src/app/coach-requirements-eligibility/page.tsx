@@ -1,10 +1,26 @@
 "use client";
 
 import React from "react";
+import { useParams } from "next/navigation";
 import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
-import { BoldFooter } from "@/ui/components/BoldFooter";
+import BrandedFooter from "@/ui/components/BrandedFooter";
 
 export default function CoachRequirementsEligibilityPage() {
+  const { brand } = useParams();
+  const brandName = brand ? String(brand) : "Skillery";
+
+  const legalLinks =
+    brandName === "gameon"
+      ? [
+          { label: "Privacy Policy", href: "/privacy" },
+          { label: "Terms of Use", href: "/terms" },
+          { label: "Prohibited Titles", href: "/prohibited-titles" },
+        ]
+      : [
+          { label: "Privacy Policy", href: "/privacy" },
+          { label: "Terms of Use", href: "/terms" },
+        ];
+
   return (
     <DefaultPageLayout>
       <div className="w-full max-w-4xl mx-auto px-6 py-12 text-white">
@@ -17,7 +33,16 @@ export default function CoachRequirementsEligibilityPage() {
           <li>Auto-approval at launch, but every submission is logged for later review.</li>
         </ul>
       </div>
-      <BoldFooter />
+
+      <BrandedFooter
+        brandName={gameon}
+        description="Empowering experts and learners across every field."
+        legalLinks={legalLinks}
+        bottomText="A brand of Skillery LLC."
+        companyName="Skillery LLC"
+        logoSrc={`/images/${brandName}/logo.png`} // optional — include if you have logos per brand
+        primaryColor="#FF00C8" // or your default
+      />
     </DefaultPageLayout>
   );
 }

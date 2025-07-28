@@ -22,10 +22,21 @@ export default function BrandLandingPage() {
   if (!brandConfig) notFound(); // ⬅️ this is all you need
 
   return (
-    <BrandPageLayout
-      logo={brandConfig.logo}
-      backgroundColor={brandConfig.colors.primary}
-    >
+<BrandPageLayout
+  logoSrc={brandConfig.logo}
+  backgroundColor={brandConfig.colors.primary}
+  brandName={brandConfig.name}
+  description={brandConfig.description}
+  legalLinks={[
+    { label: "Terms of Service", href: "/terms" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Contact", href: "/contact" },
+    ...(brandConfig.name === "GameOn"
+      ? [{ label: "Prohibited Titles", href: "/prohibited-titles" }]
+      : []),
+  ]}
+  bottomText="A brand of Skillery LLC."
+>
       <div className="flex flex-col items-center text-white gap-8 w-full px-4">
 {/* 🔍 Skillery-style Search Input */}
 <div className="w-full max-w-2xl">

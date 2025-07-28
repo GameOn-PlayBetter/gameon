@@ -742,7 +742,15 @@ function CoachSearchPage() {
             </div>
           </div>
         </div>
-        <BoldFooter />
+<BoldFooter
+  brandName="Skillery"
+  company="Skillery, LLC"
+  year={2025}
+  legalLinks={[
+    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Terms of Use", href: "/terms" },
+  ]}
+/>
       </div>
     </DefaultPageLayout>
    </>
