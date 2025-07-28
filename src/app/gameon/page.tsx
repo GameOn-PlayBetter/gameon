@@ -7,7 +7,7 @@ import { FeatherArrowRight } from "@subframe/core";
 import { FeatherArrowRightCircle } from "@subframe/core";
 import { Avatar } from "@/ui/components/Avatar";
 import { Badge } from "@/ui/components/Badge";
-import { BrandedFooter } from "@/ui/components/BrandedFooter"; // Add to imports at top
+import BrandedFooter from "@/ui/components/BrandedFooter";
 import { IconButton } from '@/ui/components/IconButton';
 import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
 
