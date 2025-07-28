@@ -11,7 +11,7 @@ import BrandedFooter from "@/ui/components/BrandedFooter";
 import { IconButton } from '@/ui/components/IconButton';
 import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
 
-export default function LandingPage() {
+export default function GameOnLandingPage() {
   return (
     <BrandPageLayout
       logo="/images/gameon/logo.svg"
@@ -340,19 +340,18 @@ image="/images/sarah.jpeg"
  </div>
 </div>
 <BrandedFooter
-  brandName="GameOn"
-  description="Empowering experts and learners across every field."
-  legalLinks={[
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Use", href: "/terms" },
-  ]}
-  bottomText="A brand of Skillery LLC."
-  companyName="Skillery LLC"
-  logoSrc="/images/gameon/logo.png"
-  primaryColor="#FF00C8"
-/>
-</BrandPageLayout>
-);
+        brandName="GameOn"
+        description="Empowering experts and learners across every field."
+        legalLinks={[
+          { label: "Privacy Policy", href: "/privacy" },
+          { label: "Terms of Use", href: "/terms" },
+        ]}
+        bottomText="A brand of Skillery LLC."
+        companyName="Skillery LLC"
+        logoSrc="/images/gameon/logo.png"
+        primaryColor="#FF00C8"
+      />
+    </BrandPageLayout>
+  );
 }
 
-// temporary edit to trigger save
