@@ -13,10 +13,18 @@ import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
 
 export default function GameOnLandingPage() {
   return (
-    <BrandPageLayout
-      logo="/images/gameon/logo.svg"
-      backgroundColor="#000000"
-    >
+<BrandPageLayout
+  brandName="GameOn"
+  description="Play better. Together."
+  logoSrc="/images/gameon/logo.svg"
+  primaryColor="#FF00C8"
+  legalLinks={[
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Use", href: "/terms" },
+  ]}
+  companyName="GameOn, LLC"
+  bottomText="© 2025 GameOn. All rights reserved."
+>
       <div className="flex w-full flex-col items-center bg-black h-screen">
         <div className="flex w-full grow shrink-0 basis-0 flex-col items-start bg-black">
           <div className="flex w-full flex-col items-center justify-center gap-3 bg-black px-6 py-6">
