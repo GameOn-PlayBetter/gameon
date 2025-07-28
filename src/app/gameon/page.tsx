@@ -337,26 +337,15 @@ image="/images/sarah.jpeg"
     <a href="https://bsky.app/profile/gameon.bsky.social" target="_blank" rel="noopener noreferrer" className="text-body font-body text-brand-700 cursor-pointer">
       Bluesky
     </a>
-  </div>
+ </div>
 </div>
-          </div>
-<BoldFooter
-  brandName="Skillery"
-  company="Skillery, LLC"
-  year={2025}
-  legalLinks={[
-    { name: "Privacy Policy", href: "/privacy" },
-    { name: "Terms of Use", href: "/terms" },
-  ]}
-/>
-        </div>
-      </div>
+</div>
 <BrandedFooter
   brandName="GameOn"
   description="Empowering experts and learners across every field."
   legalLinks={[
-    { name: "Privacy Policy", href: "/privacy" },
-    { name: "Terms of Use", href: "/terms" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Use", href: "/terms" },
   ]}
   bottomText="A brand of Skillery LLC."
   companyName="Skillery LLC"
