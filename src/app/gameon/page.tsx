@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
 import { Button } from "@/ui/components/Button";
 import { FeatherZap } from "@subframe/core";
 import { FeatherArrowRight } from "@subframe/core";
