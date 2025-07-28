@@ -339,7 +339,6 @@ image="/images/sarah.jpeg"
     </a>
  </div>
 </div>
-</div>
 <BrandedFooter
   brandName="GameOn"
   description="Empowering experts and learners across every field."
