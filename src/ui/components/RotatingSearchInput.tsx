@@ -21,10 +21,23 @@ const phrases = [
   "Ask anything."
 ];
 
-export default function RotatingSearchInput() {
+export default function RotatingSearchInput({
+  borderColor,
+  glowColor,
+  buttonColor,
+  buttonHoverColor,
+}: {
+  borderColor: string;
+  glowColor: string;
+  buttonColor: string;
+  buttonHoverColor: string;
+}) {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
+const [isHovered, setIsHovered] = useState(false);
+
+console.log("buttonColor:", buttonColor, "hoverColor:", buttonHoverColor);
 
   useEffect(() => {
     if (isFocused) return;
@@ -43,13 +56,21 @@ export default function RotatingSearchInput() {
 
   return (
     <div className="mt-6 w-full max-w-md mx-auto">
-      <div className="relative">
+      <div
+        className="relative w-full rounded-full transition-all duration-300"
+        style={{
+          boxShadow: isFocused ? `0 0 14px ${glowColor}` : "none",
+          border: isFocused
+            ? `1px solid ${glowColor}`
+            : "1px solid rgba(255, 255, 255, 0.3)",
+        }}
+      >
         <input
           type="text"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className="w-full rounded-full bg-transparent text-white px-6 pr-28 py-3 text-base border border-white/30 focus:outline-none focus:shadow-[0_0_14px_#EE9E3A] transition"
-          placeholder=""
+          className="w-full rounded-full bg-transparent text-white px-6 pr-28 py-3 text-base outline-none border-none transition"
+          placeholder=" "
         />
         {!isFocused && (
           <span
@@ -60,12 +81,19 @@ export default function RotatingSearchInput() {
             {phrases[index]}
           </span>
         )}
-        <button
-          type="button"
-          className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1 bg-orange-500 text-white rounded-full text-sm font-semibold hover:bg-orange-600 transition"
-        >
-          Search
-        </button>
+<button
+  type="button"
+  onMouseEnter={() => setIsHovered(true)}
+  onMouseLeave={() => setIsHovered(false)}
+  className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1 rounded-full text-sm font-semibold text-white"
+  style={{
+    backgroundColor: isHovered ? buttonHoverColor : buttonColor,
+    border: `1px solid ${isHovered ? buttonHoverColor : buttonColor}`,
+    transition: "background-color 0.3s ease, border-color 0.3s ease",
+  }}
+>
+  Search
+</button>
       </div>
     </div>
   );

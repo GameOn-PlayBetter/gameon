@@ -63,11 +63,11 @@ export function LoginModal({
 
   const handleLogin = () => {
     onClose(); // Close modal
-    router.push("/refer-friends"); // Simulated login
+    router.push("/player-profile"); // Simulated login
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+return (
+<div style={{ zIndex: 9999 }} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm">
       <div
         ref={modalRef}
         className="bg-[#111] border border-[#333] rounded-xl p-6 w-full max-w-sm shadow-lg animate-fadeInUp"

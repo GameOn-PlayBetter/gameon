@@ -3,7 +3,8 @@
 import React from "react";
 import { useParams } from "next/navigation";
 import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
-import BrandedFooter from "@/ui/components/BrandedFooter";
+import { BoldFooter } from "@/ui/components/BoldFooter";
+
 
 export default function CoachRequirementsEligibilityPage() {
   const { brand } = useParams();
@@ -33,16 +34,15 @@ export default function CoachRequirementsEligibilityPage() {
           <li>Auto-approval at launch, but every submission is logged for later review.</li>
         </ul>
       </div>
-
-      <BrandedFooter
-        brandName={gameon}
-        description="Empowering experts and learners across every field."
-        legalLinks={legalLinks}
-        bottomText="A brand of Skillery LLC."
-        companyName="Skillery LLC"
-        logoSrc={`/images/${brandName}/logo.png`} // optional — include if you have logos per brand
-        primaryColor="#FF00C8" // or your default
-      />
+<BoldFooter
+  logoSrc={brandConfig.logo}
+  companyName={brandConfig.companyName}
+  colors={{
+    primary: brandConfig.colors.primary,
+    button: brandConfig.colors.button,
+    buttonHover: brandConfig.colors.buttonHover,
+  }}
+/>
     </DefaultPageLayout>
   );
 }
