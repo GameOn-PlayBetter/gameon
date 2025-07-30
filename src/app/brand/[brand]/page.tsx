@@ -75,11 +75,10 @@ fontFamily={brandConfig.fontFamily}
         { label: "Games", href: "#categories" },
         { label: "Login", onClick: () => setShowLogin(true) },
       ]}
-      ctaButton={{
-        label: "Apply to Coach",
-        href: "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform",
-        target: "_blank",
-      }}
+ctaButton={{
+  label: "Apply to Coach",
+  href: "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform"
+}}
       colors={brandConfig.colors}
     >
 

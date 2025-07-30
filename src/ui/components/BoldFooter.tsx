@@ -15,7 +15,7 @@ interface BoldFooterRootProps extends React.HTMLAttributes<HTMLDivElement> {
     buttonHover?: string;
   };
   socials?: { icon: string; href: string }[];
-  bottomText?: string;
+  ctaButton?: { label: string; href: string }; // ✅ ADD THIS LINE
 }
 
 const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
@@ -26,7 +26,7 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
       companyName = "GameOn LLC",
       colors = {},
       socials = [],
-      bottomText,
+ctaButton,
       ...otherProps
     } = props;
 
@@ -44,17 +44,46 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
       >
         {/* Top Section */}
         <div className="w-full flex flex-col md:flex-row items-start justify-between gap-8 mb-12">
-          {/* Left: Logo */}
-          <div className="flex w-full md:w-1/3 justify-end pr-4 items-start">
-            <div className="relative h-[80px] w-[240px] md:h-[100px] md:w-[300px]">
-              <Image
-                src={logoSrc || "/images/gameon/gameon_logo_stacked.png"}
-                alt="Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
-          </div>
+          {/* Left: Logo + CTA */}
+<div className="flex w-full md:w-1/3 justify-end pr-4 items-start">
+  <div className="flex flex-col items-end gap-4">
+    <div className="relative h-[80px] w-[240px] md:h-[100px] md:w-[300px]">
+      <Image
+        src={logoSrc || "/images/gameon/gameon_logo_stacked.png"}
+        alt="Logo"
+        fill
+        className="object-contain"
+      />
+    </div>
+
+    {ctaButton && (
+      <a
+        href={ctaButton.href}
+target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block"
+      >
+        <button
+          className="px-6 py-3 rounded-xl font-semibold transition"
+          style={{
+            backgroundColor: colors?.button || "#FF00C8",
+            color: "white",
+          }}
+          onMouseOver={(e) => {
+            (e.target as HTMLElement).style.backgroundColor =
+              colors?.buttonHover || "#00CFFF";
+          }}
+          onMouseOut={(e) => {
+            (e.target as HTMLElement).style.backgroundColor =
+              colors?.button || "#FF00C8";
+          }}
+        >
+          {ctaButton.label}
+        </button>
+      </a>
+    )}
+  </div>
+</div>
 
           {/* Middle: Legal Links */}
           <div className="flex flex-col gap-3 w-full md:w-1/3">
@@ -133,10 +162,15 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
         {/* Footer Text */}
         <div className="mx-auto max-w-[768px] flex flex-col items-center gap-4 mt-6 text-center text-subtext-color text-[14px] font-medium leading-[20px] font-['Montserrat'] whitespace-pre-wrap">
           <span>© {companyName} 2025</span>
-          <span>
-            {bottomText ||
-              `${companyName} is an independent digital platform connecting users and coaches for live sessions, education, and support.\nAll sessions may be recorded for safety. All coaches are vetted.\n${companyName}. All rights reserved. Based in Texas, operating across galaxies (as long as they have decent ping).\nNot affiliated with any game publisher, appliance maker, or repair service. All trademarks are the property of their respective owners.`}
-          </span>
+<span>
+  {companyName} is an independent digital platform connecting users and coaches for live sessions, education, and support.
+  <br />
+  All sessions may be recorded for safety. All coaches are vetted.
+  <br />
+  {companyName}. All rights reserved. Based in Texas, operating across galaxies (as long as they have decent ping).
+  <br />
+  Not affiliated with any game publisher, appliance maker, or repair service. All trademarks are the property of their respective owners.
+</span>
         </div>
       </div>
     );
