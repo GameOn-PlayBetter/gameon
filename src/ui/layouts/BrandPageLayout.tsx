@@ -35,7 +35,6 @@ export default function BrandPageLayout({
   logoSrc,
   companyName,
   description,
-  ctaButton,
   navLinks,
   legalLinks,
   bottomText,
@@ -44,6 +43,7 @@ export default function BrandPageLayout({
   colors,
   fontFamily = "sans-serif",
   socials,
+ctaButton = undefined,
   hideHeaderLogo = false, // ✅ default to false
 }: BrandPageLayoutProps) {
 return (
