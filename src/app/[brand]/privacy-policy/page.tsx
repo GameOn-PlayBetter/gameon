@@ -13,6 +13,20 @@ export default function PrivacyPolicyPage() {
   const brandName = brand ? String(brand).toLowerCase() : "gameon";
   const brandConfig = brands[brandName as keyof typeof brands] || brands.gameon;
 
+  // ✅ Safe fallbacks to avoid TypeScript errors
+  const colors = brandConfig.colors ?? {
+    primary: "#000000",
+    border: "#333333",
+    glow: "#ffffff",
+    button: "#ff00c8",
+    buttonHover: "#00cfff",
+    text: "#ffffff",
+    hover: "#cccccc",
+  };
+
+  const socials = (brandConfig as any).socials ?? [];
+  const legalLinks = (brandConfig as any).legalLinks ?? [];
+
   return (
     <DefaultPageLayout>
       <div className="w-full max-w-4xl mx-auto px-6 py-12 text-white">
@@ -62,12 +76,12 @@ export default function PrivacyPolicyPage() {
       <BoldFooter
         logoSrc={brandConfig.logo}
         companyName={brandConfig.companyName}
-        socials={brandConfig.socials || []}
-        legalLinks={brandConfig.legalLinks || []}
+        socials={socials}
+        legalLinks={legalLinks}
         colors={{
-          primary: brandConfig.colors.primary,
-          button: brandConfig.colors.button,
-          buttonHover: brandConfig.colors.buttonHover,
+          primary: colors.primary,
+          button: colors.button,
+          buttonHover: colors.buttonHover,
         }}
       />
     </DefaultPageLayout>

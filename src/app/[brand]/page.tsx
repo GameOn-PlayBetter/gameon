@@ -13,7 +13,7 @@ import { LoginModal } from "@/ui/components/LoginModal";
 import FeaturedCoaches from "@/ui/components/GameOnCoaches";
 import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
 
-// ✅ Define the types so TS is happy
+// ✅ Strongly typed badge & coach interfaces
 type BadgeVariant = "success" | "error" | "brand" | "neutral" | "warning";
 
 interface Coach {
@@ -26,22 +26,41 @@ interface Coach {
   bookingUrl: string;
 }
 
-// Convert the brands object into an array of search suggestions
+// ✅ Create search suggestions from brands object
 const searchPages = Object.entries(brands).map(([key, config]) => ({
   name: config.companyName || key,
   description: config.tagline || config.description || "Explore this brand",
-  path: `/brand/${key}`,
+  path: `/${key}`, // ✅ Clean URL (no /brand prefix)
 }));
 
 export default function BrandLandingPage() {
   const { brand } = useParams();
   const brandKey = brand as keyof typeof brands;
   const brandConfig = brands[brandKey];
+
   const [showLogin, setShowLogin] = useState(false);
 
   if (!brandConfig) return notFound();
 
   const isFixOn = brandKey === "fixon";
+
+  // ✅ Safe fallback references for build stability
+  const colors = brandConfig.colors ?? {
+    primary: "#000000",
+    border: "#333333",
+    glow: "#ffffff",
+    button: "#ff00c8",
+    buttonHover: "#00cfff",
+    text: "#ffffff",
+    hover: "#cccccc",
+  };
+
+  const reserveBlock = brandConfig.reserveBlock ?? {
+    headline: "",
+    subtext: "",
+    buttonText: "Reserve",
+    formUrl: "#",
+  };
 
   // ✅ Strongly typed coach arrays with `as const`
   const featuredCoaches: Coach[] = isFixOn
@@ -53,7 +72,7 @@ export default function BrandLandingPage() {
           image: "/images/fixon/experts/autopro.jpg",
           description: "Car diagnostics, battery swaps, brake repairs",
           badgeVariant: "warning" as const,
-          bookingUrl: brandConfig.reserveBlock.formUrl,
+          bookingUrl: reserveBlock.formUrl,
         },
         {
           name: "HomeHackR",
@@ -62,7 +81,7 @@ export default function BrandLandingPage() {
           image: "/images/fixon/experts/homehackr.jpg",
           description: "Wall patching, painting, faucet leaks",
           badgeVariant: "success" as const,
-          bookingUrl: brandConfig.reserveBlock.formUrl,
+          bookingUrl: reserveBlock.formUrl,
         },
         {
           name: "SafeSpark",
@@ -71,7 +90,7 @@ export default function BrandLandingPage() {
           image: "/images/fixon/experts/safespark.jpg",
           description: "Outlet repair, light installs, breaker fixes",
           badgeVariant: "brand" as const,
-          bookingUrl: brandConfig.reserveBlock.formUrl,
+          bookingUrl: reserveBlock.formUrl,
         },
       ]
     : [
@@ -82,7 +101,7 @@ export default function BrandLandingPage() {
           image: "/images/gameon/david.jpg",
           description: "Professional builder & redstone specialist",
           badgeVariant: "brand" as const,
-          bookingUrl: brandConfig.reserveBlock.formUrl,
+          bookingUrl: reserveBlock.formUrl,
         },
         {
           name: "Coach Sarah",
@@ -91,7 +110,7 @@ export default function BrandLandingPage() {
           image: "/images/gameon/emma.jpg",
           description: "Competitive survivor & strategy expert",
           badgeVariant: "warning" as const,
-          bookingUrl: brandConfig.reserveBlock.formUrl,
+          bookingUrl: reserveBlock.formUrl,
         },
         {
           name: "Coach Mike",
@@ -100,7 +119,7 @@ export default function BrandLandingPage() {
           image: "/images/gameon/michael.jpg",
           description: "Diamond ranked player & macro strategist",
           badgeVariant: "success" as const,
-          bookingUrl: brandConfig.reserveBlock.formUrl,
+          bookingUrl: reserveBlock.formUrl,
         },
       ];
 
@@ -114,8 +133,8 @@ export default function BrandLandingPage() {
           { label: "Login", onClick: () => setShowLogin(true) },
         ]}
         ctaButton={{
-          label: brandConfig.reserveBlock.buttonText,
-          href: brandConfig.reserveBlock.formUrl,
+          label: reserveBlock.buttonText,
+          href: reserveBlock.formUrl,
         }}
       >
         {/* Search Bar */}
@@ -125,8 +144,8 @@ export default function BrandLandingPage() {
 
         {/* Waitlist Block */}
         <GameOnWaitlistBlock
-          colors={brandConfig.colors}
-          formUrl={brandConfig.reserveBlock.formUrl}
+          colors={colors}
+          formUrl={reserveBlock.formUrl}
         />
 
         {/* Game Cards */}
@@ -135,15 +154,16 @@ export default function BrandLandingPage() {
         {/* Coach Cards */}
         <FeaturedCoaches
           coaches={featuredCoaches}
-          colors={brandConfig.colors}
+          colors={colors}
         />
+
         {/* Reserve Block */}
         <ReserveBlock
-          headline={brandConfig.reserveBlock.headline}
-          subtext={brandConfig.reserveBlock.subtext}
-          buttonText={brandConfig.reserveBlock.buttonText}
-          formUrl={brandConfig.reserveBlock.formUrl}
-          colors={brandConfig.colors}
+          headline={reserveBlock.headline}
+          subtext={reserveBlock.subtext}
+          buttonText={reserveBlock.buttonText}
+          formUrl={reserveBlock.formUrl}
+          colors={colors}
         />
 
         {/* Login Modal */}
