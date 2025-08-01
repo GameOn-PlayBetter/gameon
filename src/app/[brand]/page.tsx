@@ -137,7 +137,6 @@ export default function BrandLandingPage() {
           coaches={featuredCoaches}
           colors={brandConfig.colors}
         />
-
         {/* Reserve Block */}
         <ReserveBlock
           headline={brandConfig.reserveBlock.headline}
@@ -151,7 +150,6 @@ export default function BrandLandingPage() {
         <LoginModal
           open={showLogin}
           onClose={() => setShowLogin(false)}
-          colors={brandConfig.colors}
         />
       </BrandPageLayout>
     </BrandThemeProvider>
