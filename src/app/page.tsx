@@ -154,7 +154,7 @@ export default function Page() {
                 </span>{" "}
                 Want To Master Today?
               </p>
-<RotatingSearchInput suggestions={searchPages} />
+<RotatingSearchInput />
             </div>
           </div>
 

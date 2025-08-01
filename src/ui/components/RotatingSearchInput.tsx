@@ -22,18 +22,21 @@ const phrases = [
   "Ask anything.",
 ];
 
-const searchPages = [
-  { name: "GameOn", description: "Gaming coaching and help", path: "/brand/gameon" },
-  { name: "FixOn", description: "Live help for home, auto & pool", path: "/brand/fixon" },
+// 🔹 Static search pages (hardcoded for now)
+const pages = [
+  { name: "GameOn", description: "Gaming coaching and help", path: "/gameon" },
+  { name: "FixOn", description: "Live help for home, auto & pool", path: "/fixon" },
   { name: "Skillery", description: "Master new skills across topics", path: "/" },
 ];
 
 export default function RotatingSearchInput() {
   const { colors } = useBrandTheme();
+
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -52,12 +55,14 @@ export default function RotatingSearchInput() {
     };
   }, [index, isFocused]);
 
-  const filteredPages = searchPages.filter((page) =>
+  // Filtered dropdown suggestions
+  const filteredPages = pages.filter((page) =>
     page.name.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
     <div className="mt-6 w-full max-w-md mx-auto relative">
+      {/* Input with neon glow */}
       <div
         className="relative w-full rounded-full transition-all duration-300"
         style={{
@@ -109,6 +114,7 @@ export default function RotatingSearchInput() {
         </button>
       </div>
 
+      {/* Dropdown with pink/blue neon glow */}
       {showDropdown && (
         <div
           className="absolute w-full mt-2 rounded-xl overflow-hidden z-50 transition-shadow"
