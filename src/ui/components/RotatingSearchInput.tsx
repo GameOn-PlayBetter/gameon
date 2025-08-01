@@ -3,6 +3,17 @@
 import React, { useEffect, useState } from "react";
 import { useBrandTheme } from "@/app/context/BrandThemeContext";
 
+// ✅ Add proper typing for pages
+interface PageSuggestion {
+  name: string;
+  description: string;
+  path: string;
+}
+
+interface RotatingSearchInputProps {
+  pages?: PageSuggestion[];
+}
+
 const phrases = [
   "Game. Fix. Jam. Learn.",
   "From game help to garden hacks...",
@@ -22,16 +33,8 @@ const phrases = [
   "Ask anything.",
 ];
 
-// 🔹 Static search pages (hardcoded for now)
-const pages = [
-  { name: "GameOn", description: "Gaming coaching and help", path: "/gameon" },
-  { name: "FixOn", description: "Live help for home, auto & pool", path: "/fixon" },
-  { name: "Skillery", description: "Master new skills across topics", path: "/" },
-];
-
-export default function RotatingSearchInput() {
+export default function RotatingSearchInput({ pages = [] }: RotatingSearchInputProps) {
   const { colors } = useBrandTheme();
-
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
@@ -55,14 +58,14 @@ export default function RotatingSearchInput() {
     };
   }, [index, isFocused]);
 
-  // Filtered dropdown suggestions
+  // ✅ Filtered dropdown suggestions now use prop `pages`
   const filteredPages = pages.filter((page) =>
     page.name.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
     <div className="mt-6 w-full max-w-md mx-auto relative">
-      {/* Input with neon glow */}
+      {/* Input with orange glow */}
       <div
         className="relative w-full rounded-full transition-all duration-300"
         style={{
