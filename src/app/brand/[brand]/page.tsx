@@ -108,13 +108,7 @@ export default function BrandLandingPage() {
       >
         {/* Search Bar */}
         <div className="w-full max-w-2xl px-4 pt-6 mx-auto">
-<RotatingSearchInput
-  borderColor={brandConfig.colors.border}
-  glowColor={brandConfig.colors.glow}
-  buttonColor={brandConfig.colors.button}
-  buttonHoverColor={brandConfig.colors.buttonHover}
-  pages={searchPages}   // ✅ New prop for dynamic suggestions
-/>
+<RotatingSearchInput pages={searchPages} />
         </div>
 
         {/* Waitlist Block */}
