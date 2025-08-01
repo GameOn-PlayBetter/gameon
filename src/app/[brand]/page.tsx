@@ -13,6 +13,18 @@ import { LoginModal } from "@/ui/components/LoginModal";
 import FeaturedCoaches from "@/ui/components/GameOnCoaches";
 import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
 
+// ✅ Define the types so TS is happy
+type BadgeVariant = "success" | "error" | "brand" | "neutral" | "warning";
+
+interface Coach {
+  name: string;
+  color: string;
+  badge: string;
+  image: string;
+  description: string;
+  badgeVariant: BadgeVariant;
+  bookingUrl: string;
+}
 
 // Convert the brands object into an array of search suggestions
 const searchPages = Object.entries(brands).map(([key, config]) => ({
@@ -31,8 +43,8 @@ export default function BrandLandingPage() {
 
   const isFixOn = brandKey === "fixon";
 
-  // Dynamic coach cards
-  const featuredCoaches = isFixOn
+  // ✅ Strongly typed coach arrays with `as const`
+  const featuredCoaches: Coach[] = isFixOn
     ? [
         {
           name: "AutoPro99",
@@ -40,7 +52,7 @@ export default function BrandLandingPage() {
           badge: "Auto Specialist",
           image: "/images/fixon/experts/autopro.jpg",
           description: "Car diagnostics, battery swaps, brake repairs",
-          badgeVariant: "warning",
+          badgeVariant: "warning" as const,
           bookingUrl: brandConfig.reserveBlock.formUrl,
         },
         {
@@ -49,7 +61,7 @@ export default function BrandLandingPage() {
           badge: "DIY Pro",
           image: "/images/fixon/experts/homehackr.jpg",
           description: "Wall patching, painting, faucet leaks",
-          badgeVariant: "success",
+          badgeVariant: "success" as const,
           bookingUrl: brandConfig.reserveBlock.formUrl,
         },
         {
@@ -58,7 +70,7 @@ export default function BrandLandingPage() {
           badge: "Electrician",
           image: "/images/fixon/experts/safespark.jpg",
           description: "Outlet repair, light installs, breaker fixes",
-          badgeVariant: "brand",
+          badgeVariant: "brand" as const,
           bookingUrl: brandConfig.reserveBlock.formUrl,
         },
       ]
@@ -69,7 +81,7 @@ export default function BrandLandingPage() {
           badge: "Minecraft Expert",
           image: "/images/gameon/david.jpg",
           description: "Professional builder & redstone specialist",
-          badgeVariant: "brand",
+          badgeVariant: "brand" as const,
           bookingUrl: brandConfig.reserveBlock.formUrl,
         },
         {
@@ -78,7 +90,7 @@ export default function BrandLandingPage() {
           badge: "DBD Pro",
           image: "/images/gameon/emma.jpg",
           description: "Competitive survivor & strategy expert",
-          badgeVariant: "warning",
+          badgeVariant: "warning" as const,
           bookingUrl: brandConfig.reserveBlock.formUrl,
         },
         {
@@ -87,7 +99,7 @@ export default function BrandLandingPage() {
           badge: "LoL Master",
           image: "/images/gameon/michael.jpg",
           description: "Diamond ranked player & macro strategist",
-          badgeVariant: "success",
+          badgeVariant: "success" as const,
           bookingUrl: brandConfig.reserveBlock.formUrl,
         },
       ];
@@ -108,7 +120,7 @@ export default function BrandLandingPage() {
       >
         {/* Search Bar */}
         <div className="w-full max-w-2xl px-4 pt-6 mx-auto">
-<RotatingSearchInput />
+          <RotatingSearchInput pages={searchPages} />
         </div>
 
         {/* Waitlist Block */}
