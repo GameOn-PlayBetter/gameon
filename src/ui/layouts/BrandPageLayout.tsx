@@ -22,14 +22,22 @@ export default function BrandPageLayout({
 }: BrandPageLayoutProps) {
   const theme = useBrandTheme();
 
-  const logo = theme?.logo;
   const colors = theme?.colors || {};
   const socials = theme?.socials || [];
   const legalLinks = theme?.legalLinks || [];
   const companyName = theme?.companyName || brandName || "Your Brand";
   const backgroundColor = colors.primary || "#0A0A0A";
 
-  // ✅ Skillery-specific transparency logic
+  const headerLogo =
+    brandName === "gameon"
+      ? "/images/gameon/go-logo.png"
+      : brandName === "skillery"
+      ? "/images/skillery_logo_wheadline.png"
+      : brandName === "fixon"
+      ? "/images/fixon/fixon_logo_shinier.png"
+      : "";
+
+  // ✅ Skillery gets transparent container so its navy shows
   const resolvedBackground =
     brandName === "skillery" ? "transparent" : backgroundColor;
 
@@ -44,9 +52,9 @@ export default function BrandPageLayout({
       {/* HEADER */}
       <header className="w-full px-6 py-4 flex justify-between items-center">
         <Link href={`/brand/${brandName}`} className="flex items-center">
-          {logo && (
+          {headerLogo && (
             <img
-              src={logo}
+              src={headerLogo}
               alt={`${brandName} logo`}
               className="w-auto"
               style={{
@@ -104,19 +112,18 @@ export default function BrandPageLayout({
         </nav>
       </header>
 
-      {/* Optional Center Logo (smaller for mobile) */}
-      {logo && (
-        <div
-          className="flex justify-center my-6 md:my-10"
-          style={{ backgroundColor: resolvedBackground }}
-        >
-          <img
-            src={logo}
-            alt={`${brandName} logo`}
-            className="h-[120px] md:h-[200px] lg:h-[300px] w-auto"
-          />
-        </div>
-      )}
+      {/* Center Logo (forced render) */}
+      <div
+        className="flex justify-center my-6 md:my-10"
+        style={{ backgroundColor: resolvedBackground }}
+      >
+        <img
+          src={headerLogo}
+          alt={`${brandName} logo`}
+          className="h-[120px] md:h-[200px] lg:h-[300px] w-auto"
+          style={{ display: "block" }}
+        />
+      </div>
 
       {/* MAIN CONTENT */}
       <main
@@ -135,7 +142,7 @@ export default function BrandPageLayout({
         colors={colors}
         legalLinks={legalLinks}
         ctaButton={ctaButton}
-        logo={logo}
+        logo={headerLogo}
       />
     </div>
   );

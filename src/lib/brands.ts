@@ -34,39 +34,12 @@ export const brands = {
       hover: "#FF00C8",
     },
     reserveBlock: {
+      formUrl: "#",
       buttonColor: "primary",
       headline: "JOIN THE ELITE",
       subtext: "Ready to share your knowledge?",
       buttonText: "Start Coaching",
-      formUrl:
-        "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/viewform?edit_requested=true&pli=1",
     },
-    featuredGames: [
-      {
-        title: "Minecraft",
-        description:
-          "Create the perfect gaming environment with our expert setup guides and recommendations.",
-        image: "/images/minecraft.webp",
-      },
-      {
-        title: "Dead by Daylight",
-        description:
-          "Join our gaming community events and compete with players worldwide.",
-        image: "/images/dbd.jpg",
-      },
-      {
-        title: "League of Legends",
-        description:
-          "Master champion mechanics and climb the ranked ladder with pro guidance.",
-        image: "/images/league.jpg",
-      },
-      {
-        title: "Valorant",
-        description:
-          "Improve your aim and tactical decision-making with personalized coaching.",
-        image: "/images/valorant.jpg",
-      },
-    ],
   },
 
   skillery: {
@@ -92,7 +65,7 @@ export const brands = {
       hover: "#FF9C00",
     },
     reserveBlock: {
-      formUrl: "/contact",
+      formUrl: "#",
       buttonColor: "default",
       headline: "LEARN LIVE",
       subtext: "Connect with experts across skills and passions.",
@@ -108,7 +81,7 @@ export const brands = {
     companyName: "FixOn",
     fontFamily: "sans-serif",
     showCenterLogo: true, // ✅ Now the center logo shows
-    socials: [], // add socials here later if needed
+    socials: [],
     legalLinks: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Use", href: "/terms" },
@@ -123,33 +96,11 @@ export const brands = {
       hover: "#FF9B6A",
     },
     reserveBlock: {
+      formUrl: "#",
       buttonColor: "success",
       headline: "JOIN THE CREW",
       subtext: "Help others tackle DIY projects live.",
       buttonText: "Become a Fixer",
-      formUrl: "https://fixon.com/form",
     },
-    featuredGames: [
-      {
-        title: "Plumbing Basics",
-        description: "Fix leaks, replace faucets, and troubleshoot water flow live.",
-        image: "/images/fixon/plumbing.jpg",
-      },
-      {
-        title: "Car Battery & Jumpstart",
-        description: "Step-by-step live help for battery replacement or jumpstarts.",
-        image: "/images/fixon/car-battery.jpg",
-      },
-      {
-        title: "Fence & Gate Repair",
-        description: "Real-time guidance for fixing and reinforcing fences or gates.",
-        image: "/images/fixon/fence.jpg",
-      },
-      {
-        title: "Pool Maintenance",
-        description: "Live support for pumps, filters, and chemical balancing.",
-        image: "/images/fixon/pool.jpg",
-      },
-    ],
   },
 };

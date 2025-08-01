@@ -22,7 +22,6 @@ const phrases = [
   "Ask anything.",
 ];
 
-// Example search pages
 const searchPages = [
   { name: "GameOn", description: "Gaming coaching and help", path: "/brand/gameon" },
   { name: "FixOn", description: "Live help for home, auto & pool", path: "/brand/fixon" },
@@ -35,7 +34,6 @@ export default function RotatingSearchInput() {
   const [fade, setFade] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-
   const [showDropdown, setShowDropdown] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -54,25 +52,23 @@ export default function RotatingSearchInput() {
     };
   }, [index, isFocused]);
 
-  // Filtered dropdown suggestions
   const filteredPages = searchPages.filter((page) =>
     page.name.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
     <div className="mt-6 w-full max-w-md mx-auto relative">
-      {/* Input with orange glow */}
       <div
         className="relative w-full rounded-full transition-all duration-300"
-style={{
-  boxShadow: isFocused
-    ? `0 0 14px ${colors.glow}, 0 0 28px rgba(0,207,255,0.4)`
-    : `0 0 8px rgba(255,0,200,0.2), 0 0 16px rgba(0,207,255,0.2)`,
-  border: isFocused
-    ? `1px solid ${colors.glow}`
-    : "1px solid rgba(255, 255, 255, 0.3)",
-  transition: "box-shadow 0.3s ease, border-color 0.3s ease",
-}}
+        style={{
+          boxShadow: isFocused
+            ? `0 0 14px ${colors.glow}, 0 0 28px rgba(0,207,255,0.4)`
+            : `0 0 8px rgba(255,0,200,0.2), 0 0 16px rgba(0,207,255,0.2)`,
+          border: isFocused
+            ? `1px solid ${colors.glow}`
+            : "1px solid rgba(255, 255, 255, 0.3)",
+          transition: "box-shadow 0.3s ease, border-color 0.3s ease",
+        }}
       >
         <input
           type="text"
@@ -113,7 +109,6 @@ style={{
         </button>
       </div>
 
-      {/* Dropdown with pink/blue neon glow */}
       {showDropdown && (
         <div
           className="absolute w-full mt-2 rounded-xl overflow-hidden z-50 transition-shadow"
