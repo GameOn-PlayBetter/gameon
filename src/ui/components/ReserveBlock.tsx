@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
+import React from "react";
+import { useBrandTheme } from "@/app/context/BrandThemeContext";
+import { Button } from "@/ui/components/Button";
 
 interface ReserveBlockProps {
+  brandName?: string;
   headline: string;
   subtext: string;
   buttonText: string;
@@ -14,64 +16,105 @@ interface ReserveBlockProps {
     button?: string;
     buttonHover?: string;
     border?: string;
-    glow?: string; // dynamic glow color
+    glow?: string;
   };
+  backgroundColor?: string;
+  textColor?: string;
+  buttonColor?: string;
+  buttonHoverColor?: string;
+  borderColor?: string;
 }
 
 export function ReserveBlock({
+  brandName,
   headline,
   subtext,
   buttonText,
   formUrl,
-  colors = {},
+  colors,
+  backgroundColor,
+  textColor,
+  buttonColor,
+  buttonHoverColor,
+  borderColor,
 }: ReserveBlockProps) {
-  const {
-    primary = "#000000",
-    text = "#FFFFFF",
-    button = "#FF00C8",
-    buttonHover = "#00CFFF",
-    border = "1px solid #999999",
-    glow = "transparent", // fallback: no glow
-  } = colors;
+  const { theme } = useBrandTheme();
 
-  const [hover, setHover] = useState(false);
+  const primary =
+    backgroundColor ||
+    colors?.primary ||
+    theme?.colors.primary ||
+    "#000000";
+
+  const text =
+    textColor || colors?.text || theme?.colors.text || "#FFFFFF";
+
+  const button =
+    buttonColor || colors?.button || theme?.colors.button || "#DC00B0";
+
+  const buttonHover =
+    buttonHoverColor ||
+    colors?.buttonHover ||
+    theme?.colors.buttonHover ||
+    "#00CFFF";
+
+  const border =
+    borderColor || colors?.border || theme?.colors.border || "rgba(255,255,255,0.3)";
+
+  const glow =
+    colors?.glow || theme?.colors.glow || button;
 
   return (
     <div
-      className="w-full py-16 px-6 text-center"
-      style={{
-        backgroundColor: primary,
-        color: text,
-      }}
+      className="flex w-full flex-col items-center justify-center px-6 py-12"
+      style={{ backgroundColor: primary }}
     >
       <div
-        className="max-w-xl mx-auto rounded-xl p-8"
+        className="flex w-full max-w-[448px] flex-col items-center gap-6 rounded-2xl px-8 py-10"
         style={{
-          border,
-          backgroundColor: "#0A0A0A",
-          boxShadow: `0 0 16px ${glow}`, // dynamic glow
+          backgroundColor: primary, // ✅ match brand color, no black box
+          boxShadow: `0 0 16px ${glow}`,
+          border: `1px solid ${glow}`,
         }}
       >
-        <h2 className="text-3xl font-bold mb-4" style={{ color: text }}>
+        <h2
+          className="text-[24px] font-bold font-heading-1 text-center"
+          style={{ color: text }}
+        >
           {headline}
         </h2>
-        <p className="text-lg mb-6" style={{ color: text }}>
+        <p
+          className="text-center font-body text-[16px]"
+          style={{ color: text }}
+        >
           {subtext}
         </p>
-        <Link
+        <a
           href={formUrl}
           target="_blank"
-          className="inline-block px-6 py-3 rounded-md font-semibold transition-colors duration-200"
-          style={{
-            backgroundColor: hover ? buttonHover : button,
-            color: text,
-          }}
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
+          rel="noopener noreferrer"
+          className="w-full"
         >
-          {buttonText}
-        </Link>
+          <Button
+            variant="primary"
+            className="w-full font-bold text-[16px]"
+            style={{
+              backgroundColor: button,
+              borderColor: border,
+              color: "#FFFFFF",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = buttonHover)
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = button)
+            }
+          >
+            {buttonText}
+          </Button>
+        </a>
       </div>
     </div>
   );
 }
+export default ReserveBlock;

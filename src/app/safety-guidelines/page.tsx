@@ -1,13 +1,19 @@
-// src/app/safety-guidelines/page.tsx
+// src/app/[brand]/safety-guidelines/page.tsx
 "use client";
 
 import React from "react";
-import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
+import { useParams, notFound } from "next/navigation";
+import { brands } from "@/lib/brands";
+import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
 import { BoldFooter } from "@/ui/components/BoldFooter";
 
 export default function SafetyGuidelinesPage() {
+  const { brand } = useParams();
+  const brandConfig = brands[brand as keyof typeof brands];
+  if (!brandConfig) return notFound();
+
   return (
-    <DefaultPageLayout>
+    <BrandPageLayout {...brandConfig}>
       <div className="w-full max-w-4xl mx-auto px-6 py-12 text-white">
         <h1 className="text-4xl font-bold mb-8">GameOn Community Safety Guidelines</h1>
 
@@ -61,6 +67,6 @@ export default function SafetyGuidelinesPage() {
         </div>
       </div>
       <BoldFooter />
-    </DefaultPageLayout>
+    </BrandPageLayout>
   );
 }

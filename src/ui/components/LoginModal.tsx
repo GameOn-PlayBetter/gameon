@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useBrandTheme } from "@/app/context/BrandThemeContext";
 
 export function LoginModal({
   open,
@@ -11,6 +12,7 @@ export function LoginModal({
   onClose: () => void;
 }) {
   const router = useRouter();
+  const brandConfig = useBrandTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [headingText, setHeadingText] = useState("Log in to Earn Tokens");
@@ -66,13 +68,19 @@ export function LoginModal({
     router.push("/player-profile"); // Simulated login
   };
 
-return (
-<div style={{ zIndex: 9999 }} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm">
+  return (
+    <div
+      style={{ zIndex: 9999 }}
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm"
+    >
       <div
         ref={modalRef}
-        className="bg-[#111] border border-[#333] rounded-xl p-6 w-full max-w-sm shadow-lg animate-fadeInUp"
+        style={{ backgroundColor: brandConfig.colors.primary }}
+        className="border border-[#333] rounded-xl p-6 w-full max-w-sm shadow-lg animate-fadeInUp"
       >
-       <h2 className="text-2xl font-bold text-white mb-4 animate-glitchPulse">{headingText}</h2>
+        <h2 className="text-2xl font-bold text-white mb-4 animate-glitchPulse">
+          {headingText}
+        </h2>
         <input
           className="w-full rounded px-4 py-2 border border-gray-500 bg-black text-white placeholder-gray-400"
           type="email"
@@ -103,3 +111,4 @@ return (
     </div>
   );
 }
+export default LoginModal;

@@ -4,6 +4,7 @@ import React from "react";
 import { Badge } from "@/ui/components/Badge";
 import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
 import RotatingSearchInput from "@/ui/components/RotatingSearchInput";
+import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
 
 type BadgeVariant = "brand" | "neutral" | "error" | "warning" | "success";
 
@@ -48,7 +49,7 @@ const brands: Brand[] = [
   {
     name: "LearnOn",
     badge: "Tutoring",
-    description: "Tutoring and study help",
+    description: "Tutoring, language learning, and academic success",
     image: "images/learnonphonemath.jpg",
     href: "",
     variant: "neutral",
@@ -110,121 +111,111 @@ const brands: Brand[] = [
   },
 ];
 
+// Search suggestions for Skillery
+const searchPages = [
+  {
+    name: "GameOn",
+    description: "Gaming coaching and help",
+    path: "/gameon",
+  },
+  {
+    name: "FixOn",
+    description: "Live help for home, auto & pool",
+    path: "/fixon",
+  },
+  {
+    name: "Skillery",
+    description: "Master new skills across topics",
+    path: "/",
+  },
+];
+
 export default function Page() {
   return (
-    <div
-      className="min-h-screen w-full"
-      style={{
-        background: "linear-gradient(to bottom, #0F1E30, #000000)",
-        fontFamily: "sans-serif",
-      }}
-    >
-      <BrandPageLayout
-        brandName="skillery"
-        logoSrc="/images/skillery_logo_footer_hd.png"
-        companyName="Skillery LLC"
-        description="Unlock Your Potential. Book expert help in anything from gaming to gardening."
-        legalLinks={[
-          { label: "Privacy Policy", href: "/privacy" },
-          { label: "Terms of Use", href: "/terms" },
-          { label: "Contact", href: "/contact" },
-        ]}
-        socials={[
-          { icon: "discord", href: "https://discord.gg/skillery" },
-          { icon: "x", href: "https://x.com/skillery" },
-          { icon: "instagram", href: "https://instagram.com/skillery" },
-        ]}
-        fontFamily="sans-serif"
-        colors={{
-          border: "border-white/30",
-          glow: "#FF9C00",
-          button: "#FF6B00",
-          buttonHover: "#EF5716",
-          text: "#FFFFFF",
-          hover: "#FF9C00",
-        }}
-      >
-        {/* --- Everything below remains the same --- */}
-        <div className="flex w-full flex-col items-center justify-center gap-6 px-6 py-24">
-          <div className="flex w-full max-w-[1024px] flex-col items-center justify-center gap-6">
-            <img
-              src="/images/skillery_logo_wheadline.png"
-              alt="Skillery Logo"
-              className="max-w-[400px] w-full h-auto object-contain"
-            />
-            <p className="text-white text-2xl font-semibold text-center tracking-wide">
-              What Do{" "}
-              <span className="text-orange-400 font-bold animate-[pulse-once_0.6s_ease-in-out]">
-                You
-              </span>{" "}
-              Want To Master Today?
-            </p>
-            <RotatingSearchInput
-              glowColor="#FF9C00"
-              borderColor="rgba(255, 255, 255, 0.3)"
-              buttonColor="#FF6B00"
-              buttonHoverColor="#EF5716"
-            />
-          </div>
-        </div>
+    <BrandThemeProvider brandName="skillery">
+<div
+  className="min-h-screen w-full relative z-0"
+  style={{
+    backgroundImage: "linear-gradient(to bottom, #0A0F18, #000000)",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    fontFamily: "sans-serif",
+  }}
+>
+        {/* 🔹 Add brandName here */}
+        <BrandPageLayout brandName="skillery">
+          <div className="flex w-full flex-col items-center justify-center gap-6 px-6 py-24">
+            <div className="flex w-full max-w-[1024px] flex-col items-center justify-center gap-6">
 
-        <div className="flex w-full flex-col items-center justify-center gap-12 px-6 py-12">
-          <div className="w-full">
-            <div className="px-6 sm:px-12 lg:px-24 xl:px-32">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {brands.map((brand) =>
-                  brand.live ? (
-                    <a
-                      key={brand.name}
-                      href={brand.href}
-                      className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EE9E3A] transition-shadow duration-300"
-                    >
-                      <img
-                        className="h-64 w-full flex-none object-cover"
-                        src={brand.image}
-                        alt={`${brand.name} brand`}
-                      />
-                      <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
-                        <Badge variant={brand.variant}>{brand.badge}</Badge>
-                        <div className="flex w-full flex-col items-start gap-2">
-                          <span className="text-[24px] font-[700] leading-[28px] text-gray-400">
-                            {brand.name}
-                          </span>
-                          <span className="text-body font-body text-subtext-color">
-                            {brand.description}
-                          </span>
+              <p className="text-white text-2xl font-semibold text-center tracking-wide">
+                What Do{" "}
+                <span className="text-orange-400 font-bold animate-[pulse-once_0.6s_ease-in-out]">
+                  You
+                </span>{" "}
+                Want To Master Today?
+              </p>
+<RotatingSearchInput suggestions={searchPages} />
+            </div>
+          </div>
+
+          <div className="flex w-full flex-col items-center justify-center gap-12 px-6 py-12">
+            <div className="w-full">
+              <div className="px-6 sm:px-12 lg:px-24 xl:px-32">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                  {brands.map((brand) =>
+                    brand.live ? (
+                      <a
+                        key={brand.name}
+                        href={brand.href}
+                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EE9E3A] transition-shadow duration-300"
+                      >
+                        <img
+                          className="h-64 w-full flex-none object-cover"
+                          src={brand.image}
+                          alt={`${brand.name} brand`}
+                        />
+                        <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
+                          <Badge variant={brand.variant}>{brand.badge}</Badge>
+                          <div className="flex w-full flex-col items-start gap-2">
+                            <span className="text-[24px] font-[700] leading-[28px] text-gray-400">
+                              {brand.name}
+                            </span>
+                            <span className="text-body font-body text-subtext-color">
+                              {brand.description}
+                            </span>
+                          </div>
+                        </div>
+                      </a>
+                    ) : (
+                      <div
+                        key={brand.name}
+                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EF5716] transition-shadow duration-300"
+                      >
+                        <img
+                          className="h-64 w-full flex-none object-cover"
+                          src={brand.image}
+                          alt={`${brand.name} brand placeholder`}
+                        />
+                        <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
+                          <Badge variant={brand.variant}>{brand.badge}</Badge>
+                          <div className="flex w-full flex-col items-start gap-2">
+                            <span className="text-[24px] font-[700] leading-[28px] text-gray-400">
+                              {brand.name} (Coming Soon)
+                            </span>
+                            <span className="text-body font-body text-subtext-color">
+                              {brand.description}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </a>
-                  ) : (
-                    <div
-                      key={brand.name}
-                      className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EF5716] transition-shadow duration-300"
-                    >
-                      <img
-                        className="h-64 w-full flex-none object-cover"
-                        src={brand.image}
-                        alt={`${brand.name} brand placeholder`}
-                      />
-                      <div className="flex w-full flex-col items-start gap-4 px-8 py-8">
-                        <Badge variant={brand.variant}>{brand.badge}</Badge>
-                        <div className="flex w-full flex-col items-start gap-2">
-                          <span className="text-[24px] font-[700] leading-[28px] text-gray-400">
-                            {brand.name} (Coming Soon)
-                          </span>
-                          <span className="text-body font-body text-subtext-color">
-                            {brand.description}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                )}
+                    )
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </BrandPageLayout>
-    </div>
+        </BrandPageLayout>
+      </div>
+    </BrandThemeProvider>
   );
 }

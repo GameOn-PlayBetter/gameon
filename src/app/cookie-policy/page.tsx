@@ -1,16 +1,22 @@
 "use client";
 
 import React from "react";
+import { useParams } from "next/navigation";
 import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { BoldFooter } from "@/ui/components/BoldFooter";
+import { brands } from "@/lib/brands";
 
 export default function CookiePolicyPage() {
+  const { brand } = useParams();
+  const brandName = brand ? String(brand) : "Skillery";
+  const brandConfig = brands[brandName as keyof typeof brands];
+
   return (
     <DefaultPageLayout>
       <div className="w-full max-w-4xl mx-auto px-6 py-12 text-white">
         <h1 className="text-4xl font-bold mb-6">Cookie Policy</h1>
         <p className="mb-6 text-lg">
-          GameOn uses cookies and similar technologies to enhance your experience, analyze usage, and provide personalized content.
+          {brandName} uses cookies and similar technologies to enhance your experience, analyze usage, and provide personalized content.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-2">1. What Are Cookies?</h2>
@@ -22,7 +28,7 @@ export default function CookiePolicyPage() {
         <ul className="list-disc pl-6 space-y-2 text-lg">
           <li>To remember your login session</li>
           <li>To analyze platform usage and improve performance</li>
-          <li>To customize your experience with GameOn</li>
+          <li>To customize your experience with {brandName}</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-8 mb-2">3. Managing Cookies</h2>
@@ -39,7 +45,16 @@ export default function CookiePolicyPage() {
           Questions? Contact us at gameon_playbetter@gmail.com
         </p>
       </div>
-      <BoldFooter />
+
+      <BoldFooter
+        logoSrc={brandConfig.logo}
+        companyName={brandConfig.companyName}
+        colors={{
+          primary: brandConfig.colors.primary,
+          button: brandConfig.colors.button,
+          buttonHover: brandConfig.colors.buttonHover,
+        }}
+      />
     </DefaultPageLayout>
   );
 }

@@ -1,17 +1,15 @@
 "use client";
 
 import React from "react";
-import { useParams } from "next/navigation";
 import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { BoldFooter } from "@/ui/components/BoldFooter";
-
+import { useBrandTheme } from "@/app/context/BrandThemeContext";
 
 export default function CoachRequirementsEligibilityPage() {
-  const { brand } = useParams();
-  const brandName = brand ? String(brand) : "Skillery";
+  const { name: brandName } = useBrandTheme();
 
   const legalLinks =
-    brandName === "gameon"
+    brandName.toLowerCase() === "gameon"
       ? [
           { label: "Privacy Policy", href: "/privacy" },
           { label: "Terms of Use", href: "/terms" },
@@ -34,15 +32,7 @@ export default function CoachRequirementsEligibilityPage() {
           <li>Auto-approval at launch, but every submission is logged for later review.</li>
         </ul>
       </div>
-<BoldFooter
-  logoSrc={brandConfig.logo}
-  companyName={brandConfig.companyName}
-  colors={{
-    primary: brandConfig.colors.primary,
-    button: brandConfig.colors.button,
-    buttonHover: brandConfig.colors.buttonHover,
-  }}
-/>
+      <BoldFooter legalLinks={legalLinks} />
     </DefaultPageLayout>
   );
 }

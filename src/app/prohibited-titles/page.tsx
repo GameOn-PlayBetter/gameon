@@ -1,10 +1,16 @@
 "use client";
 
 import React from "react";
+import { useParams } from "next/navigation";
 import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { BoldFooter } from "@/ui/components/BoldFooter";
+import { brands } from "@/lib/brands";
 
 export default function ProhibitedTitlesPage() {
+  const { brand } = useParams();
+  const brandName = brand ? String(brand) : "Skillery";
+  const brandConfig = brands[brandName as keyof typeof brands];
+
   return (
     <DefaultPageLayout>
       <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 md:px-10 pt-24 pb-40 text-white">
@@ -58,7 +64,16 @@ export default function ProhibitedTitlesPage() {
           <li>GameOn reserves the right to update this list at any time for safety, brand integrity, or legal compliance.</li>
         </ul>
       </div>
-      <BoldFooter />
+
+      <BoldFooter
+        logoSrc={brandConfig.logo}
+        companyName={brandConfig.companyName}
+        colors={{
+          primary: brandConfig.colors.primary,
+          button: brandConfig.colors.button,
+          buttonHover: brandConfig.colors.buttonHover,
+        }}
+      />
     </DefaultPageLayout>
   );
 }

@@ -6,11 +6,10 @@ import { brands } from "@/lib/brands";
 import { Button } from "@/ui/components/Button";
 import { FeatherArrowRight, FeatherArrowRightCircle } from "@subframe/core";
 
-export default function FeaturedGames() {
+export default function GameOnGames() {
   const { brand } = useParams();
   const brandKey = brand as keyof typeof brands;
   const brandConfig = brands[brandKey];
-
   const glowColor = brandConfig.colors.glow;
 
   const featuredGames = brandConfig.featuredGames ?? [
@@ -43,7 +42,10 @@ export default function FeaturedGames() {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-12 px-6 py-24">
       <div className="flex w-full max-w-[1280px] flex-col items-start gap-8">
-        <span className="font-['Orbitron'] text-[36px] font-[700] leading-[40px]" style={{ color: glowColor }}>
+        <span
+          className="font-['Orbitron'] text-[36px] font-[700] leading-[40px]"
+          style={{ color: glowColor }}
+        >
           Featured Games
         </span>
         <div className="w-full items-start gap-8 grid grid-cols-2">

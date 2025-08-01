@@ -3,14 +3,12 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import { brands } from "@/lib/brands";
-import { LoginModal } from "@/ui/components/LoginModal"; // ✅ Make sure this is a named import
+import { useBrandTheme } from "@/app/context/BrandThemeContext"; // ✅ NEW
+
+import { LoginModal } from "@/ui/components/LoginModal";
 
 export default function BrandHeader() {
-  const { brand } = useParams();
-  const config = brands[brand as keyof typeof brands];
-console.log("config", config);
+  const config = useBrandTheme(); // ✅ REPLACEMENT FOR useParams + brands
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   if (!config) return null;
@@ -22,7 +20,7 @@ console.log("config", config);
         style={{ backgroundColor: config.colors.primary }}
       >
         {/* Left: Logo */}
-        <Link href={`/brand/${brand}`} className="flex items-center">
+        <Link href={`/brand/${config.name?.toLowerCase?.() || ""}`} className="flex items-center">
           <Image
             src={config.logo}
             alt={`${config.name} Logo`}
@@ -47,7 +45,7 @@ console.log("config", config);
           </button>
           <Link
             href="/apply"
-            className={`ml-2 px-4 py-2 rounded-md transition`}
+            className="ml-2 px-4 py-2 rounded-md transition"
             style={{
               backgroundColor: config.colors.button,
               color: "white",

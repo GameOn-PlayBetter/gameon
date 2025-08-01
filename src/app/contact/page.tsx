@@ -1,10 +1,16 @@
 "use client";
 
 import React from "react";
+import { useParams } from "next/navigation";
 import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { BoldFooter } from "@/ui/components/BoldFooter";
+import { brands } from "@/lib/brands";
 
 export default function ContactPage() {
+  const { brand } = useParams();
+  const brandName = brand ? String(brand) : "Skillery";
+  const brandConfig = brands[brandName as keyof typeof brands];
+
   const email = "gameon_playbetter" + "@gmail.com";
 
   return (
@@ -25,7 +31,16 @@ export default function ContactPage() {
           </p>
         </div>
       </div>
-      <BoldFooter />
+
+      <BoldFooter
+        logoSrc={brandConfig.logo}
+        companyName={brandConfig.companyName}
+        colors={{
+          primary: brandConfig.colors.primary,
+          button: brandConfig.colors.button,
+          buttonHover: brandConfig.colors.buttonHover,
+        }}
+      />
     </DefaultPageLayout>
   );
 }
