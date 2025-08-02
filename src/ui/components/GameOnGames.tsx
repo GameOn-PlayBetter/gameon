@@ -30,9 +30,9 @@ const formUrl = brandConfig.forms?.waitlistUrl || gameOnFormUrl;
     brandKey === "fixon"
       ? [
           {
-            title: "Pool Pump Repair",
+            title: "Pool Repair",
             description:
-              "Learn to troubleshoot and repair your pool pump with live help from pros.",
+              "Learn to troubleshoot and repair your pool with live help from pros.",
             image: "/images/fixon/pool-pump.jpg",
           },
           {
@@ -48,9 +48,9 @@ const formUrl = brandConfig.forms?.waitlistUrl || gameOnFormUrl;
             image: "/images/fixon/fence.jpg",
           },
           {
-            title: "Garage Door Issues",
+            title: "Household Issues",
             description:
-              "Learn to repair sensors, tracks, and openers safely.",
+              "All things home repair.",
             image: "/images/fixon/garage-door.jpg",
           },
         ]
