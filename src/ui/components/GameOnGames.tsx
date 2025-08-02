@@ -17,98 +17,127 @@ export default function GameOnGames() {
   const gameOnFormUrl =
     "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/edit";
 
-  // ✅ Brand-specific waitlist form (FixOn & future brands)
-// @ts-ignore - allow optional forms property for brands
-const formUrl = brandConfig.forms?.waitlistUrl || gameOnFormUrl;
+// ✅ Brand-specific waitlist form (FixOn, FitOn, JamOn)
+const formUrl =
+  (brandConfig as any).forms?.waitlistUrl || gameOnFormUrl;
 
-  const sectionTitle =
-    brandKey === "fixon"
-      ? "Featured Fixes"
-      : brandKey === "fiton"
-      ? "Featured Workouts"
-      : "Featured Games";
+const sectionTitle =
+  brandKey === "fixon"
+    ? "Featured Fixes"
+    : brandKey === "fiton"
+    ? "Featured Workouts"
+    : brandKey === "jamon"
+    ? "Featured Music"
+    : "Featured Games";
 
 // ✅ Brand-specific featured items
 const featuredItems =
-    brandKey === "fixon"
-      ? [
-          {
-            title: "Pool Repair",
-            description:
-              "Learn to troubleshoot and repair your pool with live help from pros.",
-            image: "/images/fixon/pool-pump.jpg",
-          },
-          {
-            title: "Leaky Faucet",
-            description:
-              "Stop drips and save water. Get step-by-step faucet repair guidance.",
-            image: "/images/fixon/faucet.jpg",
-          },
-          {
-            title: "Fence Repair",
-            description:
-              "Fix broken boards or leaning posts with real-time help.",
-            image: "/images/fixon/fence.jpg",
-          },
-          {
-            title: "Household Issues",
-            description: "All things home repair.",
-            image: "/images/fixon/garage-door.jpg",
-          },
-        ]
-      : brandKey === "fiton"
-      ? [
-          {
-            title: "Strength Training",
-            description:
-              "Live sessions with expert trainers to build muscle safely and effectively.",
-            image: "/images/fiton/fitnesswomanlifting.jpg",
-          },
-          {
-            title: "Yoga & Flexibility",
-            description:
-              "Improve mobility and reduce stress with guided live yoga classes.",
-            image: "/images/fiton/fitnessyoga.jpg",
-          },
-          {
-            title: "Cardio & HIIT",
-            description:
-              "Burn calories and boost stamina with high-energy, trainer-led workouts.",
-            image: "/images/fiton/cardio.jpg",
-          },
-          {
-            title: "Nutrition & Wellness",
-            description:
-              "Learn how to complement your workouts with proper nutrition and lifestyle habits.",
-            image: "/images/fiton/nutrition.jpg",
-          },
-        ]
-      : [
-          {
-            title: "Minecraft",
-            description:
-              "Create the perfect gaming environment with our expert setup guides and recommendations.",
-            image: "/images/minecraft.webp",
-          },
-          {
-            title: "Dead by Daylight",
-            description:
-              "Join our gaming community events and compete with players worldwide.",
-            image: "/images/dbd.jpg",
-          },
-          {
-            title: "League of Legends",
-            description:
-              "Master champion mechanics and climb the ranked ladder with pro guidance.",
-            image: "/images/league.jpg",
-          },
-          {
-            title: "Valorant",
-            description:
-              "Improve your aim and tactical decision-making with personalized coaching.",
-            image: "/images/valorant.jpg",
-          },
-        ];
+  brandKey === "fixon"
+    ? [
+        {
+          title: "Pool Repair",
+          description:
+            "Learn to troubleshoot and repair your pool with live help from pros.",
+          image: "/images/fixon/pool-pump.jpg",
+        },
+        {
+          title: "Leaky Faucet",
+          description:
+            "Stop drips and save water. Get step-by-step faucet repair guidance.",
+          image: "/images/fixon/faucet.jpg",
+        },
+        {
+          title: "Fence Repair",
+          description:
+            "Fix broken boards or leaning posts with real-time help.",
+          image: "/images/fixon/fence.jpg",
+        },
+        {
+          title: "Household Issues",
+          description: "All things home repair.",
+          image: "/images/fixon/garage-door.jpg",
+        },
+      ]
+    : brandKey === "fiton"
+    ? [
+        {
+          title: "Strength Training",
+          description:
+            "Live sessions with expert trainers to build muscle safely and effectively.",
+          image: "/images/fiton/fitnesswomanlifting.jpg",
+        },
+        {
+          title: "Yoga & Flexibility",
+          description:
+            "Improve mobility and reduce stress with guided live yoga classes.",
+          image: "/images/fiton/fitnessyoga.jpg",
+        },
+        {
+          title: "Cardio & HIIT",
+          description:
+            "Burn calories and boost stamina with high-energy, trainer-led workouts.",
+          image: "/images/fiton/cardio.jpg",
+        },
+        {
+          title: "Nutrition & Wellness",
+          description:
+            "Learn how to complement your workouts with proper nutrition and lifestyle habits.",
+          image: "/images/fiton/nutrition.jpg",
+        },
+      ]
+    : brandKey === "jamon"
+    ? [
+        {
+          title: "Violin Lessons",
+          description:
+            "Learn chords, theory, and your favorite songs with live instruction.",
+          image: "jamon/violin.jpg",
+        },
+        {
+          title: "Piano & Keys",
+          description:
+            "Master scales, bowing technique, and your favorite pieces with real-time guidance.",
+          image: "jamon/piano.jpg",
+        },
+        {
+          title: "Vocal Coaching",
+          description:
+            "Improve tone, range, and performance skills with live coaching.",
+          image: "jamon/vocals.jpg",
+        },
+        {
+          title: "Songwriting & Music Theory",
+          description:
+            "Understand music structure and create your own songs live with an expert.",
+          image: "jamon/theory.jpg",
+        },
+      ]
+    : [
+        {
+          title: "Minecraft",
+          description:
+            "Create the perfect gaming environment with our expert setup guides and recommendations.",
+          image: "/images/minecraft.webp",
+        },
+        {
+          title: "Dead by Daylight",
+          description:
+            "Join our gaming community events and compete with players worldwide.",
+          image: "/images/dbd.jpg",
+        },
+        {
+          title: "League of Legends",
+          description:
+            "Master champion mechanics and climb the ranked ladder with pro guidance.",
+          image: "/images/league.jpg",
+        },
+        {
+          title: "Valorant",
+          description:
+            "Improve your aim and tactical decision-making with personalized coaching.",
+          image: "/images/valorant.jpg",
+        },
+      ];
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-12 px-6 py-24">
@@ -158,13 +187,15 @@ const featuredItems =
       </div>
       {/* ✅ Bottom button also goes to the brand's waitlist form */}
       <a href={formUrl} target="_blank" rel="noopener noreferrer">
-        <Button size="large" icon={<FeatherArrowRightCircle />}>
-{brandKey === "fixon"
-  ? "All Fixes"
-  : brandKey === "fiton"
-  ? "All Workouts"
-  : "All Games"}
-        </Button>
+<Button size="large" icon={<FeatherArrowRightCircle />}>
+  {brandKey === "fixon"
+    ? "All Fixes"
+    : brandKey === "fiton"
+    ? "All Workouts"
+    : brandKey === "jamon"
+    ? "All Music Lessons"
+    : "All Games"}
+</Button>
       </a>
     </div>
   );

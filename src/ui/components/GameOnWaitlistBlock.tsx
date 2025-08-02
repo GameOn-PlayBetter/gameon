@@ -42,14 +42,18 @@ export default function GameOnWaitlistBlock({
     "https://docs.google.com/forms/d/e/1FAIpQLSf7LbDaBGQBx7GnDxY5tn2ZCJerVM_VB5vuMpsWoRRKM1xoqA/viewform?usp=dialog";
   const fitOnStudentFormUrl =
     "https://docs.google.com/forms/d/e/1FAIpQLSesUepKOGjzCWZFpjdYkpg4jZ9GdqGLVqAozbShkfLsHD2CWA/viewform?usp=dialog";
+  const jamOnStudentFormUrl =
+    "https://docs.google.com/forms/d/e/1FAIpQLSf6W87gRrxzA6pEMOz_Xyqj3wyJcJ3VAfn88aLh4qeu8umprA/viewform?usp=dialog"; // ✅ JamOn student
 
-  // ✅ Determine correct form URL per brand
-  const finalFormUrl =
-    brandStr.toLowerCase() === "fixon"
-      ? fixOnFormUrl
-      : brandStr.toLowerCase() === "fiton"
-      ? fitOnStudentFormUrl
-      : formUrl || gameOnFormUrl;
+// ✅ Determine correct form URL per brand
+const finalFormUrl =
+  brandStr.toLowerCase() === "fixon"
+    ? fixOnFormUrl
+    : brandStr.toLowerCase() === "fiton"
+    ? fitOnStudentFormUrl
+    : brandStr.toLowerCase() === "jamon"
+    ? jamOnStudentFormUrl
+    : formUrl || gameOnFormUrl;
 
   // ✅ Dynamic headline and subtext per brand
   const headline = "JOIN THE WAITLIST";

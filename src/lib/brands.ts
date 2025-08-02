@@ -232,4 +232,53 @@ fiton: {
     },
   ],
 }, // ✅ End FitOn brand
-};
+jamon: {
+  name: "JamOn",
+  tagline: "Live Music. Real Lessons. Pure Vibe.",
+  description: "Learn, jam, and vibe with live music lessons and sessions.",
+  logo: "/jamon/jamon_logo.png",
+  companyName: "JamOn LLC",  // ✅ FIXED
+  fontFamily: "sans-serif",
+  fontClass: "font-sans",   // ✅ Matches your other Skillery brands
+  showCenterLogo: false,
+  socials: [
+    { icon: "tiktok", href: "#" },      // optional if you add socials
+    { icon: "instagram", href: "#" },
+    { icon: "twitter", href: "#" },
+    { icon: "discord", href: "#" },
+  ],
+  legalLinks: [  // ✅ FULL FOOTER LINKS LIKE FITON
+    { label: "Privacy Policy", href: "/jamon/privacy-policy" },
+    { label: "Cookie Policy", href: "/jamon/cookie-policy" },
+    { label: "Safety Guidelines", href: "/jamon/safety-guidelines" },
+    { label: "Coach Eligibility", href: "/jamon/coach-requirements-eligibility" },
+    { label: "Contact", href: "/jamon/contact" },
+    { label: "Terms of Service", href: "/jamon/terms-of-service" },
+  ],
+  colors: {
+    primary: "#040000",
+    secondary: "#00CFFF",
+    glow: "#FF6A00", 
+    button: "#FF6A00",
+    buttonHover: "#FF8533",
+    text: "#FFFFFF",
+    hover: "#FFD9B3",
+  },
+forms: {
+  waitlistUrl:
+    "https://docs.google.com/forms/d/e/1FAIpQLSf6W87gRrxzA6pEMOz_Xyqj3wyJcJ3VAfn88aLh4qeu8umprA/viewform?usp=dialog", // Student/waitlist form
+  studentFormUrl:
+    "https://docs.google.com/forms/d/e/1FAIpQLSf6W87gRrxzA6pEMOz_Xyqj3wyJcJ3VAfn88aLh4qeu8umprA/viewform?usp=dialog", // Alias for clarity
+  coachFormUrl:
+    "https://docs.google.com/forms/d/e/1FAIpQLScm0_HE0ScDHm2OGFM3DE3i90AeI96gq-fl2p3tV2zkuMJvAw/viewform?usp=dialog", // Coach signup form
+},
+  reserveBlock: {
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLScm0_HE0ScDHm2OGFM3DE3i90AeI96gq-fl2p3tV2zkuMJvAw/viewform?usp=dialog",
+    buttonColor: "success",
+    headline: "BECOME A MUSIC COACH",
+    subtext: "Apply now to teach live music lessons on JamOn.",
+    buttonText: "Start Coaching",
+  },
+},
+}; // ✅ close brands object completely

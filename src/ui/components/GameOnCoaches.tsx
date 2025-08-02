@@ -13,72 +13,104 @@ export default function GameOnCoaches() {
   const brandKey = (brand as keyof typeof brands) || "gameon";
   const brandConfig = brands[brandKey];
 
-  const coaches =
-    brandKey === "fixon"
-      ? [
-          {
-            name: "AutoPro99",
-            color: "text-warning-500",
-            badge: "Auto Specialist",
-            image: "/images/fixon/experts/autopro.jpg",
-            description: "Car diagnostics, battery swaps, brake repairs",
-            badgeVariant: "warning",
-          },
-          {
-            name: "HomeHackR",
-            color: "text-warning-500",
-            badge: "DIY Pro",
-            image: "/images/fixon/experts/homehackr.jpg",
-            description: "Wall patching, painting, faucet leaks",
-            badgeVariant: "warning",
-          },
-          {
-            name: "SafeSpark",
-            color: "text-warning-500",
-            badge: "Electrician",
-            image: "/images/fixon/experts/safespark.jpg",
-            description: "Outlet repair, light installs, breaker fixes",
-            badgeVariant: "warning",
-          },
-        ]
-      : [
-          {
-            name: "Coach Alex",
-            color: "text-brand-700",
-            badge: "Minecraft Expert",
-            image: "/images/gameon/david2.jpg",
-            description: "Professional builder & redstone specialist",
-            badgeVariant: "brand",
-          },
-          {
-            name: "Coach Sarah",
-            color: "text-warning-700",
-            badge: "DBD Pro",
-            image: "/images/gameon/sarah.jpg",
-            description: "Competitive survivor & strategy expert",
-            badgeVariant: "warning",
-          },
-          {
-            name: "Coach Mike",
-            color: "text-success-700",
-            badge: "LoL Master",
-            image: "/images/gameon/michael.jpg",
-            description: "Diamond ranked player & macro strategist",
-            badgeVariant: "success",
-          },
-        ];
+const coaches =
+  brandKey === "fixon"
+    ? [
+        {
+          name: "AutoPro99",
+          color: "text-warning-500",
+          badge: "Auto Specialist",
+          image: "/images/fixon/experts/autopro.jpg",
+          description: "Car diagnostics, battery swaps, brake repairs",
+          badgeVariant: "warning",
+        },
+        {
+          name: "HomeHackR",
+          color: "text-warning-500",
+          badge: "DIY Pro",
+          image: "/images/fixon/experts/homehackr.jpg",
+          description: "Wall patching, painting, faucet leaks",
+          badgeVariant: "warning",
+        },
+        {
+          name: "SafeSpark",
+          color: "text-warning-500",
+          badge: "Electrician",
+          image: "/images/fixon/experts/safespark.jpg",
+          description: "Outlet repair, light installs, breaker fixes",
+          badgeVariant: "warning",
+        },
+      ]
+    : brandKey === "jamon"
+    ? [
+        {
+          name: "ConcertViolinist",
+          color: "text-brand-700",
+          badge: "Violin Coach",
+          image: "/jamon/coaches/violin",
+          description: "Live violin lessons for chords, scales, and solos",
+          badgeVariant: "brand",
+        },
+        {
+          name: "PianoPro",
+          color: "text-success-700",
+          badge: "Piano Instructor",
+          image: "/images/jamon/coaches/piano.jpg",
+          description: "Learn scales, technique, and songs live",
+          badgeVariant: "success",
+        },
+        {
+          name: "VocalVibes",
+          color: "text-warning-700",
+          badge: "Vocal Coach",
+          image: "/images/jamon/coaches/vocals.jpg",
+          description: "Improve tone, range, and stage confidence",
+          badgeVariant: "warning",
+        },
+      ]
+    : [
+        {
+          name: "Coach Alex",
+          color: "text-brand-700",
+          badge: "Minecraft Expert",
+          image: "/images/gameon/david2.jpg",
+          description: "Professional builder & redstone specialist",
+          badgeVariant: "brand",
+        },
+        {
+          name: "Coach Sarah",
+          color: "text-warning-700",
+          badge: "DBD Pro",
+          image: "/images/gameon/sarah.jpg",
+          description: "Competitive survivor & strategy expert",
+          badgeVariant: "warning",
+        },
+        {
+          name: "Coach Mike",
+          color: "text-success-700",
+          badge: "LoL Master",
+          image: "/images/gameon/michael.jpg",
+          description: "Diamond ranked player & macro strategist",
+          badgeVariant: "success",
+        },
+      ];
 
+// ✅ TypeScript-safe access
 const bookSessionUrl =
-  // @ts-ignore - allow optional forms property for brands
-  brandConfig.forms?.waitlistUrl ||
+  (brandConfig as any).forms?.waitlistUrl ||
+  (brandConfig as any).forms?.studentFormUrl ||
   (brandKey === "gameon" ? "/coach-search" : "#");
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-12 px-6 py-24">
       <div className="flex w-full max-w-[1280px] flex-col items-start gap-8">
-        <span className="text-[36px] font-[700] leading-[40px] text-success-700">
-          Featured Coaches
-        </span>
+<span className="text-[36px] font-[700] leading-[40px] text-success-700">
+  {brandKey === "fixon"
+    ? "Featured Fixers"
+    : brandKey === "jamon"
+    ? "Featured Music Coaches"
+    : "Featured Coaches"}
+</span>
         <div className="flex w-full flex-wrap items-start gap-8">
           {coaches.map((coach, index) => (
             <div

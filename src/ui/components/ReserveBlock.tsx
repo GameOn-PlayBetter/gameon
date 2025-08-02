@@ -65,13 +65,17 @@ const border =
   const glow =
     colors?.glow || theme?.colors.glow || button;
 
-  // ✅ Hardcode Google Form links for GameOn & FixOn
-  const finalFormUrl =
-    (brandName || "").toLowerCase().includes("gameon")
-      ? "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/edit"
-      : (brandName || "").toLowerCase().includes("fixon")
-      ? "https://docs.google.com/forms/d/1FMqO0e7DviXzhhivyRBsHVGvIYrHg64e4hhzFEoRTJs/edit"
-      : formUrl;
+// ✅ Hardcode Google Form links for GameOn, FixOn, FitOn, and JamOn
+const finalFormUrl =
+  (brandName || "").toLowerCase() === "gameon"
+    ? "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/edit"
+    : (brandName || "").toLowerCase() === "fixon"
+    ? "https://docs.google.com/forms/d/1FMqO0e7DviXzhhivyRBsHVGvIYrHg64e4hhzFEoRTJs/edit"
+    : (brandName || "").toLowerCase() === "fiton"
+    ? "https://docs.google.com/forms/d/e/1FAIpQLSesUepKOGjzCWZFpjdYkpg4jZ9GdqGLVqAozbShkfLsHD2CWA/viewform?usp=dialog"
+    : (brandName || "").toLowerCase() === "jamon"
+    ? "https://docs.google.com/forms/d/e/1FAIpQLScm0_HE0ScDHm2OGFM3DE3i90AeI96gq-fl2p3tV2zkuMJvAw/viewform?usp=dialog"
+    : formUrl;
 
   return (
     <div

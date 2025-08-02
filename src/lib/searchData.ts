@@ -19,4 +19,9 @@ export const searchPages = [
     description: "Better Moves. Better You. Live fitness coaching",
     path: "/fiton",
   },
+  {
+    name: "JamOn",
+    description: "Live Music. Real Lessons. Pure Vibe.",
+    path: "/jamon",
+  },
 ];

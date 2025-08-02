@@ -29,15 +29,17 @@ export default function BrandPageLayout({
 const backgroundColor = (colors as any)?.primary || "#0A0A0A";
 
 const headerLogo =
-    brandName === "gameon"
-      ? "/images/gameon/go-logo.png"
-      : brandName === "skillery"
-      ? "/images/skillery_logo_wheadline.png"
-      : brandName === "fixon"
-      ? "/images/fixon/fixon_logo_shinier.png"
-      : brandName === "fiton"
-      ? "/images/fiton/fiton_logo.png"
-      : "";
+  brandName === "gameon"
+    ? "/images/gameon/go-logo.png"
+    : brandName === "skillery"
+    ? "/images/skillery_logo_wheadline.png"
+    : brandName === "fixon"
+    ? "/images/fixon/fixon_logo_shinier.png"
+    : brandName === "fiton"
+    ? "/images/fiton/fiton_logo.png"
+    : brandName === "jamon"
+    ? "/jamon/jamon_logo.png"
+    : "";
 
   // ✅ Skillery gets transparent container so its navy shows
   const resolvedBackground =
