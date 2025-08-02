@@ -126,6 +126,12 @@ legalLinks: [
       text: "#E0E0E0",
       hover: "#FF9B6A",
     },
+    forms: {
+      waitlistUrl:
+        "https://docs.google.com/forms/d/e/1FAIpQLSf7LbDaBGQBx7GnDxY5tn2ZCJerVM_VB5vuMpsWoRRKM1xoqA/viewform?usp=dialog", // Public waitlist
+      coachFormUrl:
+        "https://docs.google.com/forms/d/e/1FAIpQLSdH1f6FSxz7MBRtqTiFJGypHcPLkKfDfkPjhEDoxd5OjXgCKQ/viewform?usp=dialog", // Coach/fixer interest
+    },
     reserveBlock: {
       formUrl: "#",
       buttonColor: "success",

@@ -10,10 +10,11 @@ import { Badge } from "@/ui/components/Badge";
 
 export default function GameOnCoaches() {
   const { brand } = useParams();
-  const brandConfig = brands[brand as keyof typeof brands];
+  const brandKey = (brand as keyof typeof brands) || "gameon";
+  const brandConfig = brands[brandKey];
 
   const coaches =
-    brand === "fixon"
+    brandKey === "fixon"
       ? [
           {
             name: "AutoPro99",
@@ -67,11 +68,10 @@ export default function GameOnCoaches() {
           },
         ];
 
-  // ✅ Use the actual route path, not the file path
-  const bookSessionUrl =
-    brand === "fixon"
-      ? "https://docs.google.com/forms/d/1FMqO0e7DviXzhhivyRBsHVGvIYrHg64e4hhzFEoRTJs/edit"
-      : "/coach-search";
+const bookSessionUrl =
+  // @ts-ignore - allow optional forms property for brands
+  brandConfig.forms?.waitlistUrl ||
+  (brandKey === "gameon" ? "/coach-search" : "#");
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-12 px-6 py-24">
@@ -95,7 +95,16 @@ export default function GameOnCoaches() {
               >
                 {coach.name}
               </span>
-<Badge variant={(coach.badgeVariant as "brand" | "neutral" | "error" | "warning" | "success") || "brand"}>
+              <Badge
+                variant={
+                  (coach.badgeVariant as
+                    | "brand"
+                    | "neutral"
+                    | "error"
+                    | "warning"
+                    | "success") || "brand"
+                }
+              >
                 {coach.badge}
               </Badge>
               <span className={`text-body text-center ${coach.color}`}>

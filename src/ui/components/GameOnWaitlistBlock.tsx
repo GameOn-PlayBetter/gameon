@@ -21,6 +21,10 @@ export default function GameOnWaitlistBlock({
   formUrl,
 }: WaitlistBlockProps) {
   const { brand } = useParams();
+
+  // ✅ Normalize brand to always be a string for TypeScript
+  const brandStr: string = Array.isArray(brand) ? brand[0] : brand || "";
+
   const theme = useBrandTheme();
 
   const {
@@ -33,12 +37,15 @@ export default function GameOnWaitlistBlock({
 
   // ✅ Hardcoded Google Form URLs
   const gameOnFormUrl =
-    "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/edit";
+    "https://docs.google.com/forms/d/e/1FAIpQLSchRbr7JxV_pGQuP24j46fguvDiaQCveeFKvilhh_mWFt4I9w/viewform?usp=dialog";
   const fixOnFormUrl =
-    "https://docs.google.com/forms/d/1FMqO0e7DviXzhhivyRBsHVGvIYrHg64e4hhzFEoRTJs/edit";
+    "https://docs.google.com/forms/d/e/1FAIpQLSf7LbDaBGQBx7GnDxY5tn2ZCJerVM_VB5vuMpsWoRRKM1xoqA/viewform?usp=dialog";
 
+  // ✅ FixOn always uses its waitlist form, everything else unchanged
   const finalFormUrl =
-    formUrl || (brand === "fixon" ? fixOnFormUrl : gameOnFormUrl);
+    brandStr.toLowerCase() === "fixon"
+      ? fixOnFormUrl
+      : formUrl || gameOnFormUrl;
 
   // ✅ Dynamic headline per brand
   const headline = brand === "fixon" ? "JOIN THE WAITLIST" : "JOIN THE WAITLIST";

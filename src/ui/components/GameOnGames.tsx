@@ -9,24 +9,23 @@ import { FeatherArrowRight, FeatherArrowRightCircle } from "@subframe/core";
 
 export default function GameOnGames() {
   const { brand } = useParams();
-  const brandKey = brand as keyof typeof brands;
+  const brandKey = (brand as keyof typeof brands) || "gameon";
   const brandConfig = brands[brandKey];
   const glowColor = brandConfig.colors.glow;
 
-  // ✅ Hardcoded Google Form links
+  // ✅ Default fallback for GameOn
   const gameOnFormUrl =
     "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/edit";
-  const fixOnFormUrl =
-    "https://docs.google.com/forms/d/1FMqO0e7DviXzhhivyRBsHVGvIYrHg64e4hhzFEoRTJs/edit";
 
-  // ✅ Determine the correct form link per brand
-  const formUrl = brandKey === "fixon" ? fixOnFormUrl : gameOnFormUrl;
+  // ✅ Brand-specific waitlist form (FixOn & future brands)
+// @ts-ignore - allow optional forms property for brands
+const formUrl = brandConfig.forms?.waitlistUrl || gameOnFormUrl;
 
-  // ✅ Determine label dynamically
+  // ✅ Section title
   const sectionTitle =
     brandKey === "fixon" ? "Featured Fixes" : "Featured Games";
 
-  // ✅ Default cards based on brand
+  // ✅ Brand-specific featured items
   const featuredItems =
     brandKey === "fixon"
       ? [
@@ -115,7 +114,7 @@ export default function GameOnGames() {
                     {item.description}
                   </span>
                 </div>
-                {/* ✅ All Learn More buttons go to correct Google Form */}
+                {/* ✅ All Learn More buttons now go to the brand's waitlist form */}
                 <a
                   href={formUrl}
                   target="_blank"
@@ -128,7 +127,7 @@ export default function GameOnGames() {
           ))}
         </div>
       </div>
-      {/* ✅ Bottom button goes to correct Google Form */}
+      {/* ✅ Bottom button also goes to the brand's waitlist form */}
       <a href={formUrl} target="_blank" rel="noopener noreferrer">
         <Button size="large" icon={<FeatherArrowRightCircle />}>
           {brandKey === "fixon" ? "All Fixes" : "All Games"}
