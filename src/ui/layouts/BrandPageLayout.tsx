@@ -28,13 +28,15 @@ export default function BrandPageLayout({
   const companyName = theme?.companyName || brandName || "Your Brand";
 const backgroundColor = (colors as any)?.primary || "#0A0A0A";
 
-  const headerLogo =
+const headerLogo =
     brandName === "gameon"
       ? "/images/gameon/go-logo.png"
       : brandName === "skillery"
       ? "/images/skillery_logo_wheadline.png"
       : brandName === "fixon"
       ? "/images/fixon/fixon_logo_shinier.png"
+      : brandName === "fiton"
+      ? "/images/fiton/fiton_logo.png"
       : "";
 
   // ✅ Skillery gets transparent container so its navy shows
@@ -87,7 +89,11 @@ const backgroundColor = (colors as any)?.primary || "#0A0A0A";
 
           {ctaButton && (
             <a
-              href={ctaButton.href}
+href={
+  brandName.toLowerCase() === "fiton"
+    ? "https://docs.google.com/forms/d/e/1FAIpQLSdvRLccUqutavNKZLAF7GF2jqfy0PRyJxppNz8hKfUX5dD8pw/viewform?usp=dialog"
+    : ctaButton.href
+}
               target="_blank"
               rel="noopener noreferrer"
               className="ml-4 px-4 py-2 rounded-lg font-semibold text-white transition"

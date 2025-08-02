@@ -21,12 +21,15 @@ export default function GameOnGames() {
 // @ts-ignore - allow optional forms property for brands
 const formUrl = brandConfig.forms?.waitlistUrl || gameOnFormUrl;
 
-  // ✅ Section title
   const sectionTitle =
-    brandKey === "fixon" ? "Featured Fixes" : "Featured Games";
+    brandKey === "fixon"
+      ? "Featured Fixes"
+      : brandKey === "fiton"
+      ? "Featured Workouts"
+      : "Featured Games";
 
-  // ✅ Brand-specific featured items
-  const featuredItems =
+// ✅ Brand-specific featured items
+const featuredItems =
     brandKey === "fixon"
       ? [
           {
@@ -49,9 +52,35 @@ const formUrl = brandConfig.forms?.waitlistUrl || gameOnFormUrl;
           },
           {
             title: "Household Issues",
-            description:
-              "All things home repair.",
+            description: "All things home repair.",
             image: "/images/fixon/garage-door.jpg",
+          },
+        ]
+      : brandKey === "fiton"
+      ? [
+          {
+            title: "Strength Training",
+            description:
+              "Live sessions with expert trainers to build muscle safely and effectively.",
+            image: "/images/fiton/fitnesswomanlifting.jpg",
+          },
+          {
+            title: "Yoga & Flexibility",
+            description:
+              "Improve mobility and reduce stress with guided live yoga classes.",
+            image: "/images/fiton/fitnessyoga.jpg",
+          },
+          {
+            title: "Cardio & HIIT",
+            description:
+              "Burn calories and boost stamina with high-energy, trainer-led workouts.",
+            image: "/images/fiton/cardio.jpg",
+          },
+          {
+            title: "Nutrition & Wellness",
+            description:
+              "Learn how to complement your workouts with proper nutrition and lifestyle habits.",
+            image: "/images/fiton/nutrition.jpg",
           },
         ]
       : [
@@ -130,7 +159,11 @@ const formUrl = brandConfig.forms?.waitlistUrl || gameOnFormUrl;
       {/* ✅ Bottom button also goes to the brand's waitlist form */}
       <a href={formUrl} target="_blank" rel="noopener noreferrer">
         <Button size="large" icon={<FeatherArrowRightCircle />}>
-          {brandKey === "fixon" ? "All Fixes" : "All Games"}
+{brandKey === "fixon"
+  ? "All Fixes"
+  : brandKey === "fiton"
+  ? "All Workouts"
+  : "All Games"}
         </Button>
       </a>
     </div>

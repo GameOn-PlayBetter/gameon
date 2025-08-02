@@ -14,4 +14,9 @@ export const searchPages = [
     description: "Live help for home, pool, and auto repairs",
     path: "/fixon",
   },
+  {
+    name: "FitOn",
+    description: "Better Moves. Better You. Live fitness coaching",
+    path: "/fiton",
+  },
 ];

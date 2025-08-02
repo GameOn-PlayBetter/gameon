@@ -22,7 +22,7 @@ export default function GameOnWaitlistBlock({
 }: WaitlistBlockProps) {
   const { brand } = useParams();
 
-  // ✅ Normalize brand to always be a string for TypeScript
+  // ✅ Normalize brand string
   const brandStr: string = Array.isArray(brand) ? brand[0] : brand || "";
 
   const theme = useBrandTheme();
@@ -40,20 +40,26 @@ export default function GameOnWaitlistBlock({
     "https://docs.google.com/forms/d/e/1FAIpQLSchRbr7JxV_pGQuP24j46fguvDiaQCveeFKvilhh_mWFt4I9w/viewform?usp=dialog";
   const fixOnFormUrl =
     "https://docs.google.com/forms/d/e/1FAIpQLSf7LbDaBGQBx7GnDxY5tn2ZCJerVM_VB5vuMpsWoRRKM1xoqA/viewform?usp=dialog";
+  const fitOnStudentFormUrl =
+    "https://docs.google.com/forms/d/e/1FAIpQLSesUepKOGjzCWZFpjdYkpg4jZ9GdqGLVqAozbShkfLsHD2CWA/viewform?usp=dialog";
 
-  // ✅ FixOn always uses its waitlist form, everything else unchanged
+  // ✅ Determine correct form URL per brand
   const finalFormUrl =
     brandStr.toLowerCase() === "fixon"
       ? fixOnFormUrl
+      : brandStr.toLowerCase() === "fiton"
+      ? fitOnStudentFormUrl
       : formUrl || gameOnFormUrl;
 
-  // ✅ Dynamic headline per brand
-  const headline = brand === "fixon" ? "JOIN THE WAITLIST" : "JOIN THE WAITLIST";
+  // ✅ Dynamic headline and subtext per brand
+  const headline = "JOIN THE WAITLIST";
   const subtext =
-    brand === "fixon"
+    brandStr.toLowerCase() === "fixon"
       ? "FixOn is currently in pre-launch. Sign up below to reserve your spot when we go live and get help credits!"
+      : brandStr.toLowerCase() === "fiton"
+      ? "FitOn is currently in pre-launch. Sign up below to reserve your spot and start your fitness journey!"
       : "GameOn is currently in pre-launch. Sign up below to reserve your spot and start your journey!";
-  const buttonText = brand === "fixon" ? "Join the Waitlist" : "Join the Waitlist";
+  const buttonText = "Join the Waitlist";
 
   return (
     <div

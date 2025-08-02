@@ -160,4 +160,76 @@ legalLinks: [
       },
     ],
   },
+fiton: {
+  name: "FitOn",
+  tagline: "Better Moves. Better You.",
+  description:
+    "Level up your fitness with live coaching, training plans, and real-time guidance.",
+  logo: "/images/fiton/fiton_logo.png",
+  companyName: "FitOn LLC",
+  fontFamily: "Montserrat, sans-serif",
+  fontClass: "font-['Montserrat']",
+  showCenterLogo: true,
+  socials: [
+    { icon: "tiktok", href: "#" },
+    { icon: "instagram", href: "#" },
+    { icon: "twitter", href: "#" },
+    { icon: "discord", href: "#" },
+  ],
+  legalLinks: [
+    { label: "Privacy Policy", href: "/fiton/privacy-policy" },
+    { label: "Cookie Policy", href: "/fiton/cookie-policy" },
+    { label: "Safety Guidelines", href: "/fiton/safety-guidelines" },
+    { label: "Coach Eligibility", href: "/fiton/coach-requirements-eligibility" },
+    { label: "Contact", href: "/fiton/contact" },
+    { label: "Terms of Service", href: "/fiton/terms-of-service" },
+  ],
+  colors: {
+    primary: "#2A82B5",
+    border: "border-white/30",
+    glow: "#67CFFF",
+    button: "#CC3333",
+    buttonHover: "#DDAF2E",
+    text: "#FFFFFF",
+    hover: "#67CFFF",
+  },
+  forms: {
+    waitlistUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSesUepKOGjzCWZFpjdYkpg4jZ9GdqGLVqAozbShkfLsHD2CWA/viewform?usp=dialog", // Student waitlist
+    coachFormUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSdvRLccUqutavNKZLAF7GF2jqfy0PRyJxppNz8hKfUX5dD8pw/viewform?usp=dialog", // Coach signup
+  },
+  reserveBlock: {
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSdvRLccUqutavNKZLAF7GF2jqfy0PRyJxppNz8hKfUX5dD8pw/viewform?usp=dialog",
+    buttonColor: "success",
+    headline: "BECOME A COACH",
+    subtext:
+      "Apply now to join FitOn as a live fitness coach and start training students worldwide.",
+    buttonText: "Sign Up to Coach",
+  },
+  featuredItems: [
+    {
+      title: "Strength Training",
+      description:
+        "Live sessions with expert trainers to build muscle safely and effectively.",
+      image: "/images/fiton/featured/strength.jpg",
+      href: "/fiton/strength",
+    },
+    {
+      title: "Yoga & Flexibility",
+      description:
+        "Improve mobility and reduce stress with guided live yoga classes.",
+      image: "/images/fiton/featured/yoga.jpg",
+      href: "/fiton/yoga",
+    },
+    {
+      title: "Cardio & HIIT",
+      description:
+        "Burn calories and boost stamina with high-energy, trainer-led workouts.",
+      image: "/images/fiton/featured/cardio.jpg",
+      href: "/fiton/cardio",
+    },
+  ],
+}, // ✅ End FitOn brand
 };
