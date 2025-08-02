@@ -1,27 +1,16 @@
 "use client";
-/*
- * Documentation:
- * Default Page Layout — https://app.subframe.com/2dcb043d3f5e/library?component=Default+Page+Layout_a57b1c43-310a-493f-b807-8cc88e2452cf
- * Badge — https://app.subframe.com/2dcb043d3f5e/library?component=Badge_97bdb082-1124-4dd7-a335-b14b822d0157
- * Topbar with right nav — https://app.subframe.com/2dcb043d3f5e/library?component=Topbar+with+right+nav_d20e2e52-ba3d-4133-901a-9a15f7f729a9
- * Dropdown Menu — https://app.subframe.com/2dcb043d3f5e/library?component=Dropdown+Menu_99951515-459b-4286-919e-a89e7549b43b
- * Avatar — https://app.subframe.com/2dcb043d3f5e/library?component=Avatar_bec25ae6-5010-4485-b46b-cf79e3943ab2
- */
 
-import React from "react";
+import React, { useState } from "react";
 import * as SubframeUtils from "../utils";
-import { Badge } from "../components/Badge";
 import { TopbarWithRightNav } from "../components/TopbarWithRightNav";
 import { DropdownMenu } from "../components/DropdownMenu";
-import { FeatherUser } from "@subframe/core";
-import { FeatherSettings } from "@subframe/core";
-import { FeatherLogOut } from "@subframe/core";
+import { FeatherUser, FeatherSettings, FeatherLogOut } from "@subframe/core";
 import * as SubframeCore from "@subframe/core";
 import { Avatar } from "../components/Avatar";
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { LoginModal } from "../components/LoginModal";
+import { brands } from "@/lib/brands";
 
 interface DefaultPageLayoutRootProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -38,6 +27,11 @@ const DefaultPageLayoutRoot = React.forwardRef<
 ) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const router = useRouter();
+  const { brand } = useParams();
+const brandKey = Array.isArray(brand)
+  ? brand[0].toLowerCase()
+  : brand?.toLowerCase() || "gameon"; // fallback to gameon
+  const brandConfig = brands[brandKey] || brands.gameon; // fallback to GameOn
 
   const handleEarnTokensClick = () => {
     const isLoggedIn = false; // Temporary logic
@@ -52,26 +46,33 @@ const DefaultPageLayoutRoot = React.forwardRef<
     setIsDrawerOpen(false);
     router.push("/refer-friends");
   };
+
   return (
     <div
       className={SubframeUtils.twClassNames(
         "flex h-screen w-full flex-col items-center",
         className
       )}
+      style={{ backgroundColor: brandConfig.colors.primary }} // ✅ brand background
       ref={ref as any}
       {...otherProps}
     >
       <TopbarWithRightNav
         leftSlot={
-          <>
-            <Link href="/" passHref>
+<Link
+  href={
+    brandKey === "skillery"
+      ? "/" // ✅ Skillery goes to root landing page
+      : `/${brandKey || "gameon"}` // ✅ Other brands keep normal behavior
+  }
+  passHref
+>
   <img
     className="h-20 min-w-[24px] flex-none object-cover cursor-pointer"
-    src="https://res.cloudinary.com/subframe/image/upload/v1752251109/uploads/19984/hu20lhnnzh1u7drpjg4p.png"
-    alt="GameOn Logo"
+    src={brandConfig.logo}
+    alt={`${brandConfig.name} Logo`}
   />
 </Link>
-          </>
         }
         rightSlot={
           <>
@@ -80,11 +81,11 @@ const DefaultPageLayoutRoot = React.forwardRef<
                 Home
               </TopbarWithRightNav.NavItem>
               <TopbarWithRightNav.NavItem onClick={() => setIsDrawerOpen(true)}>
-  Login
-</TopbarWithRightNav.NavItem>
+                Login
+              </TopbarWithRightNav.NavItem>
               <TopbarWithRightNav.NavItem onClick={handleEarnTokensClick}>
-  Earn Tokens
-</TopbarWithRightNav.NavItem>
+                Earn Tokens
+              </TopbarWithRightNav.NavItem>
             </div>
             <SubframeCore.DropdownMenu.Root>
               <SubframeCore.DropdownMenu.Trigger asChild={true}>
@@ -116,15 +117,14 @@ const DefaultPageLayoutRoot = React.forwardRef<
           </>
         }
       />
+
       {children ? (
-        <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-4 overflow-y-auto bg-default-background">
+        <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-4 overflow-y-auto">
           {children}
         </div>
       ) : null}
-<LoginModal
-  open={isDrawerOpen}
-  onClose={() => setIsDrawerOpen(false)}
-/>
+
+      <LoginModal open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
     </div>
   );
 });

@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useBrandTheme } from "@/app/context/BrandThemeContext";
+import { searchPages } from "@/lib/searchData"; // ✅ import your centralized data
 
-// ✅ Add proper typing for pages
 interface PageSuggestion {
   name: string;
   description: string;
@@ -33,7 +33,9 @@ const phrases = [
   "Ask anything.",
 ];
 
-export default function RotatingSearchInput({ pages = [] }: RotatingSearchInputProps) {
+export default function RotatingSearchInput({
+  pages = searchPages, // ✅ default to central search data
+}: RotatingSearchInputProps) {
   const { colors } = useBrandTheme();
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
@@ -42,6 +44,17 @@ export default function RotatingSearchInput({ pages = [] }: RotatingSearchInputP
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [query, setQuery] = useState("");
+
+  // ✅ Normalize paths for production safety
+  const normalizedPages = pages.map((p) => ({
+    ...p,
+    path:
+      p.name.toLowerCase() === "skillery"
+        ? "/"
+        : p.path.startsWith("/")
+        ? p.path
+        : `/${p.path}`,
+  }));
 
   useEffect(() => {
     if (isFocused) return;
@@ -58,8 +71,7 @@ export default function RotatingSearchInput({ pages = [] }: RotatingSearchInputP
     };
   }, [index, isFocused]);
 
-  // ✅ Filtered dropdown suggestions now use prop `pages`
-  const filteredPages = pages.filter((page) =>
+  const filteredPages = normalizedPages.filter((page) =>
     page.name.toLowerCase().includes(query.toLowerCase())
   );
 

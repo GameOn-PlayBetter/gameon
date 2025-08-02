@@ -1,24 +1,20 @@
 "use client";
 
 import React from "react";
+import { useParams, notFound } from "next/navigation";
+import { brands } from "@/lib/brands";
 import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { BoldFooter } from "@/ui/components/BoldFooter";
-import { useBrandTheme } from "@/app/context/BrandThemeContext";
 
 export default function CoachRequirementsEligibilityPage() {
-  const { name: brandName } = useBrandTheme();
+  const { brand } = useParams();
+  const brandKey = Array.isArray(brand)
+    ? brand[0].toLowerCase()
+    : brand?.toLowerCase();
 
-  const legalLinks =
-    brandName.toLowerCase() === "gameon"
-      ? [
-          { label: "Privacy Policy", href: "/privacy" },
-          { label: "Terms of Use", href: "/terms" },
-          { label: "Prohibited Titles", href: "/prohibited-titles" },
-        ]
-      : [
-          { label: "Privacy Policy", href: "/privacy" },
-          { label: "Terms of Use", href: "/terms" },
-        ];
+  const brandConfig = brands[brandKey as keyof typeof brands];
+
+  if (!brandConfig) return notFound();
 
   return (
     <DefaultPageLayout>
@@ -32,7 +28,17 @@ export default function CoachRequirementsEligibilityPage() {
           <li>Auto-approval at launch, but every submission is logged for later review.</li>
         </ul>
       </div>
-      <BoldFooter legalLinks={legalLinks} />
+      <BoldFooter
+        logoSrc={brandConfig.logo}
+        companyName={brandConfig.companyName}
+        socials={brandConfig.socials}
+        legalLinks={brandConfig.legalLinks}
+        colors={{
+          primary: brandConfig.colors.primary,
+          button: brandConfig.colors.button,
+          buttonHover: brandConfig.colors.buttonHover,
+        }}
+      />
     </DefaultPageLayout>
   );
 }

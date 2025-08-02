@@ -20,6 +20,8 @@ import { Badge } from "@/ui/components/Badge";
 import { FeatherStar } from "@subframe/core";
 import { FeatherChevronLeft } from "@subframe/core";
 import { BoldFooter } from "@/ui/components/BoldFooter";
+import { useParams } from "next/navigation";
+import { brands } from "@/lib/brands";
 
 function CoachSearchPage() {
   return (
@@ -744,11 +746,10 @@ function CoachSearchPage() {
         </div>
 <BoldFooter
   brandName="Skillery"
-  company="Skillery, LLC"
-  year={2025}
+  companyName="Skillery, LLC"
   legalLinks={[
-    { name: "Privacy Policy", href: "/privacy" },
-    { name: "Terms of Use", href: "/terms" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Use", href: "/terms" },
   ]}
 />
       </div>

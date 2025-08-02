@@ -1,22 +1,24 @@
 "use client";
 
 import React from "react";
-import { useParams } from "next/navigation";
 import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { BoldFooter } from "@/ui/components/BoldFooter";
 import { brands } from "@/lib/brands";
 
 export default function ProhibitedTitlesPage() {
-  const { brand } = useParams();
-  const brandName = brand ? String(brand) : "Skillery";
-  const brandConfig = brands[brandName as keyof typeof brands];
+  // ✅ Hardcode GameOn brand
+  const brandConfig = brands.gameon;
 
   return (
-    <DefaultPageLayout>
+    <DefaultPageLayout
+      style={{ backgroundColor: brandConfig.colors.primary }} // ✅ Brand-specific background
+    >
       <div className="w-full max-w-4xl mx-auto px-6 sm:px-8 md:px-10 pt-24 pb-40 text-white">
         <h1 className="text-4xl font-bold mb-8">GameOn Prohibited Titles List</h1>
         <p className="mb-6 text-lg">
-          To protect players, coaches, and the platform, the following games are prohibited from being coached, streamed, or used in any GameOn session. These titles may be banned due to:
+          To protect players, coaches, and the platform, the following games are
+          prohibited from being coached, streamed, or used in any GameOn
+          session. These titles may be banned due to:
         </p>
         <ul className="list-disc pl-6 space-y-2 text-lg mb-10">
           <li>Adult-only or sexually explicit content</li>
@@ -60,14 +62,23 @@ export default function ProhibitedTitlesPage() {
 
         <h2 className="text-2xl font-semibold mb-4">📝 Appeals & Exceptions</h2>
         <ul className="list-disc pl-6 space-y-2 text-lg">
-          <li>Want to coach a game that’s not on this list but might raise red flags? Submit it for manual review by GameOn Admins.</li>
-          <li>GameOn reserves the right to update this list at any time for safety, brand integrity, or legal compliance.</li>
+          <li>
+            Want to coach a game that’s not on this list but might raise red
+            flags? Submit it for manual review by GameOn Admins at
+            gameon_playbetter@gmail.com
+          </li>
+          <li>
+            GameOn reserves the right to update this list at any time for safety,
+            brand integrity, or legal compliance.
+          </li>
         </ul>
       </div>
 
       <BoldFooter
         logoSrc={brandConfig.logo}
         companyName={brandConfig.companyName}
+        socials={brandConfig.socials}
+        legalLinks={brandConfig.legalLinks}
         colors={{
           primary: brandConfig.colors.primary,
           button: brandConfig.colors.button,

@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Badge } from "@/ui/components/Badge";
 import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
 import RotatingSearchInput from "@/ui/components/RotatingSearchInput";
 import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
+import { searchPages } from "@/lib/searchData"; // ✅ Centralized search data
 
 type BadgeVariant = "brand" | "neutral" | "error" | "warning" | "success";
 
@@ -111,42 +112,35 @@ const brands: Brand[] = [
   },
 ];
 
-// Search suggestions for Skillery
-const searchPages = [
-  {
-    name: "GameOn",
-    description: "Gaming coaching and help",
-    path: "/gameon",
-  },
-  {
-    name: "FixOn",
-    description: "Live help for home, auto & pool",
-    path: "/fixon",
-  },
-  {
-    name: "Skillery",
-    description: "Master new skills across topics",
-    path: "/",
-  },
-];
-
 export default function Page() {
+  const [query, setQuery] = useState("");
+
+  // Filter brands based on search query
+  const filteredBrands = useMemo(() => {
+    if (!query.trim()) return brands;
+    return brands.filter((brand) =>
+      [brand.name, brand.badge, brand.description]
+        .join(" ")
+        .toLowerCase()
+        .includes(query.toLowerCase())
+    );
+  }, [query]);
+
   return (
     <BrandThemeProvider brandName="skillery">
-<div
-  className="min-h-screen w-full relative z-0"
-  style={{
-    backgroundImage: "linear-gradient(to bottom, #0A0F18, #000000)",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    fontFamily: "sans-serif",
-  }}
->
-        {/* 🔹 Add brandName here */}
+      <div
+        className="min-h-screen w-full relative z-0"
+        style={{
+          backgroundImage: "linear-gradient(to bottom, #0A0F18, #000000)",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          fontFamily: "sans-serif",
+        }}
+      >
         <BrandPageLayout brandName="skillery">
+          {/* Hero with search */}
           <div className="flex w-full flex-col items-center justify-center gap-6 px-6 py-24">
             <div className="flex w-full max-w-[1024px] flex-col items-center justify-center gap-6">
-
               <p className="text-white text-2xl font-semibold text-center tracking-wide">
                 What Do{" "}
                 <span className="text-orange-400 font-bold animate-[pulse-once_0.6s_ease-in-out]">
@@ -154,15 +148,17 @@ export default function Page() {
                 </span>{" "}
                 Want To Master Today?
               </p>
-<RotatingSearchInput />
+              {/* ✅ Use centralized searchPages */}
+              <RotatingSearchInput pages={searchPages} />
             </div>
           </div>
 
+          {/* Brand grid */}
           <div className="flex w-full flex-col items-center justify-center gap-12 px-6 py-12">
             <div className="w-full">
               <div className="px-6 sm:px-12 lg:px-24 xl:px-32">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                  {brands.map((brand) =>
+                  {filteredBrands.map((brand) =>
                     brand.live ? (
                       <a
                         key={brand.name}
@@ -209,6 +205,11 @@ export default function Page() {
                         </div>
                       </div>
                     )
+                  )}
+                  {filteredBrands.length === 0 && (
+                    <div className="col-span-full text-center text-gray-400 text-xl py-12">
+                      No results found.
+                    </div>
                   )}
                 </div>
               </div>

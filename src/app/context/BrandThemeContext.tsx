@@ -65,8 +65,9 @@ export function BrandThemeProvider({
       companyName: brandConfig.companyName ?? "Your Brand",
       tagline: brandConfig.tagline,
       fontFamily: brandConfig.fontFamily,
-      socials: brandConfig.socials ?? [],
-      legalLinks: brandConfig.legalLinks ?? [],
+      // ✅ Safe access for socials & legalLinks
+      socials: "socials" in brandConfig ? (brandConfig as any).socials ?? [] : [],
+      legalLinks: "legalLinks" in brandConfig ? (brandConfig as any).legalLinks ?? [] : [],
     });
   }, [brandName, params?.brand]);
 

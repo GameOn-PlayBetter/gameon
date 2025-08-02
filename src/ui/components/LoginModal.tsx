@@ -12,11 +12,17 @@ export function LoginModal({
   onClose: () => void;
 }) {
   const router = useRouter();
-  const brandConfig = useBrandTheme();
+  const theme = useBrandTheme(); // ✅ Consistent with other components
+  const colors = theme.colors || {
+    primary: "#000000",
+    button: "#FF00C8",
+    buttonHover: "#00CFFF",
+    text: "#FFFFFF",
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [headingText, setHeadingText] = useState("Log in to Earn Tokens");
-
   const modalRef = useRef<HTMLDivElement>(null);
 
   const headings = [
@@ -27,7 +33,7 @@ export function LoginModal({
     "Power Up Your Session",
   ];
 
-  // Update heading each time modal opens
+  // Update heading randomly each time modal opens
   useEffect(() => {
     if (open) {
       const random = headings[Math.floor(Math.random() * headings.length)];
@@ -38,13 +44,9 @@ export function LoginModal({
   // Close on ESC key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
+      if (e.key === "Escape") onClose();
     };
-    if (open) {
-      document.addEventListener("keydown", handleKeyDown);
-    }
+    if (open) document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, onClose]);
 
@@ -55,9 +57,7 @@ export function LoginModal({
         onClose();
       }
     };
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    if (open) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, onClose]);
 
@@ -65,7 +65,7 @@ export function LoginModal({
 
   const handleLogin = () => {
     onClose(); // Close modal
-    router.push("/player-profile"); // Simulated login
+    router.push("/player-profile"); // Simulated login redirect
   };
 
   return (
@@ -75,7 +75,7 @@ export function LoginModal({
     >
       <div
         ref={modalRef}
-        style={{ backgroundColor: brandConfig.colors.primary }}
+        style={{ backgroundColor: colors.primary }}
         className="border border-[#333] rounded-xl p-6 w-full max-w-sm shadow-lg animate-fadeInUp"
       >
         <h2 className="text-2xl font-bold text-white mb-4 animate-glitchPulse">
@@ -111,4 +111,5 @@ export function LoginModal({
     </div>
   );
 }
+
 export default LoginModal;

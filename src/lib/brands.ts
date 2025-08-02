@@ -8,22 +8,26 @@ export const brands = {
     logo: "/images/gameon/go-logo.png",
     companyName: "GameOn LLC",
     fontFamily: "Orbitron",
-    showCenterLogo: false, // ✅ No giant logo in center
+    fontClass: "font-['Orbitron']", // ✅ Added
+    showCenterLogo: false,
     socials: [
       { icon: "tiktok", href: "https://www.tiktok.com/@gameon.gg" },
       { icon: "instagram", href: "https://www.instagram.com/gameon_playbetter_together1/" },
       { icon: "twitter", href: "https://x.com/game_on_gg" },
       { icon: "discord", href: "https://discord.com/channels/1389283723412902080/1389283724851413164" },
     ],
-    legalLinks: [
-      { label: "Privacy Policy", href: "/privacy-policy" },
-      { label: "Terms of Service", href: "/terms-of-service" },
-      { label: "Prohibited Titles", href: "/prohibited-titles" },
-      { label: "Coach Eligibility", href: "/coach-requirements-eligibility" },
-      { label: "Cookie Policy", href: "/cookie-policy" },
-      { label: "Safety Guidelines", href: "/safety-guidelines" },
-      { label: "Contact", href: "/contact" },
-    ],
+legalLinks: [
+  // ✅ Shared content
+  { label: "Privacy Policy", href: "/brand/privacy-policy" },
+  { label: "Cookie Policy", href: "/brand/cookie-policy" },
+  { label: "Safety Guidelines", href: "/brand/safety-guidelines" },
+  { label: "Coach Eligibility", href: "/gameon/coach-requirements-eligibility" },
+  { label: "Contact", href: "/gameon/contact" },
+
+  // ✅ GameOn-specific content
+  { label: "Terms of Service", href: "/gameon/terms-of-service" },
+  { label: "Prohibited Titles", href: "/gameon/prohibited-titles" },
+],
     colors: {
       primary: "#0A0A0A",
       border: "border-white/30",
@@ -40,6 +44,26 @@ export const brands = {
       subtext: "Ready to share your knowledge?",
       buttonText: "Start Coaching",
     },
+    featuredItems: [
+      {
+        title: "Minecraft",
+        description: "Redstone builds, creative lessons, and survival strategies",
+        image: "/images/gameon/featured/minecraft.jpg",
+        href: "/gameon/minecraft",
+      },
+      {
+        title: "League of Legends",
+        description: "Climb ranks with pro strategies and macro coaching",
+        image: "/images/gameon/featured/lol.jpg",
+        href: "/gameon/league",
+      },
+      {
+        title: "Dead by Daylight",
+        description: "Survivor tips, killer mind games, and live gameplay analysis",
+        image: "/images/gameon/featured/dbd.jpg",
+        href: "/gameon/dbd",
+      },
+    ],
   },
 
   skillery: {
@@ -49,12 +73,17 @@ export const brands = {
     logo: "/images/skillery_logo_wheadline.png",
     companyName: "Skillery LLC",
     fontFamily: "sans-serif",
-    showCenterLogo: true, // ✅ Skillery keeps the splash center logo
-    legalLinks: [
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of Use", href: "/terms" },
-      { label: "Contact", href: "/contact" },
-    ],
+    fontClass: "font-sans", // ✅ Added
+    showCenterLogo: true,
+    socials: [], // ✅ empty array prevents TS errors
+legalLinks: [
+  { label: "Privacy Policy", href: "/skillery/privacy-policy" },
+  { label: "Cookie Policy", href: "/skillery/cookie-policy" },
+  { label: "Safety Guidelines", href: "/skillery/safety-guidelines" },
+  { label: "Coach Eligibility", href: "/skillery/coach-requirements-eligibility" },
+  { label: "Contact", href: "/skillery/contact" },
+  { label: "Terms of Service", href: "/skillery/terms-of-service" }, // optional if added
+],
     colors: {
       primary: "#0F1E30",
       border: "border-white/30",
@@ -71,6 +100,7 @@ export const brands = {
       subtext: "Connect with experts across skills and passions.",
       buttonText: "Book a Session",
     },
+    // ❌ No featuredItems for Skillery – landing page uses its own card grid
   },
 
   fixon: {
@@ -80,7 +110,8 @@ export const brands = {
     logo: "/images/fixon/fixon_logo_shinier.png",
     companyName: "FixOn",
     fontFamily: "sans-serif",
-    showCenterLogo: true, // ✅ Now the center logo shows
+    fontClass: "font-sans", // ✅ Added
+    showCenterLogo: true,
     socials: [],
     legalLinks: [
       { label: "Privacy Policy", href: "/privacy" },
@@ -102,5 +133,25 @@ export const brands = {
       subtext: "Help others tackle DIY projects live.",
       buttonText: "Become a Fixer",
     },
+    featuredItems: [
+      {
+        title: "Leaky Faucet",
+        description: "Step-by-step help to fix common sink and faucet leaks",
+        image: "/images/fixon/featured/faucet.jpg",
+        href: "/fixon/faucet",
+      },
+      {
+        title: "Pool Pump Troubleshooting",
+        description: "Live guidance to diagnose and repair pool pump issues",
+        image: "/images/fixon/featured/poolpump.jpg",
+        href: "/fixon/poolpump",
+      },
+      {
+        title: "AC Not Cooling",
+        description: "Quick checks and minor fixes before calling a pro",
+        image: "/images/fixon/featured/ac.jpg",
+        href: "/fixon/ac",
+      },
+    ],
   },
 };

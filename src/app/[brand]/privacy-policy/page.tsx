@@ -1,31 +1,23 @@
 "use client";
 
 import React from "react";
-import { useParams } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { BoldFooter } from "@/ui/components/BoldFooter";
 import { brands } from "@/lib/brands";
 
 export default function PrivacyPolicyPage() {
   const { brand } = useParams();
+  const brandKey = Array.isArray(brand)
+    ? brand[0].toLowerCase()
+    : brand?.toLowerCase() || "gameon";
+  const brandConfig = brands[brandKey as keyof typeof brands];
 
-  // ✅ Fallback to "gameon" if brand is missing or invalid
-  const brandName = brand ? String(brand).toLowerCase() : "gameon";
-  const brandConfig = brands[brandName as keyof typeof brands] || brands.gameon;
+  if (!brandConfig) return notFound();
 
-  // ✅ Safe fallbacks to avoid TypeScript errors
-  const colors = brandConfig.colors ?? {
-    primary: "#000000",
-    border: "#333333",
-    glow: "#ffffff",
-    button: "#ff00c8",
-    buttonHover: "#00cfff",
-    text: "#ffffff",
-    hover: "#cccccc",
-  };
-
-  const socials = (brandConfig as any).socials ?? [];
-  const legalLinks = (brandConfig as any).legalLinks ?? [];
+  const colors = brandConfig.colors;
+  const socials = brandConfig.socials ?? [];
+  const legalLinks = brandConfig.legalLinks ?? [];
 
   return (
     <DefaultPageLayout>
@@ -64,12 +56,7 @@ export default function PrivacyPolicyPage() {
 
         <p className="mt-8 text-sm text-gray-400">
           For questions or requests related to privacy, contact us at{" "}
-          <a
-            href="mailto:gameon.playbetter@gmail.com"
-            className="underline text-blue-400"
-          >
-            gameon.playbetter@gmail.com
-          </a>
+          {brandKey}_playbetter@gmail.com
         </p>
       </div>
 

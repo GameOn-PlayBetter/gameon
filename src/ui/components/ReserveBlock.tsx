@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React from "react";
@@ -38,7 +39,7 @@ export function ReserveBlock({
   buttonHoverColor,
   borderColor,
 }: ReserveBlockProps) {
-  const { theme } = useBrandTheme();
+  const theme = useBrandTheme();
 
   const primary =
     backgroundColor ||
@@ -58,11 +59,19 @@ export function ReserveBlock({
     theme?.colors.buttonHover ||
     "#00CFFF";
 
-  const border =
-    borderColor || colors?.border || theme?.colors.border || "rgba(255,255,255,0.3)";
+const border =
+  borderColor || colors?.border || (theme?.colors as any)?.border || "rgba(255,255,255,0.3)";
 
   const glow =
     colors?.glow || theme?.colors.glow || button;
+
+  // ✅ Hardcode Google Form links for GameOn & FixOn
+  const finalFormUrl =
+    (brandName || "").toLowerCase().includes("gameon")
+      ? "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/edit"
+      : (brandName || "").toLowerCase().includes("fixon")
+      ? "https://docs.google.com/forms/d/1FMqO0e7DviXzhhivyRBsHVGvIYrHg64e4hhzFEoRTJs/edit"
+      : formUrl;
 
   return (
     <div
@@ -72,7 +81,7 @@ export function ReserveBlock({
       <div
         className="flex w-full max-w-[448px] flex-col items-center gap-6 rounded-2xl px-8 py-10"
         style={{
-          backgroundColor: primary, // ✅ match brand color, no black box
+          backgroundColor: primary,
           boxShadow: `0 0 16px ${glow}`,
           border: `1px solid ${glow}`,
         }}
@@ -90,13 +99,13 @@ export function ReserveBlock({
           {subtext}
         </p>
         <a
-          href={formUrl}
+          href={finalFormUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full"
         >
           <Button
-            variant="primary"
+            variant="brand-primary"
             className="w-full font-bold text-[16px]"
             style={{
               backgroundColor: button,

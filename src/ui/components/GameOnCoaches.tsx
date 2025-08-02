@@ -1,57 +1,92 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React from "react";
-import { useBrandTheme } from "@/app/context/BrandThemeContext";
+import { useParams } from "next/navigation";
+import { brands } from "@/lib/brands";
 import { Button } from "@/ui/components/Button";
 import { Avatar } from "@/ui/components/Avatar";
 import { Badge } from "@/ui/components/Badge";
 
-interface Coach {
-  name: string;
-  color: string;
-  badge: string;
-  image: string;
-  description: string;
-  badgeVariant?: "error" | "success" | "brand" | "neutral" | "warning";
-  bookingUrl: string;
-}
+export default function GameOnCoaches() {
+  const { brand } = useParams();
+  const brandConfig = brands[brand as keyof typeof brands];
 
-export default function FeaturedCoaches({
-  coaches,
-  colors: overrideColors,
-}: {
-  coaches: Coach[];
-  colors?: any;
-}) {
-  const { theme } = useBrandTheme();
-  const colors = theme?.colors || overrideColors;
+  const coaches =
+    brand === "fixon"
+      ? [
+          {
+            name: "AutoPro99",
+            color: "text-warning-500",
+            badge: "Auto Specialist",
+            image: "/images/fixon/experts/autopro.jpg",
+            description: "Car diagnostics, battery swaps, brake repairs",
+            badgeVariant: "warning",
+          },
+          {
+            name: "HomeHackR",
+            color: "text-warning-500",
+            badge: "DIY Pro",
+            image: "/images/fixon/experts/homehackr.jpg",
+            description: "Wall patching, painting, faucet leaks",
+            badgeVariant: "warning",
+          },
+          {
+            name: "SafeSpark",
+            color: "text-warning-500",
+            badge: "Electrician",
+            image: "/images/fixon/experts/safespark.jpg",
+            description: "Outlet repair, light installs, breaker fixes",
+            badgeVariant: "warning",
+          },
+        ]
+      : [
+          {
+            name: "Coach Alex",
+            color: "text-brand-700",
+            badge: "Minecraft Expert",
+            image: "/images/gameon/david2.jpg",
+            description: "Professional builder & redstone specialist",
+            badgeVariant: "brand",
+          },
+          {
+            name: "Coach Sarah",
+            color: "text-warning-700",
+            badge: "DBD Pro",
+            image: "/images/gameon/sarah.jpg",
+            description: "Competitive survivor & strategy expert",
+            badgeVariant: "warning",
+          },
+          {
+            name: "Coach Mike",
+            color: "text-success-700",
+            badge: "LoL Master",
+            image: "/images/gameon/michael.jpg",
+            description: "Diamond ranked player & macro strategist",
+            badgeVariant: "success",
+          },
+        ];
 
-  if (!colors) {
-    console.warn("FeaturedCoaches: No colors provided");
-    return null;
-  }
+  // ✅ Use the actual route path, not the file path
+  const bookSessionUrl =
+    brand === "fixon"
+      ? "https://docs.google.com/forms/d/1FMqO0e7DviXzhhivyRBsHVGvIYrHg64e4hhzFEoRTJs/edit"
+      : "/coach-search";
 
   return (
-    <div
-      className="flex w-full flex-col items-center justify-center gap-12 px-6 py-24"
-      style={{ backgroundColor: colors.primary }}
-    >
+    <div className="flex w-full flex-col items-center justify-center gap-12 px-6 py-24">
       <div className="flex w-full max-w-[1280px] flex-col items-start gap-8">
-        <span
-          className="text-[36px] font-[700] leading-[40px]"
-          style={{ color: colors.glow }}
-        >
+        <span className="text-[36px] font-[700] leading-[40px] text-success-700">
           Featured Coaches
         </span>
         <div className="flex w-full flex-wrap items-start gap-8">
           {coaches.map((coach, index) => (
             <div
               key={`${coach.name}-${index}`}
-              className="flex min-w-[288px] grow shrink-0 basis-0 flex-col items-center gap-6 rounded-[32px] px-8 py-12"
+              className="flex min-w-[288px] grow shrink-0 basis-0 flex-col items-center gap-6 rounded-[32px] bg-brand-50 px-8 py-12"
               style={{
-                backgroundColor: colors.primary,
-                boxShadow: `0 0 12px ${colors.glow}`,
-                border: `2px solid ${colors.glow}`,
+                boxShadow: `0 0 12px ${brandConfig.colors.glow}`,
+                border: `2px solid ${brandConfig.colors.glow}`,
               }}
             >
               <Avatar size="x-large" image={coach.image} />
@@ -60,14 +95,14 @@ export default function FeaturedCoaches({
               >
                 {coach.name}
               </span>
-              <Badge variant={coach.badgeVariant || "brand"}>
+<Badge variant={(coach.badgeVariant as "brand" | "neutral" | "error" | "warning" | "success") || "brand"}>
                 {coach.badge}
               </Badge>
               <span className={`text-body text-center ${coach.color}`}>
                 {coach.description}
               </span>
               <a
-                href={coach.bookingUrl || "#"}
+                href={bookSessionUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full"
@@ -76,8 +111,8 @@ export default function FeaturedCoaches({
                   variant="destructive-primary"
                   className="w-full"
                   style={{
-                    backgroundColor: colors.button,
-                    borderColor: colors.buttonHover,
+                    backgroundColor: brandConfig.colors.button,
+                    borderColor: brandConfig.colors.buttonHover,
                   }}
                 >
                   Book Session

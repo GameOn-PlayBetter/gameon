@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useParams, notFound } from "next/navigation";
 import { brands } from "@/lib/brands";
+import { searchPages } from "@/lib/searchData"; // ✅ Centralized search data
 import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
 
 import GameOnGames from "@/ui/components/GameOnGames";
@@ -26,13 +27,6 @@ interface Coach {
   bookingUrl: string;
 }
 
-// ✅ Create search suggestions from brands object
-const searchPages = Object.entries(brands).map(([key, config]) => ({
-  name: config.companyName || key,
-  description: config.tagline || config.description || "Explore this brand",
-  path: `/${key}`, // ✅ Clean URL (no /brand prefix)
-}));
-
 export default function BrandLandingPage() {
   const { brand } = useParams();
   const brandKey = brand as keyof typeof brands;
@@ -43,6 +37,15 @@ export default function BrandLandingPage() {
   if (!brandConfig) return notFound();
 
   const isFixOn = brandKey === "fixon";
+  const isGameOn = brandKey === "gameon";
+
+  // ✅ Hardcoded form links
+  const formUrl =
+    isGameOn
+      ? "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/edit"
+      : isFixOn
+      ? "https://docs.google.com/forms/d/1FMqO0e7DviXzhhivyRBsHVGvIYrHg64e4hhzFEoRTJs/edit"
+      : brandConfig.reserveBlock?.formUrl || "#";
 
   // ✅ Safe fallback references for build stability
   const colors = brandConfig.colors ?? {
@@ -71,8 +74,8 @@ export default function BrandLandingPage() {
           badge: "Auto Specialist",
           image: "/images/fixon/experts/autopro.jpg",
           description: "Car diagnostics, battery swaps, brake repairs",
-          badgeVariant: "warning" as const,
-          bookingUrl: reserveBlock.formUrl,
+          badgeVariant: "warning",
+          bookingUrl: formUrl,
         },
         {
           name: "HomeHackR",
@@ -80,8 +83,8 @@ export default function BrandLandingPage() {
           badge: "DIY Pro",
           image: "/images/fixon/experts/homehackr.jpg",
           description: "Wall patching, painting, faucet leaks",
-          badgeVariant: "success" as const,
-          bookingUrl: reserveBlock.formUrl,
+          badgeVariant: "success",
+          bookingUrl: formUrl,
         },
         {
           name: "SafeSpark",
@@ -89,8 +92,8 @@ export default function BrandLandingPage() {
           badge: "Electrician",
           image: "/images/fixon/experts/safespark.jpg",
           description: "Outlet repair, light installs, breaker fixes",
-          badgeVariant: "brand" as const,
-          bookingUrl: reserveBlock.formUrl,
+          badgeVariant: "brand",
+          bookingUrl: formUrl,
         },
       ]
     : [
@@ -100,8 +103,8 @@ export default function BrandLandingPage() {
           badge: "Minecraft Expert",
           image: "/images/gameon/david.jpg",
           description: "Professional builder & redstone specialist",
-          badgeVariant: "brand" as const,
-          bookingUrl: reserveBlock.formUrl,
+          badgeVariant: "brand",
+          bookingUrl: formUrl,
         },
         {
           name: "Coach Sarah",
@@ -109,8 +112,8 @@ export default function BrandLandingPage() {
           badge: "DBD Pro",
           image: "/images/gameon/emma.jpg",
           description: "Competitive survivor & strategy expert",
-          badgeVariant: "warning" as const,
-          bookingUrl: reserveBlock.formUrl,
+          badgeVariant: "warning",
+          bookingUrl: formUrl,
         },
         {
           name: "Coach Mike",
@@ -118,8 +121,8 @@ export default function BrandLandingPage() {
           badge: "LoL Master",
           image: "/images/gameon/michael.jpg",
           description: "Diamond ranked player & macro strategist",
-          badgeVariant: "success" as const,
-          bookingUrl: reserveBlock.formUrl,
+          badgeVariant: "success",
+          bookingUrl: formUrl,
         },
       ];
 
@@ -134,7 +137,7 @@ export default function BrandLandingPage() {
         ]}
         ctaButton={{
           label: reserveBlock.buttonText,
-          href: reserveBlock.formUrl,
+          href: formUrl,
         }}
       >
         {/* Search Bar */}
@@ -145,24 +148,21 @@ export default function BrandLandingPage() {
         {/* Waitlist Block */}
         <GameOnWaitlistBlock
           colors={colors}
-          formUrl={reserveBlock.formUrl}
+          formUrl={formUrl}
         />
 
         {/* Game Cards */}
         <GameOnGames />
 
         {/* Coach Cards */}
-        <FeaturedCoaches
-          coaches={featuredCoaches}
-          colors={colors}
-        />
+        <FeaturedCoaches />
 
         {/* Reserve Block */}
         <ReserveBlock
           headline={reserveBlock.headline}
           subtext={reserveBlock.subtext}
           buttonText={reserveBlock.buttonText}
-          formUrl={reserveBlock.formUrl}
+          formUrl={formUrl}
           colors={colors}
         />
 

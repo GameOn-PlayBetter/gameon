@@ -1,21 +1,44 @@
-// src/app/[brand]/safety-guidelines/page.tsx
 "use client";
 
 import React from "react";
 import { useParams, notFound } from "next/navigation";
-import { brands } from "@/lib/brands";
-import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
+import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
 import { BoldFooter } from "@/ui/components/BoldFooter";
+import { brands } from "@/lib/brands";
 
 export default function SafetyGuidelinesPage() {
   const { brand } = useParams();
-  const brandConfig = brands[brand as keyof typeof brands];
+  const brandKey = Array.isArray(brand)
+    ? brand[0].toLowerCase()
+    : brand?.toLowerCase() || "gameon";
+  const brandConfig = brands[brandKey as keyof typeof brands];
+
   if (!brandConfig) return notFound();
 
+  // ✅ Legal links: shared + brand-specific
+  const legalLinks = [
+    { label: "Privacy Policy", href: `/${brandKey}/privacy-policy` },
+    { label: "Cookie Policy", href: `/${brandKey}/cookie-policy` },
+    { label: "Safety Guidelines", href: `/${brandKey}/safety-guidelines` },
+    { label: "Coach Eligibility", href: `/${brandKey}/coach-requirements-eligibility` },
+    { label: "Contact", href: `/${brandKey}/contact` },
+    ...(brandKey === "gameon"
+      ? [
+          { label: "Prohibited Titles", href: `/${brandKey}/prohibited-titles` },
+          { label: "Terms of Service", href: `/${brandKey}/terms-of-service` },
+        ]
+      : [{ label: "Terms of Service", href: `/${brandKey}/terms-of-service` }]),
+  ];
+
+  // ✅ Brand email
+  const email = `${brandKey}_playbetter@gmail.com`;
+
   return (
-    <BrandPageLayout {...brandConfig}>
+    <DefaultPageLayout>
       <div className="w-full max-w-4xl mx-auto px-6 py-12 text-white">
-        <h1 className="text-4xl font-bold mb-8">GameOn Community Safety Guidelines</h1>
+        <h1 className="text-4xl font-bold mb-8">
+          {brandConfig.name} Community Safety Guidelines
+        </h1>
 
         <div className="space-y-8 text-lg">
           <div>
@@ -38,7 +61,7 @@ export default function SafetyGuidelinesPage() {
             <h2 className="text-2xl font-semibold mb-2">3. Coach Responsibilities</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Coaches must follow the Code of Conduct, including webcam use and session professionalism.</li>
-              <li>Coaches may not offer services outside of GameOn or solicit off-platform payments.</li>
+              <li>Coaches may not offer services outside of {brandConfig.name} or solicit off-platform payments.</li>
             </ul>
           </div>
 
@@ -54,19 +77,30 @@ export default function SafetyGuidelinesPage() {
             <h2 className="text-2xl font-semibold mb-2">5. Reporting and Enforcement</h2>
             <ul className="list-disc pl-6 space-y-2">
               <li>Violations may result in warnings, suspensions, or permanent bans.</li>
-              <li>Reports are reviewed by GameOn Admins. Repeated abuse leads to escalating penalties.</li>
+              <li>Reports are reviewed by Admins. Repeated abuse leads to escalating penalties.</li>
             </ul>
           </div>
 
           <div>
             <h2 className="text-2xl font-semibold mb-2">6. Appeals</h2>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Suspended users may appeal by emailing gameon_playbetter@gmail.com.</li>
+              <li>Suspended users may appeal by emailing {email}.</li>
             </ul>
           </div>
         </div>
       </div>
-      <BoldFooter />
-    </BrandPageLayout>
+
+      <BoldFooter
+        logoSrc={brandConfig.logo}
+        companyName={brandConfig.companyName}
+        socials={brandConfig.socials}
+        legalLinks={legalLinks}
+        colors={{
+          primary: brandConfig.colors.primary,
+          button: brandConfig.colors.button,
+          buttonHover: brandConfig.colors.buttonHover,
+        }}
+      />
+    </DefaultPageLayout>
   );
 }

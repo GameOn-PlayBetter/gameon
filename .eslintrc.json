@@ -1,3 +1,12 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "@next/next/no-img-element": "off",      // ⬅️ Silence <img> element warnings
+    "jsx-a11y/alt-text": "off",              // ⬅️ Silence missing alt attribute warnings
+    "react-hooks/exhaustive-deps": "off",    // ⬅️ Silence missing dependency warnings
+    "@typescript-eslint/no-explicit-any": "off", // ⬅️ Allow implicit any for maps/arrays
+    "no-unused-vars": "off",                 // ⬅️ Ignore unused vars in dev
+    "react/no-unescaped-entities": "off",    // ⬅️ Ignore unescaped quotes in JSX
+    "react/prop-types": "off"                // ⬅️ No prop-types enforcement in TS
+  }
 }

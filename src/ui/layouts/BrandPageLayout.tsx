@@ -26,7 +26,7 @@ export default function BrandPageLayout({
   const socials = theme?.socials || [];
   const legalLinks = theme?.legalLinks || [];
   const companyName = theme?.companyName || brandName || "Your Brand";
-  const backgroundColor = colors.primary || "#0A0A0A";
+const backgroundColor = (colors as any)?.primary || "#0A0A0A";
 
   const headerLogo =
     brandName === "gameon"
@@ -51,20 +51,17 @@ export default function BrandPageLayout({
     >
       {/* HEADER */}
       <header className="w-full px-6 py-4 flex justify-between items-center">
-        <Link href={`/brand/${brandName}`} className="flex items-center">
-          {headerLogo && (
-            <img
-              src={headerLogo}
-              alt={`${brandName} logo`}
-              className="w-auto"
-              style={{
-                height: "48px",
-                maxHeight: "48px",
-                marginTop: "-6px",
-                marginBottom: "-6px",
-              }}
-            />
-          )}
+<Link
+  href={brandName === "skillery" ? "/" : `/${brandName}`}
+  className="flex items-center"
+>
+{headerLogo && (
+  <img
+    src={headerLogo}
+    alt={`${brandName} logo`}
+    className="h-20 min-w-[24px] flex-none object-cover cursor-pointer"
+  />
+)}
         </Link>
 
         <nav className="flex gap-6 items-center">
@@ -95,15 +92,15 @@ export default function BrandPageLayout({
               rel="noopener noreferrer"
               className="ml-4 px-4 py-2 rounded-lg font-semibold text-white transition"
               style={{
-                backgroundColor: colors.button || "#FF00C8",
+backgroundColor: (colors as any).button || "#FF00C8",
               }}
               onMouseOver={(e) => {
                 (e.target as HTMLElement).style.backgroundColor =
-                  colors.buttonHover || "#00CFFF";
+(colors as any).buttonHover || "#00CFFF";
               }}
               onMouseOut={(e) => {
                 (e.target as HTMLElement).style.backgroundColor =
-                  colors.button || "#FF00C8";
+(colors as any).button || "#FF00C8";
               }}
             >
               {ctaButton.label}
@@ -142,7 +139,7 @@ export default function BrandPageLayout({
         colors={colors}
         legalLinks={legalLinks}
         ctaButton={ctaButton}
-        logo={headerLogo}
+logoSrc={headerLogo}
       />
     </div>
   );

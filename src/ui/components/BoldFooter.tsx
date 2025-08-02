@@ -68,7 +68,7 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
     },
     ref
   ) {
-    const { theme } = useBrandTheme();
+    const theme = useBrandTheme();
 
     const brandCompany = companyName || theme?.companyName || "Your Brand";
     const brandLogo = logoSrc || theme?.logo || "";
@@ -76,26 +76,29 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
     const brandSocials = socials.length ? socials : theme?.socials || [];
     const brandLegal =
       legalLinks.length ? legalLinks : (theme as any)?.legalLinks || [];
+
+    // ✅ Skillery-specific gradient, fallback for other brands
+    const isSkillery = brandCompany.toLowerCase().includes("skillery");
+
+    const footerBackground = isSkillery
+      ? "linear-gradient(to bottom, #0A0A12, #000000)"
+      : brandColors.primary || "#0A0A0A"; // slightly lighter than pure black
+
     const hoverColor = brandColors.button || "#FF00C8";
 
-    const legalRows: typeof brandLegal[] = [];
+    // Split legal links into rows of 4
+    const legalRows: { label: string; href: string }[][] = [];
     for (let i = 0; i < brandLegal.length; i += 4) {
       legalRows.push(brandLegal.slice(i, i + 4));
     }
 
-    // 🔹 Skillery-only gradient background
-    const footerBackground =
-      brandName === "skillery"
-        ? "linear-gradient(to bottom, #090A10, #000000)"
-        : brandColors.primary || "#000000";
-
     return (
       <div
         className={SubframeUtils.twClassNames(
-          "w-full border-t border-solid border-neutral-100 text-white px-6 py-24",
+          "w-full border-t border-solid border-neutral-100 px-6 py-24 text-white",
           className
         )}
-        style={{ background: footerBackground }}
+        style={{ background: footerBackground, color: "white" }}
         ref={ref}
         {...otherProps}
       >
@@ -117,14 +120,14 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
             )}
           </div>
 
-          {/* Middle: Legal Links in 2 rows */}
+          {/* Middle: Legal Links */}
           <div className="flex flex-col gap-4 w-full md:w-1/3 text-lg">
             {legalRows.map((row, idx) => (
               <div
                 key={idx}
                 className="flex flex-wrap gap-x-6 gap-y-2 text-white justify-center"
               >
-                {row.map((link) => (
+                {row.map((link: { label: string; href: string }) => (
                   <Link
                     key={link.label}
                     href={link.href}
