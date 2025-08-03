@@ -95,6 +95,33 @@ const coaches =
           badgeVariant: "warning",
         },
       ]
+: brandKey === "codeon"
+    ? [
+        {
+          name: "DevMentor",
+          color: "text-brand-700",
+          badge: "Full Stack Developer",
+          image: "/images/codeon/experts/devmentor.jpg",
+          description: "Guidance on React, Node, and full stack projects",
+          badgeVariant: "brand",
+        },
+        {
+          name: "PythonGuru",
+          color: "text-success-700",
+          badge: "Python Expert",
+          image: "/images/codeon/experts/pythonguru.jpg",
+          description: "Debugging, automation, and data scripting help",
+          badgeVariant: "success",
+        },
+        {
+          name: "BugHunter",
+          color: "text-warning-700",
+          badge: "Debug Specialist",
+          image: "/images/codeon/experts/bughunter.jpg",
+          description: "Live debugging sessions for any project or language",
+          badgeVariant: "warning",
+        },
+      ]
     : [
         {
           name: "Coach Alex",
@@ -131,11 +158,13 @@ const bookSessionUrl =
     <div className="flex w-full flex-col items-center justify-center gap-12 px-6 py-24">
       <div className="flex w-full max-w-[1280px] flex-col items-start gap-8">
 <span className="text-[36px] font-[700] leading-[40px] text-success-700">
-  {brandKey === "fixon"
-    ? "Featured Fixers"
-    : brandKey === "jamon"
-    ? "Featured Music Coaches"
-    : "Featured Coaches"}
+{brandKey === "fixon"
+  ? "Featured Fixers"
+  : brandKey === "jamon"
+  ? "Featured Music Coaches"
+  : brandKey === "codeon"
+  ? "Featured Code Coaches"
+  : "Featured Coaches"}
 </span>
         <div className="flex w-full flex-wrap items-start gap-8">
           {coaches.map((coach, index) => (

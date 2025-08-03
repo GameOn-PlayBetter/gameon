@@ -4,6 +4,8 @@ import React from "react";
 import { BoldFooter } from "@/ui/components/BoldFooter";
 import { useBrandTheme } from "@/app/context/BrandThemeContext";
 import BrandedHeader from "@/ui/components/BrandedHeader"; // ✅ Added
+import { brands } from "@/lib/brands"; // ✅ IMPORT AT TOP
+
 
 interface BrandPageLayoutProps {
   children: React.ReactNode;
@@ -20,7 +22,8 @@ export default function BrandPageLayout({
   ctaButton,
   fontFamily = "sans-serif",
 }: BrandPageLayoutProps) {
-  const theme = useBrandTheme();
+  // ✅ Only one definition
+  const theme = useBrandTheme() || brands[brandName as keyof typeof brands];
 
   const colors = theme?.colors || {};
   const socials = theme?.socials || [];
@@ -28,7 +31,7 @@ export default function BrandPageLayout({
   const companyName = theme?.companyName || brandName || "Your Brand";
   const backgroundColor = (colors as any)?.primary || "#0A0A0A";
 
-  const headerLogo =
+const headerLogo =
     brandName === "gameon"
       ? "/images/gameon/go-logo.png"
       : brandName === "skillery"
@@ -37,6 +40,8 @@ export default function BrandPageLayout({
       ? "/images/fixon/fixon_logo_shinier.png"
       : brandName === "fiton"
       ? "/images/fiton/fiton_logo.png"
+      : brandName === "codeon"
+      ? "/images/codeon/codeon-logo.png"
       : brandName === "jamon"
       ? "/jamon/jamon_logo.png"
       : "";

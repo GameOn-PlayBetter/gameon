@@ -59,7 +59,7 @@ export function BrandThemeProvider({
     }
 
     setTheme({
-      colors: brandConfig.colors,
+colors: { primary: (brandConfig.colors as any).primary ?? (brandConfig.colors as any).background ?? "#000000", ...brandConfig.colors },
       name: brandConfig.name,
       logo: brandConfig.logo ?? "/images/skillery_logo_footer_hd.png",
       companyName: brandConfig.companyName ?? "Your Brand",

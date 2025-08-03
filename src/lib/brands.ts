@@ -232,6 +232,39 @@ fiton: {
     },
   ],
 }, // ✅ End FitOn brand
+codeon: {
+  name: "CodeOn",
+  tagline: "Pull Requests Welcome. Questions too.",
+  description: "Live coaching and support for coding, programming, and project building.",
+  logo: "/images/codeon/codeon-logo.png",
+  companyName: "CodeOn LLC",
+  fontFamily: "'Fira Code', monospace", // ✅ Techy but readable
+  showCenterLogo: false,
+  waitlistForm: "https://docs.google.com/forms/d/e/1FAIpQLSfRFhCl06sOOekDJhJfNINXBgvglv4fG004fpgbIhO28GcliA/viewform?usp=dialog",
+  coachForm: "https://docs.google.com/forms/d/e/1FAIpQLSeJCKV6nT2K39Y72PXNBkmx6A-12OEYfxu9EOKbYkCVQkul3A/viewform?usp=dialog",
+  socials: [],
+legalLinks: [
+  { label: "Privacy Policy", href: "/codeon/privacy-policy" },
+  { label: "Cookie Policy", href: "/codeon/cookie-policy" },
+  { label: "Safety Guidelines", href: "/codeon/safety-guidelines" },
+  { label: "Coach Eligibility", href: "/codeon/coach-requirements-eligibility" },
+  { label: "Contact", href: "/codeon/contact" },
+  { label: "Terms of Service", href: "/codeon/terms-of-service" },
+],
+  colors: {
+    background: "#010512",   // Deep tech blue/black
+    glow: "#00FFC8",         // Aqua glow for highlights
+    button: "#00FFC8",       // Button color matches glow
+    buttonHover: "#008CFF",  // Slightly darker hover
+    text: "#FFFFFF",         // White text on dark background
+  },
+  reserveBlock: {
+    headline: "Apply as a CodeOn Coach",
+    subtext: "We are inviting experienced developers and programmers to become CodeOn coaches. Help learners with coding, projects, and debugging when we launch!",
+    buttonText: "Apply as Coach",
+    formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeJCKV6nT2K39Y72PXNBkmx6A-12OEYfxu9EOKbYkCVQkul3A/viewform?usp=dialog",
+  },
+}, // ✅ End CodeOn brand
 jamon: {
   name: "JamOn",
   tagline: "Live Music. Real Lessons. Pure Vibe.",

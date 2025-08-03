@@ -24,14 +24,18 @@ export default function BrandHeader() {
 style={{ backgroundColor: headerColor }}
 >
         {/* Left: Logo */}
-        <Link href={`/brand/${currentBrand}`} className="flex items-center">
-          <Image
-            src={config.logo}
-            alt={`${config.name} Logo`}
-            width={48}
-            height={48}
-            className="h-auto w-12"
-          />
+<Link
+  href={currentBrand === "skillery" ? "/" : `/${currentBrand}`}
+  className="flex items-center"
+>
+<Image
+  src={config.logo}
+  alt={`${config.name} Logo`}
+  width={64}
+  height={64}
+  className="h-18 w-auto"
+  style={{ display: "block" }}
+/>
         </Link>
 
         {/* Right: Nav (hidden for Skillery) */}
@@ -53,7 +57,11 @@ style={{ backgroundColor: headerColor }}
               Login
             </button>
             <Link
-              href="/apply"
+              href={
+                currentBrand === "codeon"
+                  ? "https://docs.google.com/forms/d/e/1FAIpQLSeJCKV6nT2K39Y72PXNBkmx6A-12OEYfxu9EOKbYkCVQkul3A/viewform?usp=dialog"
+                  : "/apply"
+              }
               className="ml-2 px-4 py-2 rounded-md transition"
               style={{
                 backgroundColor: config.colors.button,
@@ -67,7 +75,7 @@ style={{ backgroundColor: headerColor }}
                 (e.currentTarget.style.backgroundColor = config.colors.button)
               }
             >
-              Become an Expert
+              Apply to Coach
             </Link>
           </nav>
         )}

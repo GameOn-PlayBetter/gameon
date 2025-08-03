@@ -24,4 +24,9 @@ export const searchPages = [
     description: "Live Music. Real Lessons. Pure Vibe.",
     path: "/jamon",
   },
+{
+  name: "CodeOn",
+  description: "Pull Requests Welcome. Questions too.",
+  path: "/codeon",
+},
 ];
