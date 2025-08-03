@@ -31,24 +31,26 @@ export default function BrandPageLayout({
   const companyName = theme?.companyName || brandName || "Your Brand";
   const backgroundColor = (colors as any)?.primary || "#0A0A0A";
 
-      const headerLogo =
-    brandName === "gameon"
-      ? "/images/gameon/go-logo.png"
-      : brandName === "skillery"
-      ? "/images/skillery_logo_wheadline.png"
-      : brandName === "fixon"
-      ? "/images/fixon/fixon_logo_shinier.png"
-      : brandName === "fiton"
-      ? "/images/fiton/fiton_logo.png"
-      : brandName === "codeon"
-      ? "/images/codeon/codeon-logo.png"
-      : brandName === "jamon"
-      ? "/jamon/jamon_logo.png"
-      : brandName === "learnon"
-      ? "/images/learnon/learnon-logo.png"
-      : brandName === "growon"
-      ? "/images/growon/growon-logo1.png"
-      : "";
+const headerLogo =
+  brandName === "gameon"
+    ? "/images/gameon/go-logo.png"
+    : brandName === "skillery"
+    ? "/images/skillery_logo_wheadline.png"
+    : brandName === "fixon"
+    ? "/images/fixon/fixon_logo_shinier.png"
+    : brandName === "fiton"
+    ? "/images/fiton/fiton_logo.png"
+    : brandName === "codeon"
+    ? "/images/codeon/codeon-logo.png"
+    : brandName === "jamon"
+    ? "/images/jamon/jamon_logo.png"
+    : brandName === "learnon"
+    ? "/images/learnon/learnon-logo.png"
+    : brandName === "growon"
+    ? "/images/growon/growon-logo1.png"
+    : brandName === "cookon"
+    ? "/images/cookon/cookon-logo.png"
+    : "";
 
   const resolvedBackground =
     brandName === "skillery" ? "transparent" : backgroundColor;

@@ -39,4 +39,9 @@ export const searchPages = [
   description: "Learn gardening, landscaping, and lawn care with expert coaches",
   path: "/growon",
 },
+  {
+    name: "CookOn",
+    description: "Live cooking classes and real-time chef guidance",
+    path: "/cookon",       // ✅ match your route
+  },
 ];

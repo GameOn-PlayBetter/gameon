@@ -65,7 +65,6 @@ const border =
   const glow =
     colors?.glow || theme?.colors.glow || button;
 
-// ✅ Hardcode Google Form links for GameOn, FixOn, FitOn, and JamOn
 // ✅ Hardcode Google Form links for all brands
 const finalFormUrl =
   (brandName || "").toLowerCase() === "gameon"
@@ -82,6 +81,8 @@ const finalFormUrl =
     ? "https://docs.google.com/forms/d/e/1FAIpQLScBmxT9-07ECY-ZWRgvMBTD0EJaYaY6zM_3yMxIZhcFXR7uIw/viewform?usp=dialog"
     : (brandName || "").toLowerCase() === "growon"
     ? "https://docs.google.com/forms/d/e/1FAIpQLScuiYejOy2kiTrzgrtLul1gsdcWkPVLf-JnYoOlosmenWzjqw/viewform?usp=dialog"
+    : (brandName || "").toLowerCase() === "cookon"
+    ? "https://docs.google.com/forms/d/e/1FAIpQLSd7kJCjrqEhtYXrYiYND90qfYILrIKI-myW-gwct3AZvdHVjQ/viewform?usp=dialog"
     : formUrl;
 
   return (

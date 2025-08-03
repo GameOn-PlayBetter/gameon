@@ -453,4 +453,71 @@ growon: {
     },
   ],
 }, // ✅ End GrowOn brand
+cookon: {
+  name: "CookOn",
+  tagline: "Cook. Learn. Share.",
+  description:
+    "Learn cooking, baking, meal prep, and kitchen skills from expert home and professional chefs.",
+  logo: "/images/cookon/cookon-logo.png",
+  companyName: "CookOn LLC",
+  fontFamily: "Poppins, sans-serif", // ✅ No Orbitron
+  fontClass: "font-['Poppins']",
+  showCenterLogo: false,
+  socials: [], // Add later if needed
+  legalLinks: [
+    { label: "Privacy Policy", href: "/cookon/privacy-policy" },
+    { label: "Cookie Policy", href: "/cookon/cookie-policy" },
+    { label: "Safety Guidelines", href: "/cookon/safety-guidelines" },
+    { label: "Coach Eligibility", href: "/cookon/coach-requirements-eligibility" },
+    { label: "Contact", href: "/cookon/contact" },
+    { label: "Terms of Service", href: "/cookon/terms-of-service" },
+  ],
+  colors: {
+    primary: "#0D141A",      // ✅ Your requested background
+    border: "border-white/20",
+    glow: "#FF914D",         // Warm cooking accent
+    button: "#801818",      
+    buttonHover: "#3D5143", 
+    text: "#FFFFFF",
+    hover: "#FFD166",        // Golden accent for highlights
+  },
+  forms: {
+    waitlistUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSd7kJCjrqEhtYXrYiYND90qfYILrIKI-myW-gwct3AZvdHVjQ/viewform?usp=dialog", // Student interest
+    coachFormUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSfiahiIqw4e0fq2Ac0IRfTdJHpU7pw0o6Iik0956tdM80Fuiw/viewform?usp=dialog", // Coach application
+  },
+  reserveBlock: {
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSfiahiIqw4e0fq2Ac0IRfTdJHpU7pw0o6Iik0956tdM80Fuiw/viewform?usp=dialog",
+    buttonColor: "success",
+    headline: "BECOME A COOKON COACH",
+    subtext:
+      "Apply now to share your cooking skills and help others grow in the kitchen.",
+    buttonText: "Sign Up to Coach",
+  },
+  featuredItems: [
+    {
+      title: "Cooking Basics & Meal Prep",
+      description:
+        "Master knife skills, meal planning, and simple home-cooked favorites.",
+      image: "/images/cookon/featured/basics.jpg",
+      href: "/cookon/basics",
+    },
+    {
+      title: "Baking & Pastry",
+      description:
+        "From breads to desserts, learn techniques for perfect baking results.",
+      image: "/images/cookon/featured/baking.jpg",
+      href: "/cookon/baking",
+    },
+    {
+      title: "International Cuisines",
+      description:
+        "Explore flavors from around the world and cook like a global chef.",
+      image: "/images/cookon/featured/international.jpg",
+      href: "/cookon/international",
+    },
+  ],
+}, // ✅ End CookOn brand
 }; // ✅ close brands object completely

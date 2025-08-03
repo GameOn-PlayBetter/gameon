@@ -35,6 +35,8 @@ export default function GameOnGames() {
       ? "Featured Lessons"
       : brandKey === "growon"
       ? "Featured Outdoor Skills"
+      : brandKey === "cookon"
+      ? "Featured Cooking Lessons"
       : "Featured Games";
 
   // ✅ Featured items per brand
@@ -80,6 +82,13 @@ export default function GameOnGames() {
           { title: "Lawn Care & Landscaping", description: "Master mowing, fertilizing, and designing the yard of your dreams.", image: "/images/growon/lawn.jpg" },
           { title: "Plant Care & Composting", description: "Discover how to keep your plants thriving and create rich soil naturally.", image: "/images/growon/plants.jpg" },
           { title: "Outdoor Projects & DIY", description: "Get guidance on raised beds, edging, and other outdoor projects.", image: "/images/growon/outdoor.jpg" },
+        ]
+      : brandKey === "cookon"
+      ? [
+          { title: "Cooking Basics & Meal Prep", description: "Master knife skills, meal planning, and home-cooked favorites.", image: "/images/cookon/cookonburger.jpg" },
+          { title: "Baking & Pastry", description: "From breads to desserts, learn techniques for perfect baking results.", image: "/images/cookon/cookondough.jpg" },
+          { title: "International Cuisines", description: "Explore flavors from around the world and cook like a global chef.", image: "/images/cookon/cookonsushi.jpg" },
+          { title: "Live Cooking Sessions", description: "Cook along with expert chefs and get real-time feedback.", image: "/images/cookon/cookoncheffood.jpg" },
         ]
       : [
           { title: "Minecraft", description: "Create the perfect gaming environment with our expert setup guides and recommendations.", image: "/images/minecraft.webp" },
@@ -131,6 +140,8 @@ export default function GameOnGames() {
   ? "All Lessons"
   : brandKey === "growon"
   ? "All Outdoor Skills"
+  : brandKey === "cookon"
+  ? "All Cooking Lessons"
   : "All Games"}
         </Button>
       </a>

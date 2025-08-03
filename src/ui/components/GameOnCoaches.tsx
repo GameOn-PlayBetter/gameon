@@ -176,6 +176,33 @@ const coaches =
           badgeVariant: "warning",
         },
       ]
+: brandKey === "cookon"
+    ? [
+        {
+          name: "ChefMario",
+          color: "text-brand-700",
+          badge: "Italian Cuisine Coach",
+          image: "/images/cookon/chefmario.jpg",
+          description: "Live pasta, pizza, and classic Italian dishes",
+          badgeVariant: "brand",
+        },
+        {
+          name: "BakerBella",
+          color: "text-success-700",
+          badge: "Baking Expert",
+          image: "/images/cookon/bakerbella.jpg",
+          description: "Cakes, pastries, and bread making in real-time",
+          badgeVariant: "success",
+        },
+        {
+          name: "SpiceMaster",
+          color: "text-warning-700",
+          badge: "World Cuisine Coach",
+          image: "/images/cookon/spicemaster.jpg",
+          description: "Indian, Thai, and global flavors live in your kitchen",
+          badgeVariant: "warning",
+        },
+      ]
     : [
         {
           name: "Coach Alex",
@@ -193,6 +220,7 @@ const coaches =
           description: "Competitive survivor & strategy expert",
           badgeVariant: "warning",
         },
+
         {
           name: "Coach Mike",
           color: "text-success-700",

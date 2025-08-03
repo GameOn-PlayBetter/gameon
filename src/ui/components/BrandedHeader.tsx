@@ -56,27 +56,42 @@ style={{ backgroundColor: headerColor }}
             >
               Login
             </button>
-            <Link
-              href={
-                currentBrand === "codeon"
-                  ? "https://docs.google.com/forms/d/e/1FAIpQLSeJCKV6nT2K39Y72PXNBkmx6A-12OEYfxu9EOKbYkCVQkul3A/viewform?usp=dialog"
-                  : "/apply"
-              }
-              className="ml-2 px-4 py-2 rounded-md transition"
-              style={{
-                backgroundColor: config.colors.button,
-                color: "white",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  config.colors.buttonHover)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = config.colors.button)
-              }
-            >
-              Apply to Coach
-            </Link>
+<Link
+  href={
+    currentBrand === "gameon"
+      ? "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/edit"
+      : currentBrand === "fixon"
+      ? "https://docs.google.com/forms/d/e/1FAIpQLSf7LbDaBGQBx7GnDxY5tn2ZCJerVM_VB5vuMpsWoRRKM1xoqA/viewform?usp=dialog"
+      : currentBrand === "fiton"
+      ? "https://docs.google.com/forms/d/e/1FAIpQLSesUepKOGjzCWZFpjdYkpg4jZ9GdqGLVqAozbShkfLsHD2CWA/viewform?usp=dialog"
+      : currentBrand === "jamon"
+      ? "https://docs.google.com/forms/d/e/1FAIpQLSf6W87gRrxzA6pEMOz_Xyqj3wyJcJ3VAfn88aLh4qeu8umprA/viewform?usp=dialog"
+      : currentBrand === "codeon"
+      ? "https://docs.google.com/forms/d/e/1FAIpQLSeJCKV6nT2K39Y72PXNBkmx6A-12OEYfxu9EOKbYkCVQkul3A/viewform?usp=dialog"
+      : currentBrand === "learnon"
+      ? "https://docs.google.com/forms/d/e/1FAIpQLScBmxT9-07ECY-ZWRgvMBTD0EJaYaY6zM_3yMxIZhcFXR7uIw/viewform?usp=dialog"
+      : currentBrand === "growon"
+      ? "https://docs.google.com/forms/d/e/1FAIpQLScuiYejOy2kiTrzgrtLul1gsdcWkPVLf-JnYoOlosmenWzjqw/viewform?usp=dialog"
+      : currentBrand === "cookon"
+      ? "https://docs.google.com/forms/d/e/1FAIpQLSfiahiIqw4e0fq2Ac0IRfTdJHpU7pw0o6Iik0956tdM80Fuiw/viewform?usp=dialog"
+      : "/apply"
+  }
+  target="_blank"                 // ✅ open in new tab
+  rel="noopener noreferrer"       // ✅ security best practice
+  className="ml-2 px-4 py-2 rounded-md transition"
+  style={{
+    backgroundColor: config.colors.button,
+    color: "white",
+  }}
+  onMouseEnter={(e) =>
+    (e.currentTarget.style.backgroundColor = config.colors.buttonHover)
+  }
+  onMouseLeave={(e) =>
+    (e.currentTarget.style.backgroundColor = config.colors.button)
+  }
+>
+  Apply to Coach
+</Link>
           </nav>
         )}
       </header>
