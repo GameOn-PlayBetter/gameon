@@ -29,4 +29,9 @@ export const searchPages = [
   description: "Pull Requests Welcome. Questions too.",
   path: "/codeon",
 },
+  {
+    name: "LearnOn",
+    description: "Tutoring, language learning, and academic success",
+    path: "/learnon",
+  },
 ];

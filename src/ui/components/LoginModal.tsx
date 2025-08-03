@@ -61,6 +61,48 @@ export function LoginModal({
       "Learn. Play. Vibe.",
       "Unlock Your Inner Musician",
     ],
+codeon: [
+  "Debug It Live",
+  "Your Next Project Awaits",
+  "Code Smarter, Not Harder",
+  "Build. Fix. Deploy.",
+  "Level Up Your Coding Skills",
+],
+learnon: [
+  "Study Smarter, Not Harder",
+  "Your Next Lesson Awaits",
+  "Master Any Subject Live",
+  "Unlock Academic Success",
+  "Learn. Practice. Succeed.",
+],
+growon: [
+  "Grow Your Green Thumb",
+  "Your Garden Awaits",
+  "Plant It. Grow It. Love It.",
+  "From Seed to Success",
+  "Make Your Garden Thrive",
+],
+cookon: [
+  "Cook Like a Pro",
+  "Your Next Recipe Awaits",
+  "From Kitchen to Table",
+  "Sizzle. Stir. Serve.",
+  "Unlock Your Inner Chef",
+],
+styleon: [
+  "Style Your Confidence",
+  "Your Next Look Awaits",
+  "From Closet to Catwalk",
+  "Glam Up and Shine",
+  "Unlock Your Inner Stylist",
+],
+moneyon: [
+  "Master Your Money",
+  "Your Financial Journey Starts Here",
+  "Unlock Smart Spending",
+  "Plan, Save, Succeed",
+  "Take Control of Your Future",
+],
   };
 
   const currentBrand = theme?.name?.toLowerCase?.() || "gameon";

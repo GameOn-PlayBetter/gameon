@@ -46,6 +46,9 @@ export default function GameOnWaitlistBlock({
     "https://docs.google.com/forms/d/e/1FAIpQLSf6W87gRrxzA6pEMOz_Xyqj3wyJcJ3VAfn88aLh4qeu8umprA/viewform?usp=dialog"; // ✅ JamOn student
   const codeOnFormUrl =
     "https://docs.google.com/forms/d/e/1FAIpQLSfRFhCl06sOOekDJhJfNINXBgvglv4fG004fpgbIhO28GcliA/viewform?usp=dialog"; // ✅ CodeOn
+const learnOnStudentFormUrl =
+  "https://docs.google.com/forms/d/e/1FAIpQLScBmxT9-07ECY-ZWRgvMBTD0EJaYaY6zM_3yMxIZhcFXR7uIw/viewform?usp=dialog";
+
 
 // ✅ Determine correct form URL per brand
 const finalFormUrl =
@@ -57,18 +60,22 @@ const finalFormUrl =
     ? jamOnStudentFormUrl
     : brandStr.toLowerCase() === "codeon"
     ? codeOnFormUrl
+    : brandStr.toLowerCase() === "learnon"
+    ? learnOnStudentFormUrl
     : formUrl || gameOnFormUrl;
 
   // ✅ Dynamic headline and subtext per brand
   const headline = "JOIN THE WAITLIST";
 const subtext =
-    brandStr.toLowerCase() === "fixon"
-      ? "FixOn is currently in pre-launch. Sign up below to reserve your spot when we go live and get help credits!"
-      : brandStr.toLowerCase() === "fiton"
-      ? "FitOn is currently in pre-launch. Sign up below to reserve your spot and start your fitness journey!"
-      : brandStr.toLowerCase() === "codeon"
-      ? "CodeOn is currently in pre-launch. Sign up below to reserve your spot and start your coding journey!"
-      : "GameOn is currently in pre-launch. Sign up below to reserve your spot and start your journey!";
+  brandStr.toLowerCase() === "fixon"
+    ? "FixOn is currently in pre-launch. Sign up below to reserve your spot when we go live and get help credits!"
+    : brandStr.toLowerCase() === "fiton"
+    ? "FitOn is currently in pre-launch. Sign up below to reserve your spot and start your fitness journey!"
+    : brandStr.toLowerCase() === "codeon"
+    ? "CodeOn is currently in pre-launch. Sign up below to reserve your spot and start your coding journey!"
+    : brandStr.toLowerCase() === "learnon"
+    ? "LearnOn is currently in pre-launch. Sign up below to reserve your spot and start your learning journey!"
+    : "GameOn is currently in pre-launch. Sign up below to reserve your spot and start your journey!";
   const buttonText = "Join the Waitlist"; // ✅ add this line
 
   return (

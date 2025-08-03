@@ -312,6 +312,78 @@ forms: {
     headline: "BECOME A MUSIC COACH",
     subtext: "Apply now to teach live music lessons on JamOn.",
     buttonText: "Start Coaching",
+  }, // ✅ close reserveBlock object properly
+}, // ✅ close JamOn brand
+learnon: {
+  name: "LearnOn",
+  tagline: "Live Learning. Lasting Success.",
+  description:
+    "Live learning sessions to help students and lifelong learners excel.",
+  logo: "/images/learnon/learnon-logo.png",
+  companyName: "LearnOn LLC",
+  fontFamily: "Nunito, sans-serif",
+  fontClass: "font-['Nunito']",
+  showCenterLogo: false,
+  socials: [
+    { icon: "tiktok", href: "#" },
+    { icon: "instagram", href: "#" },
+    { icon: "twitter", href: "#" },
+    { icon: "discord", href: "#" },
+  ],
+  legalLinks: [
+    { label: "Privacy Policy", href: "/learnon/privacy-policy" },
+    { label: "Cookie Policy", href: "/learnon/cookie-policy" },
+    { label: "Safety Guidelines", href: "/learnon/safety-guidelines" },
+    { label: "Coach Eligibility", href: "/learnon/coach-requirements-eligibility" },
+    { label: "Contact", href: "/learnon/contact" },
+    { label: "Terms of Service", href: "/learnon/terms-of-service" },
+  ],
+  colors: {
+    primary: "#0A0A0A", 
+    border: "border-white/30",
+    glow: "#A56B2C",        
+    button: "#1A2A5B",
+    buttonHover: "#A56B2C",
+    text: "#FFFFFF",
+    hover: "#CBA135",
   },
-},
+  forms: {
+    waitlistUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLScBmxT9-07ECY-ZWRgvMBTD0EJaYaY6zM_3yMxIZhcFXR7uIw/viewform?usp=dialog", // Student interest form
+    coachFormUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLScSimd1XyMa8AWpaSo0qQAyzVwdUwe9EZgGUVcoSPT6o5byJA/viewform?usp=dialog", // Coach application form
+  },
+  reserveBlock: {
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLScSimd1XyMa8AWpaSo0qQAyzVwdUwe9EZgGUVcoSPT6o5byJA/viewform?usp=dialog",
+    buttonColor: "success",
+    headline: "BECOME A COACH",
+    subtext:
+      "Apply now to join LearnOn as a live learning coach and start helping students worldwide.",
+    buttonText: "Sign Up to Coach",
+  },
+  featuredItems: [
+    {
+      title: "Math & Science Help",
+      description:
+        "Get live, step-by-step help on tough assignments and core concepts.",
+      image: "/images/learnon/featured/math.jpg",
+      href: "/learnon/math",
+    },
+    {
+      title: "Language Learning",
+      description:
+        "Practice speaking and improve your fluency with real-time conversation coaching.",
+      image: "/images/learnon/featured/language.jpg",
+      href: "/learnon/language",
+    },
+    {
+      title: "Study Skills & Tutoring",
+      description:
+        "Learn smarter, not harder. Develop strong study habits and test prep strategies.",
+      image: "/images/learnon/featured/study.jpg",
+      href: "/learnon/study",
+    },
+  ],
+}, // ✅ End LearnOn brand
 }; // ✅ close brands object completely

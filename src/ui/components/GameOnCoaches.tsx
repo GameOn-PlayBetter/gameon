@@ -95,13 +95,40 @@ const coaches =
           badgeVariant: "warning",
         },
       ]
+: brandKey === "learnon"
+    ? [
+        {
+          name: "TutorMia",
+          color: "text-brand-700",
+          badge: "Math & Science Tutor",
+          image: "/images/learnon/tutormia.jpg",
+          description: "Step-by-step help with math and science assignments",
+          badgeVariant: "brand",
+        },
+        {
+          name: "CoachLeo",
+          color: "text-success-700",
+          badge: "Language Coach",
+          image: "/images/learnon/coachleo.jpg",
+          description: "Real-time conversation and grammar practice",
+          badgeVariant: "success",
+        },
+        {
+          name: "StudySensei",
+          color: "text-warning-700",
+          badge: "Study Skills Mentor",
+          image: "/images/learnon/studysensei.jpg",
+          description: "Learn test prep and smarter study techniques live",
+          badgeVariant: "warning",
+        },
+      ]
 : brandKey === "codeon"
     ? [
         {
           name: "DevMentor",
           color: "text-brand-700",
           badge: "Full Stack Developer",
-          image: "/images/codeon/experts/devmentor.jpg",
+          image: "/images/codeon/devmentor.png",
           description: "Guidance on React, Node, and full stack projects",
           badgeVariant: "brand",
         },
@@ -109,7 +136,7 @@ const coaches =
           name: "PythonGuru",
           color: "text-success-700",
           badge: "Python Expert",
-          image: "/images/codeon/experts/pythonguru.jpg",
+          image: "/images/codeon/pythonguru.jpg",
           description: "Debugging, automation, and data scripting help",
           badgeVariant: "success",
         },
@@ -117,7 +144,7 @@ const coaches =
           name: "BugHunter",
           color: "text-warning-700",
           badge: "Debug Specialist",
-          image: "/images/codeon/experts/bughunter.jpg",
+          image: "/images/codeon/bughunter.jpg",
           description: "Live debugging sessions for any project or language",
           badgeVariant: "warning",
         },

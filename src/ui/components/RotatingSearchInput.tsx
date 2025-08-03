@@ -15,22 +15,44 @@ interface RotatingSearchInputProps {
 }
 
 const phrases = [
+  // ✅ General / multi-brand
   "Game. Fix. Jam. Learn.",
-  "From game help to garden hacks...",
   "Start mastering something...",
   "Level up. Fix it. Learn it. Style it.",
   "Search expert help across all topics...",
+  "Real help, fast.",
+  "Ask anything.",
+
+  // ✅ GameOn
   "Speedruns, syntax, or recipes?",
   "Master it.",
-  "Study smarter.",
-  "Crack the code.",
-  "Jam like a pro.",
   "Boss that bug.",
+
+  // ✅ LearnOn
+  "Learn live. Learn faster.",
+  "Homework help, step by step.",
+  "Languages, math, and more.",
+  "Study smarter, not harder.",
+  "Master tough subjects live.",
+  "Ace your next test.",
+  "Real tutors. Real progress.",
+
+  // ✅ CodeOn
+  "Debug it live.",
+  "Code with confidence.",
+  "Build it. Ship it. Fix it.",
+  "Level up your coding skills.",
+  "Debug, deploy, repeat.",
+  "Pull requests welcome.",
+  "Your code. Our guidance.",
+
+  // ✅ JamOn
+  "Jam like a pro.",
+
+  // ✅ Skillery / lifestyle
+  "From game help to garden hacks...",
   "Cook it. Style it. Fix it.",
   "Garden goals?",
-  "Real help, fast.",
-  "Search real skills.",
-  "Ask anything.",
 ];
 
 export default function RotatingSearchInput({

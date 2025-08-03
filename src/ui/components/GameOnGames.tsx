@@ -22,7 +22,7 @@ export default function GameOnGames() {
     (brandConfig as any).forms?.waitlistUrl || gameOnFormUrl;
 
   // ✅ Section title per brand
-  const sectionTitle =
+   const sectionTitle =
     brandKey === "fixon"
       ? "Featured Fixes"
       : brandKey === "fiton"
@@ -31,6 +31,8 @@ export default function GameOnGames() {
       ? "Featured Music"
       : brandKey === "codeon"
       ? "Featured Projects"
+      : brandKey === "learnon"
+      ? "Featured Lessons"
       : "Featured Games";
 
   // ✅ Featured items per brand
@@ -61,7 +63,14 @@ export default function GameOnGames() {
           { title: "Web Development", description: "Get live help building websites and fixing frontend issues.", image: "/images/codeon/webdev.jpg" },
           { title: "Python Projects", description: "Debug scripts, learn new libraries, and solve coding challenges.", image: "/images/codeon/python.jpg" },
           { title: "Game Development", description: "Learn Unity or Unreal basics and get support on your game projects.", image: "/images/codeon/gamedev.jpg" },
-          { title: "Code Reviews & Pull Requests", description: "Get your code reviewed live by experienced developers.", image: "/images/codeon/codereview.jpg" },
+          { title: "Code Reviews & Pull Requests", description: "Get your code reviewed live by experienced developers.", image: "/images/codeon/codereview.webp" },
+        ]
+      : brandKey === "learnon"
+      ? [
+          { title: "Math & Science Help", description: "Get live, step-by-step help on tough assignments and core concepts.", image: "/images/learnon/math.jpg" },
+          { title: "Language Learning", description: "Practice speaking and improve your fluency with real-time conversation coaching.", image: "/images/learnon/language.jpg" },
+          { title: "Study Skills & Tutoring", description: "Learn smarter, not harder. Develop strong study habits and test prep strategies.", image: "/images/learnon/study.jpg" },
+          { title: "College & Test Prep", description: "Get live coaching for SAT, ACT, and other major exams.", image: "/images/learnon/testprep.jpg" },
         ]
       : [
           { title: "Minecraft", description: "Create the perfect gaming environment with our expert setup guides and recommendations.", image: "/images/minecraft.webp" },
@@ -109,6 +118,8 @@ export default function GameOnGames() {
             ? "All Music Lessons"
             : brandKey === "codeon"
             ? "All Projects"
+            : brandKey === "learnon"
+            ? "All Lessons"
             : "All Games"}
         </Button>
       </a>
