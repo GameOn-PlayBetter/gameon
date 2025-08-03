@@ -47,7 +47,7 @@ const coaches =
           name: "ConcertViolinist",
           color: "text-brand-700",
           badge: "Violin Coach",
-          image: "/jamon/coaches/violin",
+          image: "/jamon/violin1.jpg",
           description: "Live violin lessons for chords, scales, and solos",
           badgeVariant: "brand",
         },
@@ -55,7 +55,7 @@ const coaches =
           name: "PianoPro",
           color: "text-success-700",
           badge: "Piano Instructor",
-          image: "/images/jamon/coaches/piano.jpg",
+          image: "/jamon/pianopro.jpg",
           description: "Learn scales, technique, and songs live",
           badgeVariant: "success",
         },
@@ -63,8 +63,35 @@ const coaches =
           name: "VocalVibes",
           color: "text-warning-700",
           badge: "Vocal Coach",
-          image: "/images/jamon/coaches/vocals.jpg",
+          image: "/jamon/vocals1.jpg",
           description: "Improve tone, range, and stage confidence",
+          badgeVariant: "warning",
+        },
+      ]
+    : brandKey === "fiton"
+    ? [
+        {
+          name: "Trainer H2Oman",
+          color: "text-brand-700",
+          badge: "Personal Trainer",
+          image: "/images/fiton/experts/trainermax.jpg",
+          description: "1:1 live workouts, form checks, and custom plans",
+          badgeVariant: "brand",
+        },
+        {
+          name: "YogaLina",
+          color: "text-success-700",
+          badge: "Yoga Coach",
+          image: "/images/fiton/experts/yogalina.jpg",
+          description: "Guided yoga sessions for flexibility and relaxation",
+          badgeVariant: "success",
+        },
+        {
+          name: "CardioKing",
+          color: "text-warning-700",
+          badge: "Cardio Expert",
+          image: "/images/fiton/experts/cardioking.jpg",
+          description: "HIIT and endurance training to boost stamina",
           badgeVariant: "warning",
         },
       ]
@@ -94,7 +121,6 @@ const coaches =
           badgeVariant: "success",
         },
       ];
-
 // ✅ TypeScript-safe access
 const bookSessionUrl =
   (brandConfig as any).forms?.waitlistUrl ||

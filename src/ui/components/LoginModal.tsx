@@ -25,13 +25,46 @@ export function LoginModal({
   const [headingText, setHeadingText] = useState("Log in to Earn Tokens");
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const headings = [
-    "Log in to Earn Tokens",
-    "Ready to Unlock Rewards?",
-    "Time to Level Up!",
-    "Claim Your Bonus Tokens",
-    "Power Up Your Session",
-  ];
+ const brandHeadings: Record<string, string[]> = {
+    gameon: [
+      "Log in to Earn Tokens",
+      "Ready to Unlock Rewards?",
+      "Time to Level Up!",
+      "Claim Your Bonus Tokens",
+      "Power Up Your Session",
+    ],
+    fiton: [
+      "Crush Your Fitness Goals",
+      "Time to Train Smarter",
+      "Unlock Your Personal Best",
+      "Fuel Your Workout",
+      "Your Next Rep Starts Here",
+    ],
+    skillery: [
+      "Unlock Your Potential",
+      "Your Next Skill Awaits",
+      "Learn Something New Today",
+      "Level Up Your Knowledge",
+      "Master a Skill, Anytime",
+    ],
+    fixon: [
+      "Fix It Like a Pro",
+      "Your DIY Journey Starts Here",
+      "Unlock Live Repair Help",
+      "Ready to Tackle Your Next Fix?",
+      "Hands-On Help, One Click Away",
+    ],
+    jamon: [
+      "Tune In and Jam",
+      "Your Next Lesson Awaits",
+      "Make Music Happen",
+      "Learn. Play. Vibe.",
+      "Unlock Your Inner Musician",
+    ],
+  };
+
+  const currentBrand = theme?.name?.toLowerCase?.() || "gameon";
+  const headings = brandHeadings[currentBrand] || brandHeadings["gameon"];
 
   // Update heading randomly each time modal opens
   useEffect(() => {
