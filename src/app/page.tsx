@@ -43,7 +43,7 @@ const brands: Brand[] = [
     badge: "Music",
     description: "Music coaching and live lessons",
     image: "images/jamonmusicscrolls.jpg",
-    href: "",
+    href: "jamon",
     variant: "neutral",
     live: true,
   },
@@ -52,7 +52,16 @@ const brands: Brand[] = [
     badge: "Health & Fitness",
     description: "Health coaching and fitness tracking",
     image: "images/fiton/fitness.jpg",
-    href: "",
+    href: "fiton",
+    variant: "neutral",
+    live: true,
+  },
+  {
+    name: "CodeOn",
+    badge: "Coding",
+    description: "Live coding sessions and mentorship",
+    image: "images/codeoncode1.jpg",
+    href: "codeon",
     variant: "neutral",
     live: true,
   },
@@ -61,7 +70,7 @@ const brands: Brand[] = [
     badge: "Tutoring",
     description: "Tutoring, language learning, and academic success",
     image: "images/learnonphonemath.jpg",
-    href: "",
+    href: "learnon",
     variant: "neutral",
     live: false,
   },
@@ -70,16 +79,7 @@ const brands: Brand[] = [
     badge: "Gardening",
     description: "Gardening and outdoor coaching",
     image: "images/growonpansies.jpg",
-    href: "",
-    variant: "neutral",
-    live: false,
-  },
-  {
-    name: "CodeOn",
-    badge: "Coding",
-    description: "Live coding sessions and mentorship",
-    image: "images/codeoncode1.jpg",
-    href: "",
+    href: "grownon",
     variant: "neutral",
     live: false,
   },
@@ -88,7 +88,7 @@ const brands: Brand[] = [
     badge: "Cooking",
     description: "Live cooking lessons and recipes",
     image: "images/cookonsushi.jpg",
-    href: "",
+    href: "cookon",
     variant: "neutral",
     live: false,
   },
@@ -97,7 +97,7 @@ const brands: Brand[] = [
     badge: "Fashion",
     description: "Personal styling, makeup and fashion advice",
     image: "images/styleonglamorwoman.jpg",
-    href: "",
+    href: "styleon",
     variant: "neutral",
     live: false,
   },
@@ -106,7 +106,7 @@ const brands: Brand[] = [
     badge: "Finance",
     description: "Personal finance and budgeting coaching",
     image: "images/moneyonbitcoin2.jpg",
-    href: "",
+    href: "moneyon",
     variant: "neutral",
     live: false,
   },
@@ -163,7 +163,7 @@ export default function Page() {
                       <a
                         key={brand.name}
                         href={brand.href}
-                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EE9E3A] transition-shadow duration-300"
+                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EF5716] transition-shadow duration-300"
                       >
                         <img
                           className="h-64 w-full flex-none object-cover"
@@ -185,7 +185,7 @@ export default function Page() {
                     ) : (
                       <div
                         key={brand.name}
-                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EF5716] transition-shadow duration-300"
+                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EE9E3A] transition-shadow duration-300"
                       >
                         <img
                           className="h-64 w-full flex-none object-cover"
