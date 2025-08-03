@@ -48,11 +48,28 @@ const phrases = [
 
   // ✅ JamOn
   "Jam like a pro.",
+  "Turn practice into performance.",
+  "From Mozart to movie themes.",
+  "Learn classical and pop hits live.",
+  "Stream your progress, play your passion.",
+  "From concert hall to TikTok stage.",
+  "Master music that moves audiences.",
+  "Blend classical skill with modern flair.",
+  "From sheet music to spotlight.",
+  "Practice, perform, and go viral.",
+  "Play what you love, live with a coach.",
 
   // ✅ Skillery / lifestyle
   "From game help to garden hacks...",
   "Cook it. Style it. Fix it.",
   "Garden goals?",
+
+  // ✅ GrowOn
+  "Plant it. Grow it. Master it.",
+  "Turn your yard into an oasis.",
+  "Live help for lawns, gardens, and plants.",
+  "Grow skills for every season.",
+  "Gardening and lawn care made easy.",
 ];
 
 export default function RotatingSearchInput({

@@ -31,7 +31,7 @@ export default function BrandPageLayout({
   const companyName = theme?.companyName || brandName || "Your Brand";
   const backgroundColor = (colors as any)?.primary || "#0A0A0A";
 
-  const headerLogo =
+      const headerLogo =
     brandName === "gameon"
       ? "/images/gameon/go-logo.png"
       : brandName === "skillery"
@@ -46,6 +46,8 @@ export default function BrandPageLayout({
       ? "/jamon/jamon_logo.png"
       : brandName === "learnon"
       ? "/images/learnon/learnon-logo.png"
+      : brandName === "growon"
+      ? "/images/growon/growon-logo1.png"
       : "";
 
   const resolvedBackground =

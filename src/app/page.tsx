@@ -72,7 +72,7 @@ const brands: Brand[] = [
     image: "images/learnonphonemath.jpg",
     href: "learnon",
     variant: "neutral",
-    live: false,
+    live: true,
   },
   {
     name: "GrowOn",
@@ -81,7 +81,7 @@ const brands: Brand[] = [
     image: "images/growonpansies.jpg",
     href: "grownon",
     variant: "neutral",
-    live: false,
+    live: true,
   },
   {
     name: "CookOn",

@@ -386,4 +386,71 @@ learnon: {
     },
   ],
 }, // ✅ End LearnOn brand
+growon: {
+  name: "GrowOn",
+  tagline: "Plant. Learn. Thrive.",
+  description:
+    "Learn gardening, landscaping, lawn care, and plant care from experienced outdoor coaches.",
+  logo: "/images/growon/growon-logo1.png",
+  companyName: "GrowOn LLC",
+  fontFamily: "Poppins, sans-serif",
+  fontClass: "font-['Poppins']",
+  showCenterLogo: false,
+  socials: [], // No socials yet
+  legalLinks: [
+    { label: "Privacy Policy", href: "/growon/privacy-policy" },
+    { label: "Cookie Policy", href: "/growon/cookie-policy" },
+    { label: "Safety Guidelines", href: "/growon/safety-guidelines" },
+    { label: "Coach Eligibility", href: "/growon/coach-requirements-eligibility" },
+    { label: "Contact", href: "/growon/contact" },
+    { label: "Terms of Service", href: "/growon/terms-of-service" },
+  ],
+  colors: {
+    primary: "#0A1D1A",      // Dark soil background
+    border: "border-white/20",
+    glow: "#4CAF50",         // Vibrant green
+    button: "#6B8E23",       // Olive green
+    buttonHover: "#8FBC8F",  // Lighter green hover
+    text: "#FFFFFF",
+    hover: "#CBA135",        // Gold accent
+  },
+  forms: {
+    waitlistUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLScuiYejOy2kiTrzgrtLul1gsdcWkPVLf-JnYoOlosmenWzjqw/viewform?usp=dialog", // Student interest form
+    coachFormUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSd5zh3KkUgWT5VqY0leGrdk4csBZ7IgTTy2Qr-y8RB_rFzDWw/viewform?usp=dialog", // Coach application form
+  },
+  reserveBlock: {
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSd5zh3KkUgWT5VqY0leGrdk4csBZ7IgTTy2Qr-y8RB_rFzDWw/viewform?usp=dialog",
+    buttonColor: "success",
+    headline: "BECOME A GROWON COACH",
+    subtext:
+      "Apply now to share your gardening and outdoor skills with students nationwide.",
+    buttonText: "Sign Up to Coach",
+  },
+  featuredItems: [
+    {
+      title: "Vegetable & Flower Gardening",
+      description:
+        "Learn to plant, grow, and maintain healthy, beautiful gardens.",
+      image: "/images/growon/featured/gardening.jpg",
+      href: "/growon/gardening",
+    },
+    {
+      title: "Lawn Care & Landscaping",
+      description:
+        "Master mowing, fertilizing, and designing the yard of your dreams.",
+      image: "/images/growon/featured/lawn.jpg",
+      href: "/growon/lawn",
+    },
+    {
+      title: "Plant Care & Composting",
+      description:
+        "Discover how to keep your plants thriving and create rich soil naturally.",
+      image: "/images/growon/featured/plants.jpg",
+      href: "/growon/plants",
+    },
+  ],
+}, // ✅ End GrowOn brand
 }; // ✅ close brands object completely

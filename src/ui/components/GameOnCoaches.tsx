@@ -149,6 +149,33 @@ const coaches =
           badgeVariant: "warning",
         },
       ]
+: brandKey === "growon"
+    ? [
+        {
+          name: "GreenThumb",
+          color: "text-brand-700",
+          badge: "Gardening Coach",
+          image: "/images/growon/greenthumb.jpg",
+          description: "Vegetable & flower gardening guidance",
+          badgeVariant: "brand",
+        },
+        {
+          name: "LawnBoss",
+          color: "text-success-700",
+          badge: "Lawn & Landscaping Pro",
+          image: "/images/growon/lawnboss.jpg",
+          description: "Lawn care, design, and maintenance tips",
+          badgeVariant: "success",
+        },
+        {
+          name: "PlantWhisperer",
+          color: "text-warning-700",
+          badge: "Plant Care Specialist",
+          image: "/images/growon/plantwhisperer.jpg",
+          description: "Indoor plant care & composting live help",
+          badgeVariant: "warning",
+        },
+      ]
     : [
         {
           name: "Coach Alex",

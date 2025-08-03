@@ -22,7 +22,7 @@ export default function GameOnGames() {
     (brandConfig as any).forms?.waitlistUrl || gameOnFormUrl;
 
   // ✅ Section title per brand
-   const sectionTitle =
+  const sectionTitle =
     brandKey === "fixon"
       ? "Featured Fixes"
       : brandKey === "fiton"
@@ -33,6 +33,8 @@ export default function GameOnGames() {
       ? "Featured Projects"
       : brandKey === "learnon"
       ? "Featured Lessons"
+      : brandKey === "growon"
+      ? "Featured Outdoor Skills"
       : "Featured Games";
 
   // ✅ Featured items per brand
@@ -72,6 +74,13 @@ export default function GameOnGames() {
           { title: "Study Skills & Tutoring", description: "Learn smarter, not harder. Develop strong study habits and test prep strategies.", image: "/images/learnon/study.jpg" },
           { title: "College & Test Prep", description: "Get live coaching for SAT, ACT, and other major exams.", image: "/images/learnon/testprep.jpg" },
         ]
+      : brandKey === "growon"
+      ? [
+          { title: "Vegetable & Flower Gardening", description: "Learn to plant, grow, and maintain healthy, beautiful gardens.", image: "/images/growon/gardening.jpg" },
+          { title: "Lawn Care & Landscaping", description: "Master mowing, fertilizing, and designing the yard of your dreams.", image: "/images/growon/lawn.jpg" },
+          { title: "Plant Care & Composting", description: "Discover how to keep your plants thriving and create rich soil naturally.", image: "/images/growon/plants.jpg" },
+          { title: "Outdoor Projects & DIY", description: "Get guidance on raised beds, edging, and other outdoor projects.", image: "/images/growon/outdoor.jpg" },
+        ]
       : [
           { title: "Minecraft", description: "Create the perfect gaming environment with our expert setup guides and recommendations.", image: "/images/minecraft.webp" },
           { title: "Dead by Daylight", description: "Join our gaming community events and compete with players worldwide.", image: "/images/dbd.jpg" },
@@ -110,17 +119,19 @@ export default function GameOnGames() {
       </div>
       <a href={formUrl} target="_blank" rel="noopener noreferrer">
         <Button size="large" icon={<FeatherArrowRightCircle />}>
-          {brandKey === "fixon"
-            ? "All Fixes"
-            : brandKey === "fiton"
-            ? "All Workouts"
-            : brandKey === "jamon"
-            ? "All Music Lessons"
-            : brandKey === "codeon"
-            ? "All Projects"
-            : brandKey === "learnon"
-            ? "All Lessons"
-            : "All Games"}
+{brandKey === "fixon"
+  ? "All Fixes"
+  : brandKey === "fiton"
+  ? "All Workouts"
+  : brandKey === "jamon"
+  ? "All Music Lessons"
+  : brandKey === "codeon"
+  ? "All Projects"
+  : brandKey === "learnon"
+  ? "All Lessons"
+  : brandKey === "growon"
+  ? "All Outdoor Skills"
+  : "All Games"}
         </Button>
       </a>
     </div>

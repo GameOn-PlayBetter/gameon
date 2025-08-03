@@ -48,6 +48,8 @@ export default function GameOnWaitlistBlock({
     "https://docs.google.com/forms/d/e/1FAIpQLSfRFhCl06sOOekDJhJfNINXBgvglv4fG004fpgbIhO28GcliA/viewform?usp=dialog"; // ✅ CodeOn
 const learnOnStudentFormUrl =
   "https://docs.google.com/forms/d/e/1FAIpQLScBmxT9-07ECY-ZWRgvMBTD0EJaYaY6zM_3yMxIZhcFXR7uIw/viewform?usp=dialog";
+  const growOnStudentFormUrl =
+    "https://docs.google.com/forms/d/e/1FAIpQLScuiYejOy2kiTrzgrtLul1gsdcWkPVLf-JnYoOlosmenWzjqw/viewform?usp=dialog"; // ✅ GrowOn student
 
 
 // ✅ Determine correct form URL per brand
@@ -62,10 +64,12 @@ const finalFormUrl =
     ? codeOnFormUrl
     : brandStr.toLowerCase() === "learnon"
     ? learnOnStudentFormUrl
+    : brandStr.toLowerCase() === "growon"
+    ? growOnStudentFormUrl
     : formUrl || gameOnFormUrl;
 
-  // ✅ Dynamic headline and subtext per brand
-  const headline = "JOIN THE WAITLIST";
+// ✅ Dynamic headline and subtext per brand
+const headline = "JOIN THE WAITLIST";
 const subtext =
   brandStr.toLowerCase() === "fixon"
     ? "FixOn is currently in pre-launch. Sign up below to reserve your spot when we go live and get help credits!"
@@ -75,8 +79,11 @@ const subtext =
     ? "CodeOn is currently in pre-launch. Sign up below to reserve your spot and start your coding journey!"
     : brandStr.toLowerCase() === "learnon"
     ? "LearnOn is currently in pre-launch. Sign up below to reserve your spot and start your learning journey!"
+    : brandStr.toLowerCase() === "growon"
+    ? "GrowOn is currently in pre-launch. Sign up below to reserve your spot and start your gardening journey!"
     : "GameOn is currently in pre-launch. Sign up below to reserve your spot and start your journey!";
-  const buttonText = "Join the Waitlist"; // ✅ add this line
+
+const buttonText = "Join the Waitlist"; // ✅ add this line
 
   return (
     <div

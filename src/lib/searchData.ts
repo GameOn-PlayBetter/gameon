@@ -34,4 +34,9 @@ export const searchPages = [
     description: "Tutoring, language learning, and academic success",
     path: "/learnon",
   },
+{
+  name: "GrowOn",
+  description: "Learn gardening, landscaping, and lawn care with expert coaches",
+  path: "/growon",
+},
 ];
