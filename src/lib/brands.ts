@@ -79,12 +79,12 @@ legalLinks: [
 socialImage: "https://skillery.co/images/skillery/skillery-social-preview.png",
     socials: [], // ✅ empty array prevents TS errors
 legalLinks: [
-  { label: "Privacy Policy", href: "/skillery/privacy-policy" },
-  { label: "Cookie Policy", href: "/skillery/cookie-policy" },
-  { label: "Safety Guidelines", href: "/skillery/safety-guidelines" },
-  { label: "Coach Eligibility", href: "/skillery/coach-requirements-eligibility" },
-  { label: "Contact", href: "/skillery/contact" },
-  { label: "Terms of Service", href: "/skillery/terms-of-service" }, // optional if added
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Cookie Policy", href: "/cookie-policy" },
+  { label: "Safety Guidelines", href: "/safety-guidelines" },
+  { label: "Coach Eligibility", href: "/coach-requirements-eligibility" },
+  { label: "Contact", href: "//contact" },
+  { label: "Terms of Service", href: "/terms-of-service" }, // optional if added
 ],
     colors: {
       primary: "#0F1E30",

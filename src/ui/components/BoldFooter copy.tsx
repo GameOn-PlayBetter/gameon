@@ -82,7 +82,7 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
 
     const footerBackground = isSkillery
       ? "linear-gradient(to bottom, #0A0A12, #000000)"
-      : brandColors.primary || "#0A0A0A";
+      : brandColors.primary || "#0A0A0A"; // slightly lighter than pure black
 
     const hoverColor = brandColors.button || "#FF00C8";
 
@@ -91,23 +91,6 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
     for (let i = 0; i < brandLegal.length; i += 4) {
       legalRows.push(brandLegal.slice(i, i + 4));
     }
-
-// ✅ Safe link handler: prevents /brand/brand/path
-const formatHref = (href: string) => {
-  if (!brandName) return href;
-
-  // ✅ For Skillery, always use root-level pages
-  if (brandName.toLowerCase() === "skillery") {
-    return href;  // <-- no brand prefix
-  }
-
-  // ✅ Any other brand only prepends if not already included
-  if (href.startsWith(`/${brandName}`) || href.startsWith("/brand")) {
-    return href;
-  }
-
-  return `/${brandName}${href}`;
-};
 
     return (
       <div
@@ -147,7 +130,7 @@ const formatHref = (href: string) => {
                 {row.map((link: { label: string; href: string }) => (
                   <Link
                     key={link.label}
-                    href={formatHref(link.href)}
+                    href={link.href}
                     className="transition"
                     style={{ color: "white", transition: "color 0.3s" }}
                     onMouseOver={(e) => {
