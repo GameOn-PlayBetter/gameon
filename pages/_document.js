@@ -4,7 +4,11 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Put raw <meta> tags here */}
+        {/* ✅ Favicon for browser tab */}
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+        {/* ✅ SEO and Social Tags */}
         <meta name="title" content="Skillery – Unlock Your Potential" />
         <meta
           name="description"
@@ -18,7 +22,10 @@ export default function Document() {
           property="og:description"
           content="Live skill-building sessions for gaming, music, coding, fitness, and more. Learn from experts. Unlock your potential with Skillery."
         />
-        <meta property="og:image" content="https://skillery.co/images/skillery-social-preview.png" />
+        <meta
+          property="og:image"
+          content="https://skillery.co/images/skillery-social-preview.png"
+        />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://skillery.co/" />
@@ -27,7 +34,10 @@ export default function Document() {
           name="twitter:description"
           content="Live skill-building sessions for gaming, music, coding, fitness, and more. Learn from experts. Unlock your potential with Skillery."
         />
-        <meta name="twitter:image" content="https://skillery.co/images/skillery-social-preview.png" />
+        <meta
+          name="twitter:image"
+          content="https://skillery.co/images/skillery-social-preview.png"
+        />
       </Head>
       <body>
         <Main />
