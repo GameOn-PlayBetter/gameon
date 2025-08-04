@@ -1,42 +1,38 @@
-import { Html, Head, Main, NextScript } from 'next/document';
+// app/page.tsx
+import { Metadata } from 'next';
 
-export default function Document() {
+export const metadata: Metadata = {
+  title: 'Skillery – Unlock Your Potential',
+  description:
+    'Live skill-building sessions for gaming, music, coding, fitness, and more. Learn from experts. Unlock your potential with Skillery.',
+  openGraph: {
+    type: 'website',
+    url: 'https://skillery.co',
+    title: 'Skillery – Unlock Your Potential',
+    description:
+      'Live skill-building sessions for gaming, music, coding, fitness, and more. Learn from experts. Unlock your potential with Skillery.',
+    images: [
+      {
+        url: 'https://skillery.co/images/skillery-social-preview.png',
+        width: 1200,
+        height: 630,
+        alt: 'Skillery Logo and Tagline',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Skillery – Unlock Your Potential',
+    description:
+      'Live skill-building sessions for gaming, music, coding, fitness, and more. Learn from experts. Unlock your potential with Skillery.',
+    images: ['https://skillery.co/images/skillery-social-preview.png'],
+  },
+};
+
+export default function HomePage() {
   return (
-    <Html lang="en">
-      <Head>
-        {/* Primary Meta Tags */}
-        <meta name="title" content="Skillery – Unlock Your Potential" />
-        <meta
-          name="description"
-          content="Live skill-building sessions for gaming, music, coding, fitness, and more. Learn from experts. Unlock your potential with Skillery."
-        />
-
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://skillery.co/" />
-        <meta property="og:title" content="Skillery – Unlock Your Potential" />
-        <meta
-          property="og:description"
-          content="Live skill-building sessions for gaming, music, coding, fitness, and more. Learn from experts. Unlock your potential with Skillery."
-        />
-        <meta property="og:image" content="https://skillery.co/images/skillery-social-preview.png" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://skillery.co/" />
-        <meta name="twitter:title" content="Skillery – Unlock Your Potential" />
-        <meta
-          name="twitter:description"
-          content="Live skill-building sessions for gaming, music, coding, fitness, and more. Learn from experts. Unlock your potential with Skillery."
-        />
-        <meta name="twitter:image" content="https://skillery.co/images/skillery-social-preview.png" />
-      </Head>
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
+    <div>
+      {/* Your homepage JSX here */}
+    </div>
   );
 }
