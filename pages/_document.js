@@ -19,7 +19,7 @@ export default function Document() {
           property="og:description"
           content="Live skill-building sessions for gaming, music, coding, fitness, and more. Learn from experts. Unlock your potential with Skillery."
         />
-        <meta property="og:image" content="https://skillery.co/social-preview.jpg" />
+<meta property="og:image" content="https://skillery.co/images/skillery-social-preview.png" />
 
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
@@ -29,7 +29,7 @@ export default function Document() {
           name="twitter:description"
           content="Live skill-building sessions for gaming, music, coding, fitness, and more. Learn from experts. Unlock your potential with Skillery."
         />
-        <meta name="twitter:image" content="https://skillery.co/social-preview.jpg" />
+<meta name="twitter:image" content="https://skillery.co/images/skillery-social-preview.png" />
       </Head>
       <body>
         <Main />
