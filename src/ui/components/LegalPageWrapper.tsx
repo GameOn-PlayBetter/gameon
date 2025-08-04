@@ -9,7 +9,8 @@ interface LegalPageWrapperProps {
 }
 
 export default function LegalPageWrapper({ children }: LegalPageWrapperProps) {
-  const { brand } = useParams();
+  const params = useParams() || {};
+  const brand = (params as Record<string, string | string[]>).brand;
   const brandKey = Array.isArray(brand)
     ? brand[0].toLowerCase()
     : brand?.toLowerCase() || "gameon";

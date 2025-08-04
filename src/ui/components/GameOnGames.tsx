@@ -8,7 +8,9 @@ import { Button } from "@/ui/components/Button";
 import { FeatherArrowRight, FeatherArrowRightCircle } from "@subframe/core";
 
 export default function GameOnGames() {
-  const { brand } = useParams();
+  // ✅ Safe handling for strictNullChecks
+  const params = useParams() || {};
+  const brand = (params as Record<string, string | string[]>).brand;
   const brandKey = (brand as keyof typeof brands) || "gameon";
   const brandConfig = brands[brandKey];
   const glowColor = brandConfig.colors.glow;

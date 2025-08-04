@@ -5,7 +5,6 @@ export default function Document() {
     <Html lang="en">
       <Head>
         {/* Primary Meta Tags */}
-        <title>Skillery – Unlock Your Potential</title>
         <meta name="title" content="Skillery – Unlock Your Potential" />
         <meta
           name="description"

@@ -27,12 +27,13 @@ const DefaultPageLayoutRoot = React.forwardRef<
 ) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const router = useRouter();
-  const { brand } = useParams();
+ const params = useParams() || {};
+const brand = (params as Record<string, string | string[]>).brand;
+
 const brandKey = Array.isArray(brand)
   ? brand[0].toLowerCase()
   : brand?.toLowerCase() || "gameon"; // fallback to gameon
-  const brandConfig = brands[brandKey] || brands.gameon; // fallback to GameOn
-
+const brandConfig = brands[brandKey] || brands.gameon; // fallback to GameOn
   const handleEarnTokensClick = () => {
     const isLoggedIn = false; // Temporary logic
     if (isLoggedIn) {

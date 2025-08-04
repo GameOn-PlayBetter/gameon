@@ -2,11 +2,15 @@
   "compilerOptions": {
     "baseUrl": ".",
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,                     // ⬅️ disable strict mode to silence implicit any errors
-    "noImplicitAny": false,               // ⬅️ allow implicit any
+    "strict": false, // ⬅️ disable strict mode to silence implicit any errors
+    "noImplicitAny": false, // ⬅️ allow implicit any
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -21,11 +25,20 @@
       }
     ],
     "paths": {
-      "@/*": ["src/*"],
-      "@/subframe/*": ["src/subframe/*"],
-      "@/ui/*": ["src/ui/*"],
-      "@/lib/*": ["src/lib/*"]
-    }
+      "@/*": [
+        "src/*"
+      ],
+      "@/subframe/*": [
+        "src/subframe/*"
+      ],
+      "@/ui/*": [
+        "src/ui/*"
+      ],
+      "@/lib/*": [
+        "src/lib/*"
+      ]
+    },
+    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",
@@ -34,5 +47,7 @@
     ".next/types/**/*.ts",
     "tailwind.config.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

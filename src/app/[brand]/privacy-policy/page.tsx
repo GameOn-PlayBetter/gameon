@@ -9,7 +9,10 @@ import LegalPageWrapper from "@/ui/components/LegalPageWrapper";
 import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
 
 export default function PrivacyPolicyPage() {
-  const { brand } = useParams();
+  // ✅ Safe handling for strictNullChecks with lowercase fallback
+  const params = useParams() || {};
+  const brand = (params as Record<string, string | string[]>).brand;
+
   const brandKey = Array.isArray(brand)
     ? brand[0].toLowerCase()
     : brand?.toLowerCase() || "gameon";

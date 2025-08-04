@@ -8,8 +8,11 @@ import { brands } from "@/lib/brands";
 import LegalPageWrapper from "@/ui/components/LegalPageWrapper";
 import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
 
-export default function SafetyGuidelinesPage() {
-  const { brand } = useParams();
+export default function PrivacyPolicyPage() {
+  // ✅ Safe handling for strictNullChecks with lowercase fallback
+  const params = useParams() || {};
+  const brand = (params as Record<string, string | string[]>).brand;
+
   const brandKey = Array.isArray(brand)
     ? brand[0].toLowerCase()
     : brand?.toLowerCase() || "gameon";

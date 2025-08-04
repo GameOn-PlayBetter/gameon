@@ -9,7 +9,8 @@ import { Avatar } from "@/ui/components/Avatar";
 import { Badge } from "@/ui/components/Badge";
 
 export default function GameOnCoaches() {
-  const { brand } = useParams();
+  const params = useParams() || {};
+  const brand = (params as Record<string, string | string[]>).brand;
   const brandKey = (brand as keyof typeof brands) || "gameon";
   const brandConfig = brands[brandKey];
 

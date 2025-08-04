@@ -28,8 +28,10 @@ interface Coach {
 }
 
 export default function BrandLandingPage() {
-  const { brand } = useParams();
-  const brandKey = brand as keyof typeof brands;
+  // ✅ Safe handling for strictNullChecks
+  const params = useParams() || {};
+  const brand = (params as Record<string, string | string[]>).brand;
+  const brandKey = (brand as keyof typeof brands) || "gameon";
   const brandConfig = brands[brandKey];
 
   const [showLogin, setShowLogin] = useState(false);

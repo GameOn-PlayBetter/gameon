@@ -20,7 +20,8 @@ export default function GameOnWaitlistBlock({
   colors = {},
   formUrl,
 }: WaitlistBlockProps) {
-  const { brand } = useParams();
+  const params = useParams() || {};
+  const brand = (params as Record<string, string | string[]>).brand;
 
   // ✅ Normalize brand string
   const brandStr: string = Array.isArray(brand) ? brand[0] : brand || "";

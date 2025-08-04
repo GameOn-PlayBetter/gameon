@@ -9,12 +9,15 @@ import LegalPageWrapper from "@/ui/components/LegalPageWrapper";
 import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
 
 export default function ContactPage() {
-  const { brand } = useParams();
+  // ✅ Safe handling for strictNullChecks
+  const params = useParams() || {};
+  const brand = (params as Record<string, string | string[]>).brand;
+
   const brandKey = Array.isArray(brand)
     ? brand[0].toLowerCase()
     : brand?.toLowerCase() || "gameon";
-  const brandConfig = brands[brandKey as keyof typeof brands];
 
+  const brandConfig = brands[brandKey as keyof typeof brands];
   if (!brandConfig) return notFound();
 
   const colors = brandConfig.colors;
@@ -34,7 +37,9 @@ export default function ContactPage() {
               <h1 className="text-4xl font-bold mb-8">Contact Us</h1>
 
               <div className="space-y-6 text-lg">
-                <p>Have questions, feedback, or need help? We’d love to hear from you.</p>
+                <p>
+                  Have questions, feedback, or need help? We’d love to hear from you.
+                </p>
 
                 <p>Reach out any time at {email}</p>
 
