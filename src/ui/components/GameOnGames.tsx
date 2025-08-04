@@ -61,10 +61,10 @@ const sectionTitle =
         ]
       : brandKey === "jamon"
       ? [
-          { title: "Violin Lessons", description: "Learn chords, theory, and your favorite songs with live instruction.", image: "jamon/violin.jpg" },
-          { title: "Piano & Keys", description: "Master scales, bowing technique, and your favorite pieces with real-time guidance.", image: "jamon/piano.jpg" },
-          { title: "Vocal Coaching", description: "Improve tone, range, and performance skills with live coaching.", image: "jamon/vocals.jpg" },
-          { title: "Songwriting & Music Theory", description: "Understand music structure and create your own songs live with an expert.", image: "jamon/theory.jpg" },
+          { title: "Violin Lessons", description: "Learn chords, theory, and your favorite songs with live instruction.", image: "images/jamon/violin.jpg" },
+          { title: "Piano & Keys", description: "Master scales, bowing technique, and your favorite pieces with real-time guidance.", image: "images/jamon/piano.jpg" },
+          { title: "Vocal Coaching", description: "Improve tone, range, and performance skills with live coaching.", image: "images/jamon/vocals.jpg" },
+          { title: "Songwriting & Music Theory", description: "Understand music structure and create your own songs live with an expert.", image: "images/jamon/theory.jpg" },
         ]
       : brandKey === "codeon"
       ? [
