@@ -230,6 +230,33 @@ const coaches =
           badgeVariant: "warning",
         },
       ]
+    : brandKey === "moneyon"
+    ? [
+        {
+          name: "FinanceGuru",
+          color: "text-brand-700",
+          badge: "Certified Financial Coach",
+          image: "/images/moneyon/financeguru.jpg",
+          description: "Budgeting, investing, and financial planning",
+          badgeVariant: "brand",
+        },
+        {
+          name: "WealthMentor",
+          color: "text-success-700",
+          badge: "Investment Advisor",
+          image: "/images/moneyon/wealthmentor.jpg",
+          description: "Stocks, ETFs, and retirement strategies",
+          badgeVariant: "success",
+        },
+        {
+          name: "CreditWizard",
+          color: "text-warning-700",
+          badge: "Credit & Debt Specialist",
+          image: "/images/moneyon/creditwizard.jpg",
+          description: "Credit score boosts and debt management plans",
+          badgeVariant: "warning",
+        },
+      ]
     : [
         {
           name: "Coach Alex",

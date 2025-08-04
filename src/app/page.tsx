@@ -105,10 +105,10 @@ const brands: Brand[] = [
     name: "MoneyOn",
     badge: "Finance",
     description: "Personal finance and budgeting coaching",
-    image: "images/moneyonbitcoin2.jpg",
+    image: "images//moneyon/moneyonbitcoin1.jpg",
     href: "moneyon",
     variant: "neutral",
-    live: false,
+    live: true,
   },
 ];
 

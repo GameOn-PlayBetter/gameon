@@ -80,6 +80,13 @@ const phrases = [
   "Shape your style with live beauty and grooming lessons.",
   "Your look. Your rules. Hair, nails, makeup, and more.",
   "Confidence starts with hair, nails, makeup, and self‑care.",
+
+// ✅ MoneyOn
+"Master your finances live.",
+"Learn to budget, invest, and save.",
+"From budgeting to Bitcoin — we coach it live.",
+"Plan your future with real financial experts.",
+"Smart money skills. Live sessions.",
 ];
 
 export default function RotatingSearchInput({

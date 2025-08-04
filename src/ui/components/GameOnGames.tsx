@@ -22,24 +22,26 @@ export default function GameOnGames() {
     (brandConfig as any).forms?.waitlistUrl || gameOnFormUrl;
 
   // ✅ Section title per brand
-  const sectionTitle =
-    brandKey === "fixon"
-      ? "Featured Fixes"
-      : brandKey === "fiton"
-      ? "Featured Workouts"
-      : brandKey === "jamon"
-      ? "Featured Music"
-      : brandKey === "codeon"
-      ? "Featured Projects"
-      : brandKey === "learnon"
-      ? "Featured Lessons"
-      : brandKey === "growon"
-      ? "Featured Outdoor Skills"
-      : brandKey === "cookon"
-      ? "Featured Cooking Lessons"
-      : brandKey === "styleon"
-      ? "Featured Beauty & Grooming Lessons"
-      : "Featured Games";
+const sectionTitle =
+  brandKey === "fixon"
+    ? "Featured Fixes"
+    : brandKey === "fiton"
+    ? "Featured Workouts"
+    : brandKey === "jamon"
+    ? "Featured Music"
+    : brandKey === "codeon"
+    ? "Featured Projects"
+    : brandKey === "learnon"
+    ? "Featured Lessons"
+    : brandKey === "growon"
+    ? "Featured Outdoor Skills"
+    : brandKey === "cookon"
+    ? "Featured Cooking Lessons"
+    : brandKey === "styleon"
+    ? "Featured Beauty & Grooming Lessons"
+    : brandKey === "moneyon"
+    ? "Featured Finance Lessons"
+    : "Featured Games";
 
   // ✅ Featured items per brand
   const featuredItems =
@@ -98,6 +100,13 @@ export default function GameOnGames() {
           { title: "Makeup & Skincare", description: "From natural looks to bold glam, plus self-care routines.", image: "/images/styleon/makeup.jpg" },
           { title: "Nails & Nail Art", description: "DIY manicures, nail art, and maintenance tips live.", image: "/images/styleon/nails.jpg" },
           { title: "Full Style Confidence", description: "Combine hair, makeup, and grooming for a complete look.", image: "/images/styleon/fullstyle.jpg" },
+        ]
+      : brandKey === "moneyon"
+      ? [
+          { title: "Investing & Trading", description: "Learn stocks, ETFs, and crypto with live step-by-step guidance.", image: "/images/moneyon/investing.jpg" },
+          { title: "Budgeting & Saving", description: "Master personal finance strategies to save smarter and plan ahead.", image: "/images/moneyon/budgeting.jpg" },
+          { title: "Retirement & Taxes", description: "Understand retirement accounts and tax planning for long-term growth.", image: "/images/moneyon/retirement.jpg" },
+          { title: "Debt & Credit Management", description: "Learn to pay down debt, boost credit scores, and manage loans effectively.", image: "/images/moneyon/credit.jpg" },
         ]
       : [
           { title: "Minecraft", description: "Create the perfect gaming environment with our expert setup guides and recommendations.", image: "/images/minecraft.webp" },

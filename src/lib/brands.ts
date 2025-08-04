@@ -592,4 +592,76 @@ cookon: {
     },
   ],
 }, // ✅ End CookOn brand
+moneyon: {
+  name: "MoneyOn",
+  tagline: "Your Money. Your Move.",
+  description:
+    "Learn to manage, invest, and grow your finances with live guidance from certified professionals.",
+  logo: "/images/moneyon/moneyon-logo.png",
+  companyName: "MoneyOn LLC",
+  fontFamily: "Nunito, sans-serif",
+  fontClass: "font-['Nunito']",
+  showCenterLogo: false,
+  socials: [
+    { icon: "tiktok", href: "#" },
+    { icon: "instagram", href: "#" },
+    { icon: "twitter", href: "#" },
+    { icon: "discord", href: "#" },
+  ],
+  legalLinks: [
+    { label: "Privacy Policy", href: "/moneyon/privacy-policy" },
+    { label: "Cookie Policy", href: "/moneyon/cookie-policy" },
+    { label: "Safety Guidelines", href: "/moneyon/safety-guidelines" },
+    { label: "Coach Eligibility", href: "/moneyon/coach-requirements-eligibility" },
+    { label: "Contact", href: "/moneyon/contact" },
+    { label: "Terms of Service", href: "/moneyon/terms-of-service" },
+  ],
+  colors: {
+    primary: "#0A0F18",
+    border: "border-white/30",
+    glow: "#FFFFFF",          // gold glow for finance/trust
+    button: "#006400",        // green for money/approval
+    buttonHover: "#444444",
+    text: "#FFFFFF",
+    hover: "#32CD32",         // lime green hover for money vibe
+  },
+  forms: {
+    waitlistUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSe5sqBzdbspQ4sDQFyoLA8aVpo3EZ1chbo_LMhaPFLMCSsuNg/viewform?usp=dialog", // Student interest form
+    coachFormUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSdyzHNv2g-DetGnikmWCqQJytU3XUnlyDF9vrvTTCAM6nLcrg/viewform?usp=dialog", // Coach application form
+  },
+  reserveBlock: {
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSdyzHNv2g-DetGnikmWCqQJytU3XUnlyDF9vrvTTCAM6nLcrg/viewform?usp=dialog",
+    buttonColor: "success",
+    headline: "BECOME A COACH",
+    subtext:
+      "Apply now to join MoneyOn and teach live finance skills including investing, budgeting, and wealth growth.",
+    buttonText: "Sign Up to Coach",
+  },
+  featuredItems: [
+    {
+      title: "Investing & Trading",
+      description:
+        "Learn the basics of stock, ETF, and crypto investing with live guidance.",
+      image: "/images/moneyon/featured/investing.jpg",
+      href: "/moneyon/investing",
+    },
+    {
+      title: "Budgeting & Saving",
+      description:
+        "Master personal finance strategies to save smarter and plan ahead.",
+      image: "/images/moneyon/featured/budgeting.jpg",
+      href: "/moneyon/budgeting",
+    },
+    {
+      title: "Retirement & Taxes",
+      description:
+        "Understand retirement accounts and tax planning to grow long-term wealth.",
+      image: "/images/moneyon/featured/retirement.jpg",
+      href: "/moneyon/retirement",
+    },
+  ],
+}, // ✅ End MoneyOn brand
 }; // ✅ close brands object completely

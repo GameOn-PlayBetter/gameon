@@ -49,4 +49,9 @@ export const searchPages = [
   description: "Live beauty, grooming, makeup, and nail lessons for everyone",
   path: "/styleon",
 },
+  {
+    name: "MoneyOn", 
+    description: "Live financial coaching — learn to budget, invest, and save",
+    path: "/moneyon",
+  },
 ];

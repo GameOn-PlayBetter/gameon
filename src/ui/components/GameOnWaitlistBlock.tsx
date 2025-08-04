@@ -54,6 +54,9 @@ const cookOnStudentFormUrl =
   "https://docs.google.com/forms/d/e/1FAIpQLSd7kJCjrqEhtYXrYiYND90qfYILrIKI-myW-gwct3AZvdHVjQ/viewform?usp=dialog"; 
 const styleOnStudentFormUrl =
   "https://docs.google.com/forms/d/e/1FAIpQLScLW9RfsiHPB54C_kdDx2C4BRTg4IkYSC-Uyiz76Vq-W6JwnQ/viewform?usp=dialog"; 
+const moneyOnStudentFormUrl =
+  "https://docs.google.com/forms/d/e/1FAIpQLSe5sqBzdbspQ4sDQFyoLA8aVpo3EZ1chbo_LMhaPFLMCSsuNg/viewform?usp=dialog";
+
 
 
 // ✅ Determine correct form URL per brand
@@ -74,6 +77,8 @@ const finalFormUrl =
     ? cookOnStudentFormUrl
     : brandStr.toLowerCase() === "styleon"
     ? styleOnStudentFormUrl
+    : brandStr.toLowerCase() === "moneyon"
+    ? moneyOnStudentFormUrl
     : formUrl || gameOnFormUrl;
 
 // ✅ Dynamic headline and subtext per brand
@@ -93,6 +98,8 @@ const subtext =
     ? "CookOn is currently in pre-launch. Sign up below to reserve your spot and start your cooking journey!"
     : brandStr.toLowerCase() === "styleon"
     ? "StyleOn is currently in pre-launch. Sign up below to reserve your spot and start your beauty and grooming journey!"
+    : brandStr.toLowerCase() === "moneyon"
+    ? "MoneyOn is currently in pre-launch. Sign up below to reserve your spot and start your financial journey!"
     : "GameOn is currently in pre-launch. Sign up below to reserve your spot and start your journey!";
 
 const buttonText = "Join the Waitlist"; // ✅ add this line

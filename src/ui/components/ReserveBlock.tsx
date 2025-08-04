@@ -85,6 +85,8 @@ const finalFormUrl =
     ? "https://docs.google.com/forms/d/e/1FAIpQLSd7kJCjrqEhtYXrYiYND90qfYILrIKI-myW-gwct3AZvdHVjQ/viewform?usp=dialog"
     : (brandName || "").toLowerCase() === "styleon"
     ? "https://docs.google.com/forms/d/e/1FAIpQLScLW9RfsiHPB54C_kdDx2C4BRTg4IkYSC-Uyiz76Vq-W6JwnQ/viewform?usp=dialog"
+    : (brandName || "").toLowerCase() === "moneyon"
+    ? "https://docs.google.com/forms/d/e/1FAIpQLSe5sqBzdbspQ4sDQFyoLA8aVpo3EZ1chbo_LMhaPFLMCSsuNg/viewform?usp=dialog"
     : formUrl;
 
   return (
