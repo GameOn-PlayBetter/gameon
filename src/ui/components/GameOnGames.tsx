@@ -96,10 +96,10 @@ const sectionTitle =
         ]
       : brandKey === "styleon"
       ? [
-          { title: "Hair Styling & Grooming", description: "Learn cuts, fades, braids, and updos for every style.", image: "/images/styleon/hair.jpg" },
+          { title: "Hair Styling & Grooming", description: "Learn cuts, fades, braids, and updos for every style.", image: "/images/styleon/hair2.jpg" },
           { title: "Makeup & Skincare", description: "From natural looks to bold glam, plus self-care routines.", image: "/images/styleon/makeup.jpg" },
-          { title: "Nails & Nail Art", description: "DIY manicures, nail art, and maintenance tips live.", image: "/images/styleon/nails.jpg" },
-          { title: "Full Style Confidence", description: "Combine hair, makeup, and grooming for a complete look.", image: "/images/styleon/fullstyle.jpg" },
+          { title: "Nails & Nail Art", description: "DIY manicures, nail art, and maintenance tips live.", image: "/images/styleon/nails2.jpg" },
+          { title: "Full Style Confidence", description: "Combine hair, makeup, and grooming for a complete look.", image: "/images/styleon/fullstyle1.jpg" },
         ]
       : brandKey === "moneyon"
       ? [
