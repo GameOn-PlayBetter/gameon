@@ -10,6 +10,7 @@ export const brands = {
     fontFamily: "Orbitron",
     fontClass: "font-['Orbitron']", // ✅ Added
     showCenterLogo: false,
+  socialImage: "https://skillery.co/images/gameon-social-preview.png",
     socials: [
       { icon: "tiktok", href: "https://www.tiktok.com/@gameon.gg" },
       { icon: "instagram", href: "https://www.instagram.com/gameon_playbetter_together1/" },
@@ -75,6 +76,7 @@ legalLinks: [
     fontFamily: "sans-serif",
     fontClass: "font-sans", // ✅ Added
     showCenterLogo: true,
+socialImage: "https://skillery.co/images/skillery/skillery-social-preview.png",
     socials: [], // ✅ empty array prevents TS errors
 legalLinks: [
   { label: "Privacy Policy", href: "/skillery/privacy-policy" },
@@ -112,6 +114,7 @@ legalLinks: [
     fontFamily: "sans-serif",
     fontClass: "font-sans", // ✅ Added
     showCenterLogo: true,
+socialImage: "https://skillery.co/images/fixon/fixon-social-preview.png",
     socials: [],
     legalLinks: [
       { label: "Privacy Policy", href: "/privacy" },
@@ -170,6 +173,7 @@ fiton: {
   fontFamily: "Montserrat, sans-serif",
   fontClass: "font-['Montserrat']",
   showCenterLogo: true,
+socialImage: "https://skillery.co/images/fiton/fiton-social-preview.png",
   socials: [
     { icon: "tiktok", href: "#" },
     { icon: "instagram", href: "#" },
@@ -240,6 +244,7 @@ codeon: {
   companyName: "CodeOn LLC",
   fontFamily: "'Fira Code', monospace", // ✅ Techy but readable
   showCenterLogo: false,
+socialImage: "https://skillery.co/images/codeon/codeon-social-preview.png",
   waitlistForm: "https://docs.google.com/forms/d/e/1FAIpQLSfRFhCl06sOOekDJhJfNINXBgvglv4fG004fpgbIhO28GcliA/viewform?usp=dialog",
   coachForm: "https://docs.google.com/forms/d/e/1FAIpQLSeJCKV6nT2K39Y72PXNBkmx6A-12OEYfxu9EOKbYkCVQkul3A/viewform?usp=dialog",
   socials: [],
@@ -274,6 +279,7 @@ jamon: {
   fontFamily: "sans-serif",
   fontClass: "font-sans",   // ✅ Matches your other Skillery brands
   showCenterLogo: false,
+socialImage: "https://skillery.co/images/jamon/jamon-social-preview.png",
   socials: [
     { icon: "tiktok", href: "#" },      // optional if you add socials
     { icon: "instagram", href: "#" },
@@ -324,6 +330,7 @@ learnon: {
   fontFamily: "Nunito, sans-serif",
   fontClass: "font-['Nunito']",
   showCenterLogo: false,
+socialImage: "https://skillery.co/images/learnon/learnon-social-preview.png",
   socials: [
     { icon: "tiktok", href: "#" },
     { icon: "instagram", href: "#" },
@@ -396,6 +403,7 @@ styleon: {
   fontFamily: "Nunito, sans-serif",
   fontClass: "font-['Nunito']",
   showCenterLogo: false,
+socialImage: "https://skillery.co/images/styleon/styleon-social-preview.png",
   socials: [
     { icon: "tiktok", href: "#" },
     { icon: "instagram", href: "#" },
@@ -468,6 +476,7 @@ growon: {
   fontFamily: "Poppins, sans-serif",
   fontClass: "font-['Poppins']",
   showCenterLogo: false,
+socialImage: "https://skillery.co/images/growon/growon-social-preview.png",
   socials: [], // No socials yet
   legalLinks: [
     { label: "Privacy Policy", href: "/growon/privacy-policy" },
@@ -535,6 +544,7 @@ cookon: {
   fontFamily: "Poppins, sans-serif", // ✅ No Orbitron
   fontClass: "font-['Poppins']",
   showCenterLogo: false,
+socialImage: "https://skillery.co/images/cookon/cookon-social-preview.png",
   socials: [], // Add later if needed
   legalLinks: [
     { label: "Privacy Policy", href: "/cookon/privacy-policy" },
@@ -602,6 +612,7 @@ moneyon: {
   fontFamily: "Nunito, sans-serif",
   fontClass: "font-['Nunito']",
   showCenterLogo: false,
+socialImage: "https://skillery.co/images/moneyon/moneyon-social-preview.png",
   socials: [
     { icon: "tiktok", href: "#" },
     { icon: "instagram", href: "#" },
