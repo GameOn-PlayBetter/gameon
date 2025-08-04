@@ -37,6 +37,8 @@ export default function GameOnGames() {
       ? "Featured Outdoor Skills"
       : brandKey === "cookon"
       ? "Featured Cooking Lessons"
+      : brandKey === "styleon"
+      ? "Featured Beauty & Grooming Lessons"
       : "Featured Games";
 
   // ✅ Featured items per brand
@@ -90,6 +92,13 @@ export default function GameOnGames() {
           { title: "International Cuisines", description: "Explore flavors from around the world and cook like a global chef.", image: "/images/cookon/cookonsushi.jpg" },
           { title: "Live Cooking Sessions", description: "Cook along with expert chefs and get real-time feedback.", image: "/images/cookon/cookoncheffood.jpg" },
         ]
+      : brandKey === "styleon"
+      ? [
+          { title: "Hair Styling & Grooming", description: "Learn cuts, fades, braids, and updos for every style.", image: "/images/styleon/hair.jpg" },
+          { title: "Makeup & Skincare", description: "From natural looks to bold glam, plus self-care routines.", image: "/images/styleon/makeup.jpg" },
+          { title: "Nails & Nail Art", description: "DIY manicures, nail art, and maintenance tips live.", image: "/images/styleon/nails.jpg" },
+          { title: "Full Style Confidence", description: "Combine hair, makeup, and grooming for a complete look.", image: "/images/styleon/fullstyle.jpg" },
+        ]
       : [
           { title: "Minecraft", description: "Create the perfect gaming environment with our expert setup guides and recommendations.", image: "/images/minecraft.webp" },
           { title: "Dead by Daylight", description: "Join our gaming community events and compete with players worldwide.", image: "/images/dbd.jpg" },
@@ -142,6 +151,8 @@ export default function GameOnGames() {
   ? "All Outdoor Skills"
   : brandKey === "cookon"
   ? "All Cooking Lessons"
+  : brandKey === "styleon"
+  ? "All Beauty & Grooming Lessons"
   : "All Games"}
         </Button>
       </a>

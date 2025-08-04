@@ -50,6 +50,8 @@ const headerLogo =
     ? "/images/growon/growon-logo1.png"
     : brandName === "cookon"
     ? "/images/cookon/cookon-logo.png"
+    : brandName === "styleon"
+    ? "/images/styleon/styleon-logo.png"
     : "";
 
   const resolvedBackground =

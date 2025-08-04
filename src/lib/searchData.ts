@@ -44,4 +44,9 @@ export const searchPages = [
     description: "Live cooking classes and real-time chef guidance",
     path: "/cookon",       // ✅ match your route
   },
+{
+  name: "StyleOn",
+  description: "Live beauty, grooming, makeup, and nail lessons for everyone",
+  path: "/styleon",
+},
 ];

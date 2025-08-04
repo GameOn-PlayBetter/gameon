@@ -203,6 +203,33 @@ const coaches =
           badgeVariant: "warning",
         },
       ]
+: brandKey === "styleon"
+    ? [
+        {
+          name: "BlendMaster",
+          color: "text-brand-700",
+          badge: "Makeup & Grooming Coach",
+          image: "/images/styleon/blendmaster.jpg",
+          description: "DIY makeup, beard care, and self-care routines",
+          badgeVariant: "brand",
+        },
+        {
+          name: "PolishPro",
+          color: "text-success-700",
+          badge: "Nails & Style Mentor",
+          image: "/images/styleon/polishpro.jpg",
+          description: "Live nail art, maintenance, and style guidance",
+          badgeVariant: "success",
+        },
+        {
+          name: "StyleSensei",
+          color: "text-warning-700",
+          badge: "Hair & Full Look Coach",
+          image: "/images/styleon/stylesensei.jpg",
+          description: "Hair styling, grooming, and complete DIY looks",
+          badgeVariant: "warning",
+        },
+      ]
     : [
         {
           name: "Coach Alex",

@@ -70,6 +70,16 @@ const phrases = [
   "Live help for lawns, gardens, and plants.",
   "Grow skills for every season.",
   "Gardening and lawn care made easy.",
+
+  // ✅ StyleOn (fully inclusive)
+  "Haircuts, fades, and flawless makeup at home.",
+  "Learn DIY nails, grooming, and beauty skills live.",
+  "Master your look: hair, nails, and makeup.",
+  "From beard care to bold eye looks, we teach it all.",
+  "DIY self‑care, hair styling, and nail art for everyone.",
+  "Shape your style with live beauty and grooming lessons.",
+  "Your look. Your rules. Hair, nails, makeup, and more.",
+  "Confidence starts with hair, nails, makeup, and self‑care.",
 ];
 
 export default function RotatingSearchInput({

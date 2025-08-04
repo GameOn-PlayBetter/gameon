@@ -386,6 +386,78 @@ learnon: {
     },
   ],
 }, // ✅ End LearnOn brand
+styleon: {
+  name: "StyleOn",
+  tagline: "LIVE YOUR LOOK",
+  description:
+    "Learn to master your own beauty and style at home with live 1:1 sessions from real experts.",
+  logo: "/images/styleon/styleon-logo.png",
+  companyName: "StyleOn LLC",
+  fontFamily: "Nunito, sans-serif",
+  fontClass: "font-['Nunito']",
+  showCenterLogo: false,
+  socials: [
+    { icon: "tiktok", href: "#" },
+    { icon: "instagram", href: "#" },
+    { icon: "twitter", href: "#" },
+    { icon: "discord", href: "#" },
+  ],
+  legalLinks: [
+    { label: "Privacy Policy", href: "/styleon/privacy-policy" },
+    { label: "Cookie Policy", href: "/styleon/cookie-policy" },
+    { label: "Safety Guidelines", href: "/styleon/safety-guidelines" },
+    { label: "Coach Eligibility", href: "/styleon/coach-requirements-eligibility" },
+    { label: "Contact", href: "/styleon/contact" },
+    { label: "Terms of Service", href: "/styleon/terms-of-service" },
+  ],
+  colors: {
+    primary: "#0A0A0A",
+    border: "border-white/30",
+    glow: "#8B0000",           // gold glow for beauty/luxury vibe
+    button: "#A56B2C",         // warm gold-brown button
+    buttonHover: "#444444",    // lighter gold hover
+    text: "#FFFFFF",
+    hover: "#FFD700",
+  },
+  forms: {
+    waitlistUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLScLW9RfsiHPB54C_kdDx2C4BRTg4IkYSC-Uyiz76Vq-W6JwnQ/viewform?usp=dialog", // Student interest form
+    coachFormUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSd0dUnJg-m34vIHALS-hAz3UUSTS80-2W3MQcBsFfZSmdGx7Q/viewform?usp=dialog", // Coach application form
+  },
+  reserveBlock: {
+    formUrl:
+      "https://docs.google.com/forms/d/e/1FAIpQLSd0dUnJg-m34vIHALS-hAz3UUSTS80-2W3MQcBsFfZSmdGx7Q/viewform?usp=dialog",
+    buttonColor: "success",
+    headline: "BECOME A COACH",
+    subtext:
+      "Apply now to join StyleOn and teach live DIY beauty skills in hair, makeup, and nails.",
+    buttonText: "Sign Up to Coach",
+  },
+  featuredItems: [
+    {
+      title: "Hair Styling & Care",
+      description:
+        "Learn to create stunning looks, braids, and updos all by yourself at home.",
+      image: "/images/styleon/featured/hair.jpg",
+      href: "/styleon/hair",
+    },
+    {
+      title: "Makeup & Skincare",
+      description:
+        "Master everyday and glam makeup while learning proper skin prep and care.",
+      image: "/images/styleon/featured/makeup.jpg",
+      href: "/styleon/makeup",
+    },
+    {
+      title: "Nail Art & Self-Care",
+      description:
+        "Perfect at-home manicures, nail art, and self-care techniques with expert guidance.",
+      image: "/images/styleon/featured/nails.jpg",
+      href: "/styleon/nails",
+    },
+  ],
+}, // ✅ End StyleOn brand
 growon: {
   name: "GrowOn",
   tagline: "Plant. Learn. Thrive.",
