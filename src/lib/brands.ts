@@ -274,7 +274,7 @@ jamon: {
   name: "JamOn",
   tagline: "Live Music. Real Lessons. Pure Vibe.",
   description: "Learn, jam, and vibe with live music lessons and sessions.",
-  logo: "/jamon/jamon_logo.png",
+  logo: "/images/jamon/jamon_logo.png",
   companyName: "JamOn LLC",  // ✅ FIXED
   fontFamily: "sans-serif",
   fontClass: "font-sans",   // ✅ Matches your other Skillery brands

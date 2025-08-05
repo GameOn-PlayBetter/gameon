@@ -1,14 +1,11 @@
 "use client";
-/*
- * Documentation:
- * Topbar with right nav — https://app.subframe.com/2dcb043d3f5e/library?component=Topbar+with+right+nav_d20e2e52-ba3d-4133-901a-9a15f7f729a9
- * Badge — https://app.subframe.com/2dcb043d3f5e/library?component=Badge_97bdb082-1124-4dd7-a335-b14b822d0157
- * Avatar — https://app.subframe.com/2dcb043d3f5e/library?component=Avatar_bec25ae6-5010-4485-b46b-cf79e3943ab2
- */
 
 import React from "react";
 import * as SubframeUtils from "../utils";
 import * as SubframeCore from "@subframe/core";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { brands } from "@/lib/brands";
 
 interface NavItemProps extends React.HTMLAttributes<HTMLDivElement> {
   selected?: boolean;
@@ -18,19 +15,13 @@ interface NavItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const NavItem = React.forwardRef<HTMLElement, NavItemProps>(function NavItem(
-  {
-    selected = false,
-    icon = null,
-    children,
-    className,
-    ...otherProps
-  }: NavItemProps,
+  { selected = false, icon = null, children, className, ...otherProps },
   ref
 ) {
   return (
     <div
       className={SubframeUtils.twClassNames(
-        "group/79ff7d2b flex cursor-pointer items-center justify-center gap-2 rounded-md px-2 py-1",
+        "group flex cursor-pointer items-center justify-center gap-2 rounded-md px-2 py-1",
         className
       )}
       ref={ref as any}
@@ -39,11 +30,8 @@ const NavItem = React.forwardRef<HTMLElement, NavItemProps>(function NavItem(
       {icon ? (
         <SubframeCore.IconWrapper
           className={SubframeUtils.twClassNames(
-            "text-heading-3 font-heading-3 text-subtext-color group-hover/79ff7d2b:text-default-font",
-            {
-              "text-default-font group-hover/79ff7d2b:text-default-font":
-                selected,
-            }
+            "text-heading-3 font-heading-3 text-subtext-color group-hover:text-default-font",
+            { "text-default-font group-hover:text-default-font": selected }
           )}
         >
           {icon}
@@ -52,7 +40,7 @@ const NavItem = React.forwardRef<HTMLElement, NavItemProps>(function NavItem(
       {children ? (
         <span
           className={SubframeUtils.twClassNames(
-            "text-body font-body text-subtext-color group-hover/79ff7d2b:text-default-font",
+            "text-body font-body text-subtext-color group-hover:text-default-font",
             { "text-body-bold font-body-bold text-default-font": selected }
           )}
         >
@@ -74,12 +62,7 @@ const TopbarWithRightNavRoot = React.forwardRef<
   HTMLElement,
   TopbarWithRightNavRootProps
 >(function TopbarWithRightNavRoot(
-  {
-    leftSlot,
-    rightSlot,
-    className,
-    ...otherProps
-  }: TopbarWithRightNavRootProps,
+  { leftSlot, rightSlot, className, ...otherProps },
   ref
 ) {
   return (
@@ -94,6 +77,7 @@ const TopbarWithRightNavRoot = React.forwardRef<
       {leftSlot ? (
         <div className="flex items-center gap-4">{leftSlot}</div>
       ) : null}
+
       {rightSlot ? (
         <div className="flex grow shrink-0 basis-0 items-center justify-end gap-4">
           {rightSlot}

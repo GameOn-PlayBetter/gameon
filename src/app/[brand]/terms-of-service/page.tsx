@@ -63,7 +63,7 @@ export default function TermsOfServicePage() {
 
         <h2 className="text-2xl font-semibold mt-8 mb-2">7. Contact Us</h2>
         <ul className="list-disc pl-6 space-y-2 text-lg">
-          <li>If you have any questions or concerns about these terms, please contact us at gameon_playbetter@gmail.com</li>
+          <li>If you have any questions or concerns about these terms, please contact us at support@skillery.co</li>
         </ul>
       </div>
 

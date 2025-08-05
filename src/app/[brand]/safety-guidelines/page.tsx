@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
   const brandConfig = brands[brandKey as keyof typeof brands];
   if (!brandConfig) return notFound();
 
-  const email = "skilleryllc@gmail.com";
+  const email = "support@skillery.co";
 
   return (
     <BrandThemeProvider brandName={brandKey}>

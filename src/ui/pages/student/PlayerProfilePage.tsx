@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
+import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
 import { Badge } from "@/ui/components/Badge";
 import { Button } from "@/ui/components/Button";
 import { FeatherCoins, FeatherShoppingCart, FeatherStar, FeatherTrophy, FeatherZap, FeatherX, FeatherAward, FeatherTarget, FeatherBook, FeatherCheck, FeatherClock, FeatherPickaxe, FeatherGhost, FeatherCrown, FeatherHome, FeatherMessageCircle, FeatherBox, FeatherPlay, FeatherSkull, FeatherCalendar, FeatherVideo, FeatherXCircle } from "@subframe/core";
@@ -21,10 +21,8 @@ function PlayerProfilePage() {
   const brand = useBrandTheme(); // ✅ Brand info available
 
   return (
-    <DefaultPageLayout
-style={{ backgroundColor: brand.colors.primary }}
-      className="font-sans"
-    >
+<BrandPageLayout brandName="gameon" showLogo={false}>
+
       <div
         className="flex h-full w-full flex-col items-start"
  style={{ fontFamily: "sans-serif" }}
@@ -129,7 +127,7 @@ style={{ backgroundColor: brand.colors.primary }}
 
         </div>
       </div>
-    </DefaultPageLayout>
+</BrandPageLayout>
   );
 }
 

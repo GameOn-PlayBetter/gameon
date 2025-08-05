@@ -13,6 +13,7 @@ interface BrandPageLayoutProps {
   navLinks?: { label: string; href?: string; onClick?: () => void }[];
   ctaButton?: { label: string; href: string };
   fontFamily?: string;
+  showLogo?: boolean; // ✅ Add this line
 }
 
 export default function BrandPageLayout({

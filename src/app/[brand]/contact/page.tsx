@@ -23,7 +23,7 @@ export default function ContactPage() {
   const colors = brandConfig.colors;
   const backgroundColor =
     (colors as any).primary || (colors as any).background || "#000000";
-  const email = "skilleryllc@gmail.com";
+  const email = "yo@skillery.co";
 
   return (
     <BrandThemeProvider brandName={brandKey}>

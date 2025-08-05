@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { LoginModal } from "../components/LoginModal";
 import { brands } from "@/lib/brands";
+import BrandedHeader from "@/ui/components/BrandedHeader";
 
 interface DefaultPageLayoutRootProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -75,48 +76,45 @@ const brandConfig = brands[brandKey] || brands.gameon; // fallback to GameOn
   />
 </Link>
         }
-        rightSlot={
-          <>
-            <div className="flex items-center justify-end gap-2">
-              <TopbarWithRightNav.NavItem selected={true}>
-                Home
-              </TopbarWithRightNav.NavItem>
-              <TopbarWithRightNav.NavItem onClick={() => setIsDrawerOpen(true)}>
-                Login
-              </TopbarWithRightNav.NavItem>
-              <TopbarWithRightNav.NavItem onClick={handleEarnTokensClick}>
-                Earn Tokens
-              </TopbarWithRightNav.NavItem>
-            </div>
-            <SubframeCore.DropdownMenu.Root>
-              <SubframeCore.DropdownMenu.Trigger asChild={true}>
-                <Avatar image="https://res.cloudinary.com/subframe/image/upload/v1711417507/shared/fychrij7dzl8wgq2zjq9.avif">
-                  A
-                </Avatar>
-              </SubframeCore.DropdownMenu.Trigger>
-              <SubframeCore.DropdownMenu.Portal>
-                <SubframeCore.DropdownMenu.Content
-                  side="bottom"
-                  align="end"
-                  sideOffset={4}
-                  asChild={true}
-                >
-                  <DropdownMenu>
-                    <DropdownMenu.DropdownItem icon={<FeatherUser />}>
-                      Profile
-                    </DropdownMenu.DropdownItem>
-                    <DropdownMenu.DropdownItem icon={<FeatherSettings />}>
-                      Settings
-                    </DropdownMenu.DropdownItem>
-                    <DropdownMenu.DropdownItem icon={<FeatherLogOut />}>
-                      Log out
-                    </DropdownMenu.DropdownItem>
-                  </DropdownMenu>
-                </SubframeCore.DropdownMenu.Content>
-              </SubframeCore.DropdownMenu.Portal>
-            </SubframeCore.DropdownMenu.Root>
-          </>
-        }
+rightSlot={
+  <div className="flex items-center justify-end gap-2">
+    <TopbarWithRightNav.NavItem selected={true}>Home</TopbarWithRightNav.NavItem>
+    <TopbarWithRightNav.NavItem onClick={() => setIsDrawerOpen(true)}>
+      Login
+    </TopbarWithRightNav.NavItem>
+    <TopbarWithRightNav.NavItem onClick={handleEarnTokensClick}>
+      Earn Tokens
+    </TopbarWithRightNav.NavItem>
+
+    <SubframeCore.DropdownMenu.Root>
+      <SubframeCore.DropdownMenu.Trigger asChild={true}>
+        <Avatar image="https://res.cloudinary.com/subframe/image/upload/v1711417507/shared/fychrij7dzl8wgq2zjq9.avif">
+          A
+        </Avatar>
+      </SubframeCore.DropdownMenu.Trigger>
+      <SubframeCore.DropdownMenu.Portal>
+        <SubframeCore.DropdownMenu.Content
+          side="bottom"
+          align="end"
+          sideOffset={4}
+          asChild={true}
+        >
+          <DropdownMenu>
+            <DropdownMenu.DropdownItem icon={<FeatherUser />}>
+              Profile
+            </DropdownMenu.DropdownItem>
+            <DropdownMenu.DropdownItem icon={<FeatherSettings />}>
+              Settings
+            </DropdownMenu.DropdownItem>
+            <DropdownMenu.DropdownItem icon={<FeatherLogOut />}>
+              Log out
+            </DropdownMenu.DropdownItem>
+          </DropdownMenu>
+        </SubframeCore.DropdownMenu.Content>
+      </SubframeCore.DropdownMenu.Portal>
+    </SubframeCore.DropdownMenu.Root>
+  </div>
+}
       />
 
       {children ? (
