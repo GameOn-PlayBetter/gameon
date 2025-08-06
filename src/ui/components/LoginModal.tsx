@@ -138,10 +138,11 @@ moneyon: [
 
   if (!open) return null;
 
-  const handleLogin = () => {
-    onClose(); // Close modal
-    router.push("/player-profile"); // Simulated login redirect
-  };
+const handleLogin = () => {
+  onClose(); // Close modal
+  const brandPath = theme?.name?.toLowerCase?.() || "gameon";
+  router.push(`/${brandPath}/player-profile`); // Redirect to brand-specific page
+};
 
   return (
     <div
