@@ -1,4 +1,4 @@
-import '../styles/globals.css'        // only if you have global styles
+import '../src/app/globals.css'
 import { Analytics } from '@vercel/analytics/react'
 
 function MyApp({ Component, pageProps }) {
