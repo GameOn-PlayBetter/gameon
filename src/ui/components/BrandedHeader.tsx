@@ -62,7 +62,7 @@ export default function BrandHeader() {
                 currentBrand === "gameon"
                   ? "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/edit"
                   : currentBrand === "fixon"
-                  ? "https://docs.google.com/forms/d/e/1FAIpQLSf7LbDaBGQBx7GnDxY5tn2ZCJerVM_VB5vuMpsWoRRKM1xoqA/viewform?usp=dialog"
+                  ? "https://docs.google.com/forms/d/e/1FAIpQLSfUcvdybuE4rjzMYfcB8pQp676BxYhOZVWWJjx1cDTao7ZBIA/viewform?usp=dialog"
                   : currentBrand === "fiton"
                   ? "https://docs.google.com/forms/d/e/1FAIpQLSdvRLccUqutavNKZLAF7GF2jqfy0PRyJxppNz8hKfUX5dD8pw/viewform?usp=dialog"
                   : currentBrand === "jamon"
