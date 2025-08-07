@@ -676,3 +676,6 @@ socialImage: "https://skillery.co/images/moneyon/moneyon-social-preview.png",
   ],
 }, // ✅ End MoneyOn brand
 }; // ✅ close brands object completely
+export function getBrandConfig(brand: string) {
+  return brands[brand as keyof typeof brands];
+}
