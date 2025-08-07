@@ -173,23 +173,25 @@ const sectionTitle =
     e.currentTarget.style.boxShadow = "none"; // remove glow on leave
   }}
 >
-{brandKey === "fixon"
-  ? "All Fixes"
-  : brandKey === "fiton"
-  ? "All Workouts"
-  : brandKey === "jamon"
-  ? "All Music Lessons"
-  : brandKey === "codeon"
-  ? "All Projects"
-  : brandKey === "learnon"
-  ? "All Lessons"
-  : brandKey === "growon"
-  ? "All Outdoor Skills"
-  : brandKey === "cookon"
-  ? "All Cooking Lessons"
-  : brandKey === "styleon"
-  ? "All Beauty & Grooming Lessons"
-  : "All Games"}
+  {brandKey === "fixon"
+    ? "All Fixes"
+    : brandKey === "fiton"
+    ? "All Workouts"
+    : brandKey === "jamon"
+    ? "All Music Lessons"
+    : brandKey === "codeon"
+    ? "All Projects"
+    : brandKey === "learnon"
+    ? "All Lessons"
+    : brandKey === "growon"
+    ? "All Outdoor Skills"
+    : brandKey === "cookon"
+    ? "All Cooking Lessons"
+    : brandKey === "styleon"
+    ? "All Beauty & Grooming Lessons"
+    : brandKey === "moneyon"
+    ? "All Finance Lessons"
+    : "All Topics"}
         </Button>
       </a>
     </div>
