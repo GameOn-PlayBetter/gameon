@@ -299,7 +299,7 @@ socialImage: "https://skillery.co/images/jamon/jamon-social-preview.png",
     secondary: "#00CFFF",
     glow: "#FF6A00", 
     button: "#FF6A00",
-    buttonHover: "#FF8533",
+    buttonHover: "#00CFFF",
     text: "#FFFFFF",
     hover: "#FFD9B3",
   },
@@ -423,7 +423,7 @@ socialImage: "https://skillery.co/images/styleon/styleon-social-preview.png",
     border: "border-white/30",
     glow: "#8B0000",           // gold glow for beauty/luxury vibe
     button: "#A56B2C",         // warm gold-brown button
-    buttonHover: "#444444",    // lighter gold hover
+    buttonHover: "#DAA520",    
     text: "#FFFFFF",
     hover: "#FFD700",
   },
@@ -491,7 +491,7 @@ socialImage: "https://skillery.co/images/growon/growon-social-preview.png",
     border: "border-white/20",
     glow: "#4CAF50",         // Vibrant green
     button: "#6B8E23",       // Olive green
-    buttonHover: "#8FBC8F",  // Lighter green hover
+    buttonHover: "#CBA135",  // Lighter green hover
     text: "#FFFFFF",
     hover: "#CBA135",        // Gold accent
   },
@@ -632,7 +632,7 @@ socialImage: "https://skillery.co/images/moneyon/moneyon-social-preview.png",
     border: "border-white/30",
     glow: "#FFFFFF",          // gold glow for finance/trust
     button: "#006400",        // green for money/approval
-    buttonHover: "#444444",
+    buttonHover: "#32CD32",
     text: "#FFFFFF",
     hover: "#32CD32",         // lime green hover for money vibe
   },
