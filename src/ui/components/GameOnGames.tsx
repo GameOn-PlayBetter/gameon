@@ -139,7 +139,18 @@ const sectionTitle =
                   <span className="text-body font-body text-subtext-color">{item.description}</span>
                 </div>
                 <a href={formUrl} target="_blank" rel="noopener noreferrer">
-                  <Button icon={<FeatherArrowRight />}>Learn More</Button>
+<Button
+  icon={<FeatherArrowRight />}
+  className="transition-all duration-300"
+  onMouseEnter={(e) => {
+    e.currentTarget.style.boxShadow = "0 0 20px #8B5CF6"; // Tailwind's purple glow
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.boxShadow = "none";
+  }}
+>
+  Learn More
+</Button>
                 </a>
               </div>
             </div>
@@ -147,7 +158,21 @@ const sectionTitle =
         </div>
       </div>
       <a href={formUrl} target="_blank" rel="noopener noreferrer">
-        <Button size="large" icon={<FeatherArrowRightCircle />}>
+<Button
+  size="large"
+  icon={<FeatherArrowRightCircle />}
+  className="transition-all duration-300"
+  style={{
+    backgroundColor: "#8B5CF6", // Tailwind's purple-500
+    borderColor: "#7C3AED",     // Tailwind's purple-600
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.boxShadow = "0 0 20px #EF4444"; // red glow
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.boxShadow = "none"; // remove glow on leave
+  }}
+>
 {brandKey === "fixon"
   ? "All Fixes"
   : brandKey === "fiton"

@@ -340,20 +340,37 @@ const bookSessionUrl =
                 rel="noopener noreferrer"
                 className="w-full"
               >
-                <Button
-                  variant="destructive-primary"
-                  className="w-full"
-                  style={{
-                    backgroundColor: brandConfig.colors.button,
-                    borderColor: brandConfig.colors.buttonHover,
-                  }}
-                >
-                  Book Session
-                </Button>
+<Button
+  variant="destructive-primary"
+  className="w-full transition duration-300 hover:shadow-[0_0_12px_#8B5CF6]"
+  style={{
+    backgroundColor: brandConfig.colors.button,
+    borderColor: brandConfig.colors.buttonHover,
+  }}
+>
+  Book Session
+</Button>
               </a>
             </div>
           ))}
         </div>
+<div className="w-full pt-4">
+  <a
+    href={`/${brandKey}/coach-search`}
+    className="flex justify-center w-full"
+  >
+<Button
+  variant="destructive-primary"
+  className="w-full max-w-[320px] transition duration-200 hover:shadow-lg hover:shadow-pink-500/60"
+  style={{
+    backgroundColor: "#8B5CF6", // Tailwind's purple-500
+    borderColor: "#7C3AED",     // Tailwind's purple-600
+  }}
+>
+  All Coaches
+</Button>
+  </a>
+</div>
       </div>
     </div>
   );
