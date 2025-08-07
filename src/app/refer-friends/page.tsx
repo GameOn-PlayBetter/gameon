@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
+import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { TextFieldUnstyled } from "@/ui/components/TextFieldUnstyled";
 import { IconButton } from "@/ui/components/IconButton";
 import { FeatherCopy } from "@subframe/core";

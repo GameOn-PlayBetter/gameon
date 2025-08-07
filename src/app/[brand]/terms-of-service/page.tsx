@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
+import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { BoldFooter } from "@/ui/components/BoldFooter";
 import { brands } from "@/lib/brands";
 

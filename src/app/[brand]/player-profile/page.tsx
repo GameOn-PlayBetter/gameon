@@ -1,7 +1,8 @@
+
 "use client";
 
 import React from "react";
-import { DefaultPageLayout } from "@/ui/layouts/DefaultPageLayout";
+import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { Badge } from "@/ui/components/Badge";
 import { Button } from "@/ui/components/Button";
 import { FeatherCoins } from "@subframe/core";
@@ -34,6 +35,7 @@ import { FeatherSkull } from "@subframe/core";
 import { FeatherCalendar } from "@subframe/core";
 import { FeatherVideo } from "@subframe/core";
 import { FeatherXCircle } from "@subframe/core";
+import GameOnCoaches from "@/ui/components/GameOnCoaches";
 
 // force rebuild for prod
 
