@@ -28,8 +28,6 @@
     <loc>https://skillery.co/jamon</loc>
     <priority>0.9</priority>
   </url>
-
-  <!-- Optional Future Pages -->
   <url>
     <loc>https://skillery.co/codeon</loc>
     <priority>0.8</priority>
@@ -37,6 +35,12 @@
   <url>
     <loc>https://skillery.co/growon</loc>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://skillery.co/moneyon</loc>
+  </url>
+  <url>
+    <loc>https://skillery.co/styleon</loc>
   </url>
   
 </urlset>
