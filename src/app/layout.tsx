@@ -2,10 +2,35 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Subframe Next.js Starter",
-  description: "Your starter kit for integrating Subframe into Next.js",
+  title: "Skillery — Unlock Your Potential",
+  description: "Live expert coaching across skills, trades, and passions. Finally learn it. Live.",
+  keywords: ["Skillery", "Live Coaching", "Online Learning", "Skill Mastery", "Tutoring", "FixOn", "JamOn", "GameOn"],
+  openGraph: {
+    title: "Skillery — Unlock Your Potential",
+    description: "Real help. Real experts. Real learning — live.",
+    url: "https://skillery.co",
+    siteName: "Skillery",
+    images: [
+      {
+        url: "https://skillery.co/skillery_social_512.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Skillery — Unlock Your Potential",
+    description: "Live expert coaching across skills, trades, and passions.",
+    images: ["https://skillery.co/skillery_social_512.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -29,12 +54,6 @@ export default function RootLayout({
   {/* ✅ Favicon */}
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="/skillery_social_512.png" />
-
-  {/* ✅ Social previews */}
-  <meta property="og:image" content="https://skillery.co/skillery_social_512.png" />
-  <meta property="twitter:image" content="https://skillery.co/skillery_social_512.png" />
-  <meta property="og:title" content="Skillery" />
-  <meta property="og:description" content="Unlock your potential." />
 </head>
 
       <body>{children}</body>
