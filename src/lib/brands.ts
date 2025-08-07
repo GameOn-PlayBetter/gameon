@@ -4,7 +4,7 @@ export const brands = {
   gameon: {
     name: "GameOn",
     tagline: "Play Better Together",
-    description: “Book live sessions with top streamers and gaming coaches. Speedrun, co-op, troubleshoot, or just play—safer, smarter, together.”,
+    description: "Book live sessions with top streamers and gaming coaches. Speedrun, co-op, troubleshoot, or just play—safer, smarter, together.",
     logo: "/images/gameon/go-logo.png",
     companyName: "GameOn LLC",
     fontFamily: "Orbitron",
