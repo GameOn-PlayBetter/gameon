@@ -1,15 +1,49 @@
+// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const { pathname } = url;
 
-  // Only intercept /skillery/* pages
+  // --- 1) ADMIN AUTH-ONLY GATE ---
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    const res = NextResponse.next();
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          // New API: only getAll + setAll
+          getAll: () => req.cookies.getAll(),
+          setAll: (cookies) => {
+            for (const { name, value, ...options } of cookies) {
+              // Next 14 signature
+              res.cookies.set(name, value, options as any);
+            }
+          },
+        },
+      }
+    );
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      url.pathname = "/login";
+      url.searchParams.set("next", "/admin");
+      return NextResponse.redirect(url);
+    }
+
+    return res;
+  }
+
+  // --- 2) YOUR EXISTING SKILLERY REWRITES ---
   if (pathname.startsWith("/skillery/")) {
     const target = pathname.replace("/skillery", "");
-
-    // Define which root pages Skillery should use
     const rootPages = [
       "/privacy-policy",
       "/cookie-policy",
@@ -19,10 +53,8 @@ export function middleware(req: NextRequest) {
       "/coach-requirements-eligibility",
       "/terms-of-service",
     ];
-
-    // If the path after /skillery matches one of the root pages
     if (rootPages.includes(target)) {
-      url.pathname = target; // rewrite to root page
+      url.pathname = target;
       return NextResponse.rewrite(url);
     }
   }
@@ -31,5 +63,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/skillery/:path*"],
+  matcher: ["/admin", "/admin/:path*", "/skillery/:path*"],
 };
