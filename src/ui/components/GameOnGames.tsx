@@ -23,9 +23,11 @@ export default function GameOnGames() {
   const formUrl =
     (brandConfig as any).forms?.waitlistUrl || gameOnFormUrl;
 
-  // ✅ Section title per brand
+// ✅ Section title per brand
 const sectionTitle =
-  brandKey === "fixon"
+  brandKey === "gameon"
+    ? "Featured Games"
+    : brandKey === "fixon"
     ? "Featured Fixes"
     : brandKey === "fiton"
     ? "Featured Workouts"
@@ -86,7 +88,7 @@ const sectionTitle =
       ? [
           { title: "Vegetable & Flower Gardening", description: "Learn to plant, grow, and maintain healthy, beautiful gardens.", image: "/images/growon/gardening.jpg" },
           { title: "Lawn Care & Landscaping", description: "Master mowing, fertilizing, and designing the yard of your dreams.", image: "/images/growon/lawn.jpg" },
-          { title: "Plant Care & Composting", description: "Discover how to keep your plants thriving and create rich soil naturally.", image: "/images/growon/plants.jpg" },
+          { title: "Plant Care & Composting", description: "Discover how to keep your plants thriving and create rich soil naturally. Indoor ones, too!", image: "/images/growon/plants.jpg" },
           { title: "Outdoor Projects & DIY", description: "Get guidance on raised beds, edging, and other outdoor projects.", image: "/images/growon/outdoor.jpg" },
         ]
       : brandKey === "cookon"
@@ -173,7 +175,9 @@ const sectionTitle =
     e.currentTarget.style.boxShadow = "none"; // remove glow on leave
   }}
 >
-  {brandKey === "fixon"
+  {brandKey === "gameon"
+    ? "All Games"
+    : brandKey === "fixon"
     ? "All Fixes"
     : brandKey === "fiton"
     ? "All Workouts"
@@ -192,7 +196,7 @@ const sectionTitle =
     : brandKey === "moneyon"
     ? "All Finance Lessons"
     : "All Topics"}
-        </Button>
+</Button>
       </a>
     </div>
   );
