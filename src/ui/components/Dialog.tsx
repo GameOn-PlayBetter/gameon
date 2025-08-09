@@ -65,3 +65,4 @@ const DialogRoot = React.forwardRef<HTMLElement, DialogRootProps>(
 export const Dialog = Object.assign(DialogRoot, {
   Content,
 });
+export default Dialog;
