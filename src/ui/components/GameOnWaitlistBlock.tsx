@@ -89,6 +89,8 @@ const subtext =
     ? "FixOn is currently in pre-launch. Sign up below to reserve your spot when we go live and get help credits!"
     : brandStr.toLowerCase() === "fiton"
     ? "FitOn is currently in pre-launch. Sign up below to reserve your spot and start your fitness journey!"
+    : brandStr.toLowerCase() === "jamon"
+    ? "JamOn is currently in pre-launch. Sign up below to reserve your spot and start your music journey!"
     : brandStr.toLowerCase() === "codeon"
     ? "CodeOn is currently in pre-launch. Sign up below to reserve your spot and start your coding journey!"
     : brandStr.toLowerCase() === "learnon"

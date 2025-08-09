@@ -53,7 +53,7 @@ const sectionTitle =
       ? [
           { title: "Household Issues & Questions", description: "All things home repair.", image: "/images/fixon/garage-door.jpg" },
           { title: "Leaks", description: "Stop drips and save water. Get step-by-step faucet repair guidance.", image: "/images/fixon/faucet.jpg" },
-          { title: "Pool Repair", description: "Learn to troubleshoot and repair your pool with live help from pros.", image: "/images/fixon/pool-pump.jpg" },
+          { title: "Pool Repair", description: "From startup to troubleshoot and repair, learn your pool with live help from pros.", image: "/images/fixon/pool-pump.jpg" },
           { title: "Fence Repair", description: "Fix broken boards or leaning posts with real-time help.", image: "/images/fixon/fence.jpg" },
         ]
       : brandKey === "fiton"
@@ -113,8 +113,8 @@ const sectionTitle =
           { title: "Debt & Credit Management", description: "Learn to pay down debt, boost credit scores, and manage loans effectively.", image: "/images/moneyon/credit.jpg" },
         ]
       : [
-          { title: "Minecraft", description: "Create the perfect gaming environment with our expert setup guides and recommendations.", image: "/images/minecraft.webp" },
-          { title: "Dead by Daylight", description: "Join our gaming community events and compete with players worldwide.", image: "/images/dbd.jpg" },
+          { title: "Minecraft", description: "Master redstone, building, and survival strategies in Minecraft.", image: "/images/minecraft.webp" },
+          { title: "Dead by Daylight", description: "Sharpen your skills with expert guidance on looping and match control.", image: "/images/dbd.jpg" },
           { title: "League of Legends", description: "Master champion mechanics and climb the ranked ladder with pro guidance.", image: "/images/league.jpg" },
           { title: "Valorant", description: "Improve your aim and tactical decision-making with personalized coaching.", image: "/images/valorant.jpg" },
         ];

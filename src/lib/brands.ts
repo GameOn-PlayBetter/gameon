@@ -507,7 +507,7 @@ socialImage: "https://skillery.co/images/growon/growon-social-preview.png",
     buttonColor: "success",
     headline: "BECOME A GROWON COACH",
     subtext:
-      "Apply now to share your gardening and outdoor skills with students nationwide.",
+      "Apply now to share your gardening and outdoor skills with learners worldwide.",
     buttonText: "Sign Up to Coach",
   },
   featuredItems: [
