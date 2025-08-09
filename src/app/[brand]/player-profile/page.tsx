@@ -39,6 +39,7 @@ import { Select } from "@/ui/components/Select";
 import { TextArea } from "@/ui/components/TextArea";
 // ✅ use your existing dialog component
 import Dialog from "@/ui/components/Dialog";
+import ReportCoachDialog from "@/ui/components/ReportCoachDialog";
 
 // ✅ added for Sessions & brand-awareness
 import { TextField } from "@/ui/components/TextField";
@@ -129,7 +130,7 @@ function PlayerProfilePage() {
                       GameMaster_Pro
                     </span>
                     <Badge>Premium Member</Badge>
-                    <Badge variant="success">In Session</Badge>
+                    <Badge variant="success">Founding Member</Badge>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button icon={<FeatherCoins />} onClick={() => {}}>
@@ -517,7 +518,7 @@ function PlayerProfilePage() {
                       <span className="text-body-bold font-body-bold text-default-font">
                         The Last of Us Speedrun
                       </span>
-                      <span className="text-body font-body text-subtext-color">Today at 8:00 PM with Coach Slaybase</span>
+                      <span className="text-body font-body text-subtext-color">Today at 8:00 PM with Coach Mandy</span>
                     </div>
                     <Button disabled variant="neutral-tertiary" icon={<FeatherXCircle />} onClick={() => {}}>
                       Cancel
@@ -703,6 +704,136 @@ function PlayerProfilePage() {
               </div>
             </div>
           )}
+
+          {/* ===== BADGE SHOP TAB ===== */}
+          {activeTab === "badges" && (
+            <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-12 px-12 py-12 overflow-auto">
+              {/* Brand promo */}
+              <Alert
+                variant="brand"
+                icon={<FeatherGift />}
+                title="Special Offer!"
+                description={`Get 20% extra ${tokenLabel.toLowerCase()} on any ${tokenLabel.toLowerCase()} package purchase today!`}
+                actions={<IconButton icon={<FeatherX />} onClick={() => {}} />}
+              />
+
+              <div className="flex w-full flex-col items-start gap-8">
+                {/* Legendary */}
+                <div className="flex w-full flex-col items-start gap-6">
+                  <div className="flex w-full items-center gap-2">
+                    <IconWithBackground variant="brand" icon={<FeatherStar />} />
+                    <span className="text-heading-2 font-heading-2 text-default-font">
+                      Legendary Badges
+                    </span>
+                  </div>
+
+                  <div className="grid w-full grid-cols-3 gap-4">
+                    <div className="flex flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 p-6">
+                      <div className="flex w-full items-center justify-between">
+                        <LargeBadge icon={<FeatherCrown />}>Supreme Champion</LargeBadge>
+                        <Badge variant="brand">500 {tokenLabel}</Badge>
+                      </div>
+                      <span className="text-body font-body text-subtext-color">
+                        Reserved for the most elite players
+                      </span>
+                      <Button className="w-full" variant="brand-primary" icon={<FeatherPlus />}>
+                        Purchase Badge
+                      </Button>
+                    </div>
+
+                    <div className="flex flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 p-6">
+                      <div className="flex w-full items-center justify-between">
+                        <LargeBadge icon={<FeatherZap />}>Speed Demon</LargeBadge>
+                        <Badge variant="brand">450 {tokenLabel}</Badge>
+                      </div>
+                      <span className="text-body font-body text-subtext-color">
+                        For the fastest speedrunners
+                      </span>
+                      <Button className="w-full" variant="brand-primary" icon={<FeatherPlus />}>
+                        Purchase Badge
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Epic */}
+                <div className="flex w-full flex-col items-start gap-6">
+                  <div className="flex w-full items-center gap-2">
+                    <IconWithBackground variant="success" icon={<FeatherShield />} />
+                    <span className="text-heading-2 font-heading-2 text-default-font">
+                      Epic Badges
+                    </span>
+                  </div>
+
+                  <div className="grid w-full grid-cols-3 gap-4">
+                    <div className="flex flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-neutral-50 p-6">
+                      <div className="flex w-full items-center justify-between">
+                        <LargeBadge icon={<FeatherSword />}>Battle Master</LargeBadge>
+                        <Badge variant="success">300 {tokenLabel}</Badge>
+                      </div>
+                      <span className="text-body font-body text-subtext-color">
+                        For exceptional combat skills
+                      </span>
+                      <Button className="w-full" variant="brand-primary" icon={<FeatherPlus />}>
+                        Purchase Badge
+                      </Button>
+                    </div>
+
+                    <div className="flex flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-neutral-50 p-6">
+                      <div className="flex w-full items-center justify-between">
+                        <LargeBadge icon={<FeatherCompass />}>Explorer Elite</LargeBadge>
+                        <Badge variant="success">250 {tokenLabel}</Badge>
+                      </div>
+                      <span className="text-body font-body text-subtext-color">
+                        For dedicated world explorers
+                      </span>
+                      <Button className="w-full" variant="brand-primary" icon={<FeatherPlus />}>
+                        Purchase Badge
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rare */}
+                <div className="flex w-full flex-col items-start gap-6">
+                  <div className="flex w-full items-center gap-2">
+                    <IconWithBackground variant="warning" icon={<FeatherAward />} />
+                    <span className="text-heading-2 font-heading-2 text-default-font">
+                      Rare Badges
+                    </span>
+                  </div>
+
+                  <div className="grid w-full grid-cols-3 gap-4">
+                    <div className="flex flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-neutral-50 p-6">
+                      <div className="flex w-full items-center justify-between">
+                        <LargeBadge icon={<FeatherHeart />}>Team Player</LargeBadge>
+                        <Badge variant="warning">150 {tokenLabel}</Badge>
+                      </div>
+                      <span className="text-body font-body text-subtext-color">
+                        For cooperative excellence
+                      </span>
+                      <Button className="w-full" variant="brand-primary" icon={<FeatherPlus />}>
+                        Purchase Badge
+                      </Button>
+                    </div>
+
+                    <div className="flex flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-neutral-50 p-6">
+                      <div className="flex w/full items-center justify-between">
+                        <LargeBadge icon={<FeatherTarget />}>Sharpshooter</LargeBadge>
+                        <Badge variant="warning">125 {tokenLabel}</Badge>
+                      </div>
+                      <span className="text-body font-body text-subtext-color">
+                        For exceptional accuracy
+                      </span>
+                      <Button className="w-full" variant="brand-primary" icon={<FeatherPlus />}>
+                        Purchase Badge
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Tip Dialog — uses your Dialog API */}
@@ -768,79 +899,17 @@ function PlayerProfilePage() {
           </Dialog.Content>
         </Dialog>
 
-        {/* Report Dialog — session-aware, prefilled coach */}
-        <Dialog open={reportOpen} onOpenChange={setReportOpen}>
-          <Dialog.Content className="w-full max-w-lg p-6">
-            <div className="flex w-full items-center justify-between">
-              <span className="text-heading-2 font-heading-2 text-error-700">Report Coach</span>
-              <IconButton variant="neutral-tertiary" icon={<FeatherX />} onClick={() => setReportOpen(false)} />
-            </div>
-
-            <div className="mt-4">
-              <Alert
-                variant="error"
-                icon={<FeatherAlertTriangle />}
-                title="Please only report serious violations"
-                description="False reports may result in account restrictions. All reports are reviewed by our moderation team."
-              />
-            </div>
-
-            <div className="mt-6 flex w-full flex-col items-start gap-6">
-              <Select
-                className="h-auto w-full flex-none"
-                label="Coach"
-                placeholder="Choose a coach to report"
-                icon={<FeatherUser />}
-                value={reportCoach}
-                onValueChange={(v: string) => setReportCoach(v)}
-                disabled={!!reportCoach} // prefilled from row, locked for session-specific report
-              >
-                {/* You can expand this list dynamically later */}
-                <Select.Item value="Coach Alex">Coach Alex</Select.Item>
-                <Select.Item value="Coach Sarah">Coach Sarah</Select.Item>
-                <Select.Item value="Coach Mike">Coach Mike</Select.Item>
-              </Select>
-
-              <Select
-                className="h-auto w-full flex-none"
-                label="Reason"
-                placeholder="Select a reason"
-                icon={<FeatherFlag />}
-                value={reportReason}
-                onValueChange={(v: string) => setReportReason(v)}
-              >
-                <Select.Item value="inappropriate">Inappropriate Behavior</Select.Item>
-                <Select.Item value="noshow">No-show/Late to Session</Select.Item>
-                <Select.Item value="quality">Poor Session Quality</Select.Item>
-                <Select.Item value="harassment">Harassment</Select.Item>
-                <Select.Item value="other">Other</Select.Item>
-              </Select>
-
-              <TextArea className="w-full" label="Description" helpText="Please provide specific details">
-                <TextArea.Input
-                  className="h-auto min-h-[96px] w-full flex-none"
-                  placeholder="Describe what happened..."
-                  value={reportDetails}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setReportDetails(e.target.value)}
-                />
-              </TextArea>
-            </div>
-
-            <div className="mt-6 flex w-full items-center justify-end gap-2">
-              <Button variant="neutral-secondary" icon={<FeatherX />} onClick={() => setReportOpen(false)}>
-                Cancel
-              </Button>
-              <Button
-                variant="destructive-primary"
-                icon={<FeatherFlag />}
-                onClick={submitReport}
-                disabled={!reportCoach || !reportReason || !reportDetails.trim()}
-              >
-                Submit Report
-              </Button>
-            </div>
-          </Dialog.Content>
-        </Dialog>
+        {/* Report Dialog — now using the reusable component */}
+        <ReportCoachDialog
+          open={reportOpen}
+          onOpenChange={setReportOpen}
+          coachName={reportCoach}
+          onSubmit={(payload: any) => {
+            // TODO: replace with real submit → API call / Supabase action
+            // payload = { coachName, reason, details }
+            setReportOpen(false);
+          }}
+        />
       </DefaultPageLayout>
     </>
   );
