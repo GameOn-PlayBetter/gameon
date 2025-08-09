@@ -188,7 +188,7 @@ const sectionTitle =
     : brandKey === "learnon"
     ? "All Lessons"
     : brandKey === "growon"
-    ? "All Outdoor Skills"
+    ? "All Plant Skills"
     : brandKey === "cookon"
     ? "All Cooking Lessons"
     : brandKey === "styleon"
