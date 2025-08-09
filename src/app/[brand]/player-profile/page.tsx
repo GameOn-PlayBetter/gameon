@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { Badge } from "@/ui/components/Badge";
 import { Button } from "@/ui/components/Button";
@@ -57,7 +57,49 @@ import {
 } from "@subframe/core";
 import { usePathname } from "next/navigation";
 
+// ---- placeholder text for Coach Feedback table ----
+const feedbackSamples = [
+  "Great improvement on reaction time!",
+  "Work on map awareness and positioning.",
+  "Excellent teamwork during clutch rounds.",
+  "Focus on resource management next session.",
+  "Aim consistency has improved — keep practicing."
+];
+
+const actionItemSamples = [
+  "Practice aiming for 15 min daily",
+  "Review match replays for missed shots",
+  "Try different character builds",
+  "Focus on early-game loot efficiency",
+  "Run strategy drills with a friend"
+];
+
+// deterministic pick so rows don't shuffle each render
+const pickSample = (arr: string[], i: number) => arr[i % arr.length];
+
+// ---- Quick-win coach API wiring ----
+interface CoachLite {
+  id?: number;
+  display_name: string;
+  avatar_url?: string;
+  games?: string[];
+}
+// -----------------------------------
+
 // force rebuild for prod
+
+interface Coach {
+  id?: number;
+  display_name: string;
+  title: string;
+  avatar_url?: string;
+  tags?: string[];
+  description?: string;
+  rating?: number;
+  num_reviews?: number;
+  tokens_per_hour?: number;
+  games?: string[];
+}
 
 function PlayerProfilePage() {
   const [activeTab, setActiveTab] = useState<"overview" | "sessions" | "badges">("overview");
@@ -85,7 +127,7 @@ function PlayerProfilePage() {
 
   // ========== REPORT DIALOG STATE ==========
   const [reportOpen, setReportOpen] = useState(false);
-  const [reportCoach, setReportCoach] = useState<string>(""); // e.g., "Coach Alex"
+  const [reportCoach, setReportCoach] = useState<string>(""); // e.g., from row click
   const [reportReason, setReportReason] = useState<string>("");
   const [reportDetails, setReportDetails] = useState<string>("");
 
@@ -98,10 +140,34 @@ function PlayerProfilePage() {
 
   function submitReport() {
     // TODO: replace with real submit → API call / Supabase action
-    // console.log({ coach: reportCoach, reason: reportReason, details: reportDetails });
     setReportOpen(false);
   }
   // ========================================
+
+  // ====== Fetch real coaches for placeholders ======
+  const [coaches, setCoaches] = useState<CoachLite[]>([]);
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const res = await fetch(`/api/coaches?brand=${encodeURIComponent(brandSeg ?? "")}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (isMounted && Array.isArray(data)) setCoaches(data);
+      } catch (e) {
+        console.error("Failed to load coaches for Sessions/Feedback:", e);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [brandSeg]);
+
+  const coachA = coaches[0]?.display_name || "Coach Alex";
+  const coachAImg = coaches[0]?.avatar_url || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde";
+  const coachB = coaches[1]?.display_name || "Coach Sarah";
+  const coachBImg = coaches[1]?.avatar_url || "https://images.unsplash.com/photo-1494790108377-be9c29b29330";
+  // ===============================================================
 
   return (
     <>
@@ -330,6 +396,8 @@ function PlayerProfilePage() {
                   </Table>
                 </div>
               </div>
+
+              {/* Coach Feedback */}
               <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
                 <div className="flex w-full items-center justify-between">
                   <span className="text-heading-3 font-heading-3 text-default-font">Coach Feedback</span>
@@ -338,6 +406,7 @@ function PlayerProfilePage() {
                   <IconWithBackground icon={<FeatherMessageCircle />} />
                   <span className="text-heading-3 font-heading-3 text-default-font">Latest Notes</span>
                 </div>
+
                 <Table
                   header={
                     <Table.HeaderRow>
@@ -349,62 +418,45 @@ function PlayerProfilePage() {
                     </Table.HeaderRow>
                   }
                 >
-                  <Table.Row>
-                    <Table.Cell>
-                      <div className="flex items-center gap-2">
-                        <Avatar
-                          size="small"
-                          image="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3"
-                        >
-                          A
-                        </Avatar>
-                        <span className="text-body font-body text-default-font">Coach Alex</span>
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Badge>Minecraft</Badge>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-body font-body text-default-font">
-                        Excellent progress on building techniques
-                      </span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Badge variant="warning">Practice Redstone</Badge>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-body font-body text-subtext-color">2h ago</span>
-                    </Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell>
-                      <div className="flex items-center gap-2">
-                        <Avatar
-                          size="small"
-                          image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3"
-                        >
-                          S
-                        </Avatar>
-                        <span className="text-body font-body text-default-font">Coach Sarah</span>
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Badge variant="warning">Dead By Daylight</Badge>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-body font-body text-default-font">
-                        Good map awareness, needs work on timing
-                      </span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Badge variant="warning">Practice Loops</Badge>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-body font-body text-subtext-color">1d ago</span>
-                    </Table.Cell>
-                  </Table.Row>
+                  {coaches.slice(0, 5).map((coach, idx) => (
+                    <Table.Row key={coach.id ?? idx}>
+                      <Table.Cell>
+                        <div className="flex items-center gap-2">
+                          <Avatar size="small" image={coach.avatar_url}>
+                            {coach.display_name?.[0] ?? "C"}
+                          </Avatar>
+                          <span className="text-body font-body text-default-font">
+                            {coach.display_name ?? "Coach"}
+                          </span>
+                        </div>
+                      </Table.Cell>
+
+                      <Table.Cell>
+                        <Badge>{coach.games?.[0] || "N/A"}</Badge>
+                      </Table.Cell>
+
+                      <Table.Cell>
+                        <span className="text-body font-body text-default-font">
+                          {pickSample(feedbackSamples, idx)}
+                        </span>
+                      </Table.Cell>
+
+                      <Table.Cell>
+                        <Badge variant="warning">
+                          {pickSample(actionItemSamples, idx)}
+                        </Badge>
+                      </Table.Cell>
+
+                      <Table.Cell>
+                        <span className="text-body font-body text-subtext-color">
+                          {idx + 1}d ago
+                        </span>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
                 </Table>
               </div>
+
               <div className="flex w-full flex-col items-start gap-4">
                 <div className="flex w-full items-center justify-between">
                   <span className="text-heading-3 font-heading-3 text-default-font">Recent Sessions</span>
@@ -433,13 +485,10 @@ function PlayerProfilePage() {
                     </Table.Cell>
                     <Table.Cell>
                       <div className="flex items-center gap-2">
-                        <Avatar
-                          size="small"
-                          image="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3"
-                        >
-                          C
+                        <Avatar size="small" image={coachAImg}>
+                          {coachA?.[0] ?? "C"}
                         </Avatar>
-                        <span className="text-body font-body text-default-font">Coach Alex</span>
+                        <span className="text-body font-body text-default-font">{coachA}</span>
                       </div>
                     </Table.Cell>
                     <Table.Cell>
@@ -468,13 +517,10 @@ function PlayerProfilePage() {
                     </Table.Cell>
                     <Table.Cell>
                       <div className="flex items-center gap-2">
-                        <Avatar
-                          size="small"
-                          image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3"
-                        >
-                          S
+                        <Avatar size="small" image={coachBImg}>
+                          {coachB?.[0] ?? "C"}
                         </Avatar>
-                        <span className="text-body font-body text-default-font">Coach Sarah</span>
+                        <span className="text-body font-body text-default-font">{coachB}</span>
                       </div>
                     </Table.Cell>
                     <Table.Cell>
@@ -494,6 +540,7 @@ function PlayerProfilePage() {
                   </Table.Row>
                 </Table>
               </div>
+
               <div className="flex w-full flex-col items-start gap-4">
                 <div className="flex w-full items-center justify-between">
                   <span className="text-heading-3 font-heading-3 text-default-font">Upcoming Sessions</span>
@@ -574,7 +621,7 @@ function PlayerProfilePage() {
                   <Alert
                     variant="warning"
                     icon={<FeatherAlertTriangle />}
-                    title="Rate Your Recent Session with Coach Alex"
+                    title={`Rate Your Recent Session with ${coachA}`}
                     description="Your feedback helps maintain coaching quality. Please rate your recent session."
                     actions={
                       <div className="flex items-center gap-2">
@@ -605,13 +652,10 @@ function PlayerProfilePage() {
                       </Table.Cell>
                       <Table.Cell>
                         <div className="flex items-center gap-2">
-                          <Avatar
-                            size="small"
-                            image="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"
-                          >
-                            A
+                          <Avatar size="small" image={coachAImg}>
+                            {coachA?.[0] ?? "C"}
                           </Avatar>
-                          <span className="text-body font-body text-default-font">Coach Alex</span>
+                          <span className="text-body font-body text-default-font">{coachA}</span>
                         </div>
                       </Table.Cell>
                       <Table.Cell>
@@ -643,7 +687,7 @@ function PlayerProfilePage() {
                             variant="destructive-secondary"
                             size="small"
                             icon={<FeatherFlag />}
-                            onClick={() => openReport("Coach Alex")}
+                            onClick={() => openReport(coachA)}
                           >
                             Report
                           </Button>
@@ -657,13 +701,10 @@ function PlayerProfilePage() {
                       </Table.Cell>
                       <Table.Cell>
                         <div className="flex items-center gap-2">
-                          <Avatar
-                            size="small"
-                            image="https://images.unsplash.com/photo-1494790108377-be9c29b29330"
-                          >
-                            S
+                          <Avatar size="small" image={coachBImg}>
+                            {coachB?.[0] ?? "C"}
                           </Avatar>
-                          <span className="text-body font-body text-default-font">Coach Sarah</span>
+                          <span className="text-body font-body text-default-font">{coachB}</span>
                         </div>
                       </Table.Cell>
                       <Table.Cell>
@@ -692,7 +733,7 @@ function PlayerProfilePage() {
                             variant="destructive-secondary"
                             size="small"
                             icon={<FeatherFlag />}
-                            onClick={() => openReport("Coach Sarah")}
+                            onClick={() => openReport(coachB)}
                           >
                             Report
                           </Button>
@@ -719,8 +760,8 @@ function PlayerProfilePage() {
 
               <div className="flex w-full flex-col items-start gap-8">
                 {/* Legendary */}
-                <div className="flex w-full flex-col items-start gap-6">
-                  <div className="flex w-full items-center gap-2">
+                <div className="flex w/full flex-col items-start gap-6">
+                  <div className="flex w/full items-center gap-2">
                     <IconWithBackground variant="brand" icon={<FeatherStar />} />
                     <span className="text-heading-2 font-heading-2 text-default-font">
                       Legendary Badges
@@ -757,24 +798,24 @@ function PlayerProfilePage() {
                 </div>
 
                 {/* Epic */}
-                <div className="flex w-full flex-col items-start gap-6">
-                  <div className="flex w-full items-center gap-2">
+                <div className="flex w/full flex-col items-start gap-6">
+                  <div className="flex w/full items-center gap-2">
                     <IconWithBackground variant="success" icon={<FeatherShield />} />
                     <span className="text-heading-2 font-heading-2 text-default-font">
                       Epic Badges
                     </span>
                   </div>
 
-                  <div className="grid w-full grid-cols-3 gap-4">
+                  <div className="grid w/full grid-cols-3 gap-4">
                     <div className="flex flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-neutral-50 p-6">
-                      <div className="flex w-full items-center justify-between">
+                      <div className="flex w/full items-center justify-between">
                         <LargeBadge icon={<FeatherSword />}>Battle Master</LargeBadge>
                         <Badge variant="success">300 {tokenLabel}</Badge>
                       </div>
                       <span className="text-body font-body text-subtext-color">
                         For exceptional combat skills
                       </span>
-                      <Button className="w-full" variant="brand-primary" icon={<FeatherPlus />}>
+                      <Button className="w/full" variant="brand-primary" icon={<FeatherPlus />}>
                         Purchase Badge
                       </Button>
                     </div>
@@ -787,7 +828,7 @@ function PlayerProfilePage() {
                       <span className="text-body font-body text-subtext-color">
                         For dedicated world explorers
                       </span>
-                      <Button className="w-full" variant="brand-primary" icon={<FeatherPlus />}>
+                      <Button className="w/full" variant="brand-primary" icon={<FeatherPlus />}>
                         Purchase Badge
                       </Button>
                     </div>
@@ -795,24 +836,24 @@ function PlayerProfilePage() {
                 </div>
 
                 {/* Rare */}
-                <div className="flex w-full flex-col items-start gap-6">
-                  <div className="flex w-full items-center gap-2">
+                <div className="flex w/full flex-col items-start gap-6">
+                  <div className="flex w/full items-center gap-2">
                     <IconWithBackground variant="warning" icon={<FeatherAward />} />
                     <span className="text-heading-2 font-heading-2 text-default-font">
                       Rare Badges
                     </span>
                   </div>
 
-                  <div className="grid w-full grid-cols-3 gap-4">
+                  <div className="grid w/full grid-cols-3 gap-4">
                     <div className="flex flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-neutral-50 p-6">
-                      <div className="flex w-full items-center justify-between">
+                      <div className="flex w/full items-center justify-between">
                         <LargeBadge icon={<FeatherHeart />}>Team Player</LargeBadge>
                         <Badge variant="warning">150 {tokenLabel}</Badge>
                       </div>
                       <span className="text-body font-body text-subtext-color">
                         For cooperative excellence
                       </span>
-                      <Button className="w-full" variant="brand-primary" icon={<FeatherPlus />}>
+                      <Button className="w/full" variant="brand-primary" icon={<FeatherPlus />}>
                         Purchase Badge
                       </Button>
                     </div>
@@ -825,7 +866,7 @@ function PlayerProfilePage() {
                       <span className="text-body font-body text-subtext-color">
                         For exceptional accuracy
                       </span>
-                      <Button className="w-full" variant="brand-primary" icon={<FeatherPlus />}>
+                      <Button className="w/full" variant="brand-primary" icon={<FeatherPlus />}>
                         Purchase Badge
                       </Button>
                     </div>
@@ -838,8 +879,8 @@ function PlayerProfilePage() {
 
         {/* Tip Dialog — uses your Dialog API */}
         <Dialog open={tipOpen} onOpenChange={setTipOpen}>
-          <Dialog.Content className="w-full max-w-lg p-6">
-            <div className="flex w-full items-center gap-4">
+          <Dialog.Content className="w/full max-w-lg p-6">
+            <div className="flex w/full items-center gap-4">
               <Avatar
                 size="large"
                 image="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3"
@@ -862,9 +903,9 @@ function PlayerProfilePage() {
               />
             </div>
 
-            <div className="mt-6 flex w-full flex-col items-start gap-6">
+            <div className="mt-6 flex w/full flex-col items-start gap-6">
               <Select
-                className="h-auto w-full flex-none"
+                className="h-auto w/full flex-none"
                 label={`${tokenLabel} Amount`}
                 placeholder="Select amount"
                 icon={<FeatherCoins />}
@@ -878,9 +919,9 @@ function PlayerProfilePage() {
                 <Select.Item value="custom">Custom Amount</Select.Item>
               </Select>
 
-              <TextArea className="w-full" label="Message (Optional)" helpText="Add a note with your tip">
+              <TextArea className="w/full" label="Message (Optional)" helpText="Add a note with your tip">
                 <TextArea.Input
-                  className="h-auto min-h-[96px] w-full flex-none"
+                  className="h-auto min-h-[96px] w/full flex-none"
                   placeholder="Thanks for the great session!"
                   value={tipMessage}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTipMessage(e.target.value)}
@@ -888,7 +929,7 @@ function PlayerProfilePage() {
               </TextArea>
             </div>
 
-            <div className="mt-6 flex w-full items-center justify-end gap-2">
+            <div className="mt-6 flex w/full items-center justify-end gap-2">
               <Button variant="neutral-secondary" icon={<FeatherX />} onClick={() => setTipOpen(false)}>
                 Cancel
               </Button>
