@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
+import Link from "next/link";
 import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { createClient } from "@/utils/supabase/client";
 import { Badge } from "@/ui/components/Badge";
@@ -48,7 +49,10 @@ const supabase = createClient();
 
 export default function CoachSessionsPage() {
   const { brand, id } = useParams() as { brand: string; id: string };
+  const pathname = usePathname();
   const coachId = Number(id);
+
+  const base = `/${brand}/coach/${id}`;
 
   const [coach, setCoach] = useState<Coach | null>(null);
   const [loadingCoach, setLoadingCoach] = useState(true);
@@ -167,7 +171,6 @@ export default function CoachSessionsPage() {
 
   const todays = filtered.filter((s) => (s.scheduled_time || "").slice(0, 10) === todayKey);
   const past = filtered.filter((s) => new Date(s.scheduled_time) < now);
-  // You could also add “upcoming” if you want.
 
   // Distinct game list for the filter dropdown
   const games = Array.from(
@@ -177,8 +180,52 @@ export default function CoachSessionsPage() {
   return (
     <DefaultPageLayout>
       <div className="flex h-full w-full flex-col items-start bg-default-background">
-        {/* Tabs row (Sessions active). No header duplication here. */}
+        {/* --- TOP NAV TABS (brand/id-aware) --- */}
         <div className="flex w-full items-end px-6 pt-6">
+          <div className="flex h-px w-12 flex-none bg-neutral-200" />
+          <div className="ml-4">
+            <div className="flex items-center gap-4">
+              <div className="flex">
+                {/* If your Tabs component accepts arbitrary children, we can nest Links inside */}
+                <div className="flex items-end">
+                  <div className="mr-2">
+                    <a>
+                      <span className="hidden" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Use your existing Tabs UI */}
+        <div className="flex w-full items-end px-6">
+          <div className="flex h-px w-12 flex-none bg-neutral-200" />
+          <div className="ml-4 flex items-center gap-4">
+            {/* Replace with your Tabs if it requires specific structure; keeping simple to avoid refactor */}
+            <div className="flex items-center gap-4">
+              <Link href={base} className={pathname === base ? "font-semibold underline" : ""}>
+                Dashboard
+              </Link>
+              <Link
+                href={`${base}/sessions`}
+                className={pathname === `${base}/sessions` ? "font-semibold underline" : ""}
+              >
+                Sessions
+              </Link>
+              <Link
+                href={`${base}/reviews`}
+                className={pathname === `${base}/reviews` ? "font-semibold underline" : ""}
+              >
+                Reviews
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Existing Sessions controls (Calendar/List, filters, etc.) */}
+        <div className="flex w-full items-end px-6 pt-4">
           <div className="flex h-px w-12 flex-none bg-neutral-200" />
           <div className="ml-4 flex items-center gap-4">
             <Button

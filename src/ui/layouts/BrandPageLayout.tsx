@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
+import Head from "next/head"; // ✅ Added
+import { usePathname } from "next/navigation"; // ✅ Added
 import { BoldFooter } from "@/ui/components/BoldFooter";
 import { useBrandTheme } from "@/app/context/BrandThemeContext";
-import BrandedHeader from "@/ui/components/BrandedHeader"; // ✅ Added
-import { brands } from "@/lib/brands"; // ✅ IMPORT AT TOP
-
+import BrandedHeader from "@/ui/components/BrandedHeader";
+import { brands } from "@/lib/brands";
 
 interface BrandPageLayoutProps {
   children: React.ReactNode;
@@ -13,7 +14,7 @@ interface BrandPageLayoutProps {
   navLinks?: { label: string; href?: string; onClick?: () => void }[];
   ctaButton?: { label: string; href: string };
   fontFamily?: string;
-  showLogo?: boolean; // ✅ Add this line
+  showLogo?: boolean;
 }
 
 export default function BrandPageLayout({
@@ -23,7 +24,6 @@ export default function BrandPageLayout({
   ctaButton,
   fontFamily = "sans-serif",
 }: BrandPageLayoutProps) {
-  // ✅ Only one definition
   const theme = useBrandTheme() || brands[brandName as keyof typeof brands];
 
   const colors = theme?.colors || {};
@@ -32,33 +32,52 @@ export default function BrandPageLayout({
   const companyName = theme?.companyName || brandName || "Your Brand";
   const backgroundColor = (colors as any)?.primary || "#0A0A0A";
 
-const headerLogo =
-  brandName === "gameon"
-    ? "/images/gameon/go-logo.png"
-    : brandName === "skillery"
-    ? "/images/skillery_logo_wheadline.png"
-    : brandName === "fixon"
-    ? "/images/fixon/fixon_logo_shinier.png"
-    : brandName === "fiton"
-    ? "/images/fiton/fiton_logo.png"
-    : brandName === "codeon"
-    ? "/images/codeon/codeon-logo.png"
-    : brandName === "jamon"
-    ? "/images/jamon/jamon_logo.png"
-    : brandName === "learnon"
-    ? "/images/learnon/learnon-logo.png"
-    : brandName === "growon"
-    ? "/images/growon/growon-logo1.png"
-    : brandName === "cookon"
-    ? "/images/cookon/cookon-logo.png"
-    : brandName === "styleon"
-    ? "/images/styleon/styleon-logo.png"
-    : brandName === "moneyon"
-    ? "/images/moneyon/moneyon-logo.png"
-    : "";
+  const headerLogo =
+    brandName === "gameon"
+      ? "/images/gameon/go-logo.png"
+      : brandName === "skillery"
+      ? "/images/skillery_logo_wheadline.png"
+      : brandName === "fixon"
+      ? "/images/fixon/fixon_logo_shinier.png"
+      : brandName === "fiton"
+      ? "/images/fiton/fiton_logo.png"
+      : brandName === "codeon"
+      ? "/images/codeon/codeon-logo.png"
+      : brandName === "jamon"
+      ? "/images/jamon/jamon_logo.png"
+      : brandName === "learnon"
+      ? "/images/learnon/learnon-logo.png"
+      : brandName === "growon"
+      ? "/images/growon/growon-logo1.png"
+      : brandName === "cookon"
+      ? "/images/cookon/cookon-logo.png"
+      : brandName === "styleon"
+      ? "/images/styleon/styleon-logo.png"
+      : brandName === "moneyon"
+      ? "/images/moneyon/moneyon-logo.png"
+      : "";
 
   const resolvedBackground =
     brandName === "skillery" ? "transparent" : backgroundColor;
+
+  // ✅ Canonical fix
+  const pathname = usePathname() || "/";
+  const parts = pathname.split("/").filter(Boolean);
+  const restSegs = parts.slice(1); // skip brand
+  const slug = restSegs.join("/");
+
+  const DUPLICATE_SLUGS = new Set([
+    "contact",
+    "terms-of-service",
+    "cookie-policy",
+    "safety-guidelines",
+    "coach-requirements-eligibility",
+  ]);
+
+  const canonicalHref =
+    slug && DUPLICATE_SLUGS.has(slug)
+      ? `https://skillery.co/${slug}`
+      : null;
 
   return (
     <div
@@ -68,23 +87,26 @@ const headerLogo =
         fontFamily: theme?.fontFamily || fontFamily,
       }}
     >
-      {/* HEADER replaced with BrandedHeader */}
+      {canonicalHref && (
+        <Head>
+          <link rel="canonical" href={canonicalHref} />
+        </Head>
+      )}
+
       <BrandedHeader />
 
-      {/* Center Logo (forced render) */}
       <div
         className="flex justify-center my-6 md:my-10 pt-20"
         style={{ backgroundColor: resolvedBackground }}
       >
-<img
-  src={headerLogo}
-  alt={`${brandName} logo`}
-  className="max-h-[400px] w-auto max-w-[600px] mx-auto"
-  style={{ display: "block" }}
-/>
+        <img
+          src={headerLogo}
+          alt={`${brandName} logo`}
+          className="max-h-[400px] w-auto max-w-[600px] mx-auto"
+          style={{ display: "block" }}
+        />
       </div>
 
-      {/* MAIN CONTENT - pulled closer to logo */}
       <main
         className="flex flex-col grow w-full -mt-12"
         style={{ backgroundColor: resolvedBackground }}
@@ -92,7 +114,6 @@ const headerLogo =
         {children}
       </main>
 
-      {/* FOOTER */}
       <BoldFooter
         className="mt-auto"
         brandName={brandName}

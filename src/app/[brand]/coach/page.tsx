@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { Badge } from "@/ui/components/Badge";
 import { FeatherShield } from "@subframe/core";
@@ -34,9 +34,56 @@ import { FeatherPlay } from "@subframe/core";
 import { FeatherFlag } from "@subframe/core";
 import { FeatherTicket } from "@subframe/core";
 import { FeatherBook } from "@subframe/core";
+import Link from "next/link";
+import { usePathname, useParams } from "next/navigation";
+import { createClient } from "@/utils/supabase/client"; // same path as in sessions page
+
+// --- minimal shape we read from Supabase ---
+type CoachFromDB = {
+  id: number;
+  display_name: string | null;
+  avatar_url: string;
+  languages: string[] | null;
+  bookings_count: number | null;
+};
+
+const supabase = createClient();
 
 function CoachPage() {
- return (
+  const params = useParams() as { brand?: string; id?: string };
+  const coachId = params?.id ? Number(params.id) : undefined;
+
+  const [coach, setCoach] = useState<CoachFromDB | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const run = async () => {
+      if (!coachId || Number.isNaN(coachId)) return;
+
+      const { data, error } = await supabase
+        .from("coaches")
+        .select("id, display_name, avatar_url, languages, bookings_count")
+        .eq("id", coachId)
+        .maybeSingle();
+
+      if (!cancelled) {
+        if (error) {
+          console.error("coach fetch error:", error.message);
+          setCoach(null);
+        } else {
+          setCoach((data as CoachFromDB) || null);
+        }
+      }
+    };
+
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, [coachId]);
+
+  return (
 <>
   {/* Glowing "DEMO DATA ONLY" banner */}
   <div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 bg-red-600 px-6 py-2 rounded-md shadow-lg shadow-red-400 pointer-events-none">
@@ -52,14 +99,14 @@ function CoachPage() {
             <div className="flex h-36 w-36 flex-none flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-100 relative">
               <img
                 className="h-36 w-36 flex-none object-cover absolute"
-                src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80"
+                src={coach?.avatar_url || "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80"}
               />
             </div>
             <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-6 pt-4">
               <div className="flex w-full items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-heading-2 font-heading-2 text-default-font">
-                    Sarah Tactical
+                    {coach?.display_name || "Sarah Tactical"}
                   </span>
                   <Badge variant="success" icon={<FeatherShield />}>
                     Verified Coach
@@ -80,7 +127,7 @@ function CoachPage() {
                     Total Sessions
                   </span>
                   <span className="line-clamp-1 w-full text-caption font-caption text-brand-500">
-                    43
+                    {coach?.bookings_count ?? 43}
                   </span>
                 </div>
                 <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
@@ -96,7 +143,7 @@ function CoachPage() {
                     Languages
                   </span>
                   <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                    English, Spanish
+                    {coach?.languages && coach.languages.length ? coach.languages.join(", ") : "English, Spanish"}
                   </span>
                 </div>
               </div>
