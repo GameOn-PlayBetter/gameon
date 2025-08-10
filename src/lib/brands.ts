@@ -439,7 +439,7 @@ socialImage: "https://skillery.co/images/styleon/styleon-social-preview.png",
     buttonColor: "success",
     headline: "BECOME A COACH",
     subtext:
-      "Apply now to join StyleOn and teach live DIY beauty skills in hair, makeup, and nails.",
+      "Apply now to join StyleOn and teach live DIY beauty skills in hair, makeup, nails, personal style and grooming.",
     buttonText: "Sign Up to Coach",
   },
   featuredItems: [

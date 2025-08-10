@@ -21,31 +21,41 @@ interface Session {
 }
 
 export default function SessionInfoPage() {
-const id = (useParams() as { id: string }).id;
+  const params = useParams() as { id?: string | string[] } | null;
+  const id = Array.isArray(params?.id) ? params!.id[0] : params?.id;
+
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   const supabase = createClient();
 
   useEffect(() => {
+    let cancelled = false;
+
     async function fetchSession() {
+      setLoading(true);
       const { data, error } = await supabase
         .from("sessions")
         .select("*")
         .eq("id", id)
         .single();
 
-      if (error) {
-        console.error("Error fetching session:", error.message);
-      } else {
-        setSession(data as Session);
+      if (!cancelled) {
+        if (error) {
+          console.error("Error fetching session:", error.message);
+          setSession(null);
+        } else {
+          setSession(data as Session);
+        }
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
     if (id) fetchSession();
-  }, [id]);
+    return () => {
+      cancelled = true;
+    };
+  }, [id, supabase]);
 
   const brandConfig = brands[session?.brand || "skillery"];
 
@@ -68,12 +78,14 @@ const id = (useParams() as { id: string }).id;
                 <h1 className="text-heading-1 font-heading-1 text-default-font text-center">
                   {session.title}
                 </h1>
-                <p className="text-subtext-color font-body text-center">{brandConfig.description}</p>
+                <p className="text-subtext-color font-body text-center">
+                  {brandConfig.description}
+                </p>
               </div>
 
               <div className="flex items-center gap-4">
                 <Avatar size="large" image={session.image}>
-                  {session.coach_name[0]}
+                  {(session.coach_name && session.coach_name[0]) || "?"}
                 </Avatar>
                 <div className="flex flex-col">
                   <span className="text-heading-3 font-heading-3 text-default-font">
@@ -85,10 +97,13 @@ const id = (useParams() as { id: string }).id;
                 </div>
               </div>
 
-              <p className="text-default-font text-body font-body">{session.description}</p>
+              <p className="text-default-font text-body font-body">
+                {session.description}
+              </p>
 
               <div className="text-default-font font-body text-body">
-                <strong>Scheduled:</strong> {new Date(session.scheduled_time).toLocaleString()}
+                <strong>Scheduled:</strong>{" "}
+                {new Date(session.scheduled_time).toLocaleString()}
               </div>
 
               <div className="text-default-font font-body text-body">
