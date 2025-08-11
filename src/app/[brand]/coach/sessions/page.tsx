@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useParams, usePathname } from "next/navigation";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { createClient } from "@/utils/supabase/client";
 import { Badge } from "@/ui/components/Badge";
 import { Button } from "@/ui/components/Button";
 import { Avatar } from "@/ui/components/Avatar";
+import { Tabs } from "@/ui/components/Tabs";
 import {
+  FeatherShield,
   FeatherClock,
   FeatherVideo,
   FeatherMessageCircle,
@@ -20,12 +22,17 @@ import {
   FeatherCheck,
 } from "@subframe/core";
 
+const supabase = createClient();
+
 type Coach = {
   id: number;
-  brand: string;
+  brand?: string;
   display_name: string | null;
-  title: string;
-  is_active: boolean;
+  title?: string | null;
+  is_active?: boolean | null;
+  avatar_url?: string | null;
+  languages: string[] | null;
+  bookings_count: number | null;
 };
 
 type SessionRow = {
@@ -38,21 +45,20 @@ type SessionRow = {
   price?: number | null;
   scheduled_time: string; // ISO string
   game?: string | null;
-  image?: string | null; // optional student or game image
+  image?: string | null;
   duration_minutes?: number | null;
   student_name?: string | null;
   recording_url?: string | null;
   status?: "upcoming" | "starting" | "completed" | "canceled" | null;
 };
 
-const supabase = createClient();
-
 export default function CoachSessionsPage() {
-  const { brand, id } = useParams() as { brand: string; id: string };
-  const pathname = usePathname();
-  const coachId = Number(id);
+  const { brand } = useParams() as { brand: string };
+  const router = useRouter();
+  const base = `/${brand}/coach`;
 
-  const base = `/${brand}/coach/${id}`;
+  const [authChecked, setAuthChecked] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const [coach, setCoach] = useState<Coach | null>(null);
   const [loadingCoach, setLoadingCoach] = useState(true);
@@ -64,21 +70,46 @@ export default function CoachSessionsPage() {
   const [search, setSearch] = useState("");
   const [gameFilter, setGameFilter] = useState<string>("");
 
-  // 1) Load coach (by id only — no brand filter, avoids random “not found”)
+  // Auth
   useEffect(() => {
-    if (!coachId || Number.isNaN(coachId)) return;
-
     let cancelled = false;
     (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!cancelled) {
+        setUserId(data.user?.id ?? null);
+        setAuthChecked(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Coach by auth user (brand‑scoped)
+  useEffect(() => {
+    if (!authChecked) return;
+    let cancelled = false;
+
+    (async () => {
+      if (!userId) {
+        setCoach(null);
+        setLoadingCoach(false);
+        return;
+      }
+
       setLoadingCoach(true);
-      const { data, error } = await supabase
+      let query = supabase
         .from("coaches")
-        .select("id, brand, display_name, title, is_active")
-        .eq("id", coachId)
-        .single();
+        .select("id, brand, display_name, title, is_active, avatar_url, languages, bookings_count")
+        .eq("auth_user_id", userId)
+        .eq("is_active", true);
+
+      if (brand) query = query.ilike("brand", String(brand));
+
+      const { data, error } = await query.maybeSingle();
 
       if (!cancelled) {
-        if (error || !data || data.is_active === false) {
+        if (error || !data) {
           console.error("coach fetch error (sessions):", error?.message);
           setCoach(null);
         } else {
@@ -91,29 +122,26 @@ export default function CoachSessionsPage() {
     return () => {
       cancelled = true;
     };
-  }, [coachId]);
+  }, [authChecked, userId, brand]);
 
-  // 2) Load sessions for this coach.
-  //    Prefer coach_id; if none are found, try fallback by coach_name (demo data).
+  // Sessions by coach
   useEffect(() => {
-    if (!coachId || Number.isNaN(coachId)) return;
+    if (!coach?.id) return;
 
     let cancelled = false;
     (async () => {
       setLoadingSessions(true);
 
-      // Try by coach_id first
       let { data: byId, error: errId } = await supabase
         .from("sessions")
         .select(
           "id, brand, coach_id, coach_name, title, description, price, scheduled_time, game, image, duration_minutes, student_name, recording_url, status"
         )
-        .eq("coach_id", coachId)
+        .eq("coach_id", coach.id)
         .order("scheduled_time", { ascending: true });
 
-      // If none found and we have a coach name/title, try fallback by coach_name
-      if (!byId?.length && (coach?.display_name || coach?.title)) {
-        const coachName = coach?.display_name || coach?.title || "";
+      if ((!byId || !byId.length) && (coach.display_name || coach.title)) {
+        const coachName = coach.display_name || coach.title || "";
         const { data: byName, error: errName } = await supabase
           .from("sessions")
           .select(
@@ -140,17 +168,16 @@ export default function CoachSessionsPage() {
     return () => {
       cancelled = true;
     };
-  }, [coachId, coach?.display_name, coach?.title]);
+  }, [coach?.id, coach?.display_name, coach?.title]);
 
-  // Derived data
+  // Derived
   const now = new Date();
-  const todayKey = now.toISOString().slice(0, 10); // YYYY-MM-DD
+  const todayKey = now.toISOString().slice(0, 10);
 
   const filtered = useMemo(() => {
     let out = sessions.slice();
 
     if (brand) {
-      // keep across brands, but if your sessions have brand set, prefer matching
       out = out.filter((s) => !s.brand || s.brand.toLowerCase() === brand.toLowerCase());
     }
     if (gameFilter) {
@@ -172,60 +199,113 @@ export default function CoachSessionsPage() {
   const todays = filtered.filter((s) => (s.scheduled_time || "").slice(0, 10) === todayKey);
   const past = filtered.filter((s) => new Date(s.scheduled_time) < now);
 
-  // Distinct game list for the filter dropdown
-  const games = Array.from(
-    new Set(filtered.map((s) => (s.game || "").trim()).filter(Boolean))
-  ).sort();
+  // Guards
+  if (!authChecked) {
+    return (
+      <DefaultPageLayout>
+        <div className="p-6 text-subtext-color">Checking session…</div>
+      </DefaultPageLayout>
+    );
+  }
+
+  if (!userId) {
+    return (
+      <DefaultPageLayout>
+        <div className="p-6">
+          <p className="text-default-font">You must be logged in to view your Sessions.</p>
+          <div className="mt-4">
+            <Link href={`/login?next=${encodeURIComponent(base + "/sessions")}`}>
+              <Button>Log in</Button>
+            </Link>
+          </div>
+        </div>
+      </DefaultPageLayout>
+    );
+  }
 
   return (
     <DefaultPageLayout>
       <div className="flex h-full w-full flex-col items-start bg-default-background">
-        {/* --- TOP NAV TABS (brand/id-aware) --- */}
-        <div className="flex w-full items-end px-6 pt-6">
-          <div className="flex h-px w-12 flex-none bg-neutral-200" />
-          <div className="ml-4">
-            <div className="flex items-center gap-4">
-              <div className="flex">
-                {/* If your Tabs component accepts arbitrary children, we can nest Links inside */}
-                <div className="flex items-end">
-                  <div className="mr-2">
-                    <a>
-                      <span className="hidden" />
-                    </a>
-                  </div>
+
+        {/* --- HEADER: same structure as Dashboard; no placeholders that show other names/images --- */}
+        <div className="flex w-full flex-col items-start gap-8 px-12 pt-12 pb-6">
+          <div className="flex w-full flex-wrap items-start gap-4">
+            <div className="flex h-36 w-36 flex-none flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-100 relative">
+              {/* Skeleton while loading; neutral circle if no avatar; never a stock image */}
+              {loadingCoach ? (
+                <div className="h-36 w-36 animate-pulse rounded-full bg-neutral-200" />
+              ) : coach?.avatar_url ? (
+                <img
+                  className="h-36 w-36 flex-none object-cover absolute"
+                  src={coach.avatar_url}
+                  alt={coach?.display_name ?? "Coach avatar"}
+                />
+              ) : (
+                <div className="h-36 w-36 rounded-full bg-neutral-200" />
+              )}
+            </div>
+            <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-6 pt-4">
+              <div className="flex w-full items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-heading-2 font-heading-2 text-default-font">
+                    {loadingCoach ? (
+                      <span className="inline-block h-6 w-32 animate-pulse rounded bg-neutral-200" />
+                    ) : (
+                      coach?.display_name ?? "—"
+                    )}
+                  </span>
+                  {!loadingCoach && (
+                    <>
+                      <Badge variant="success" icon={<FeatherShield />}>Verified Coach</Badge>
+                      <Badge>Elite Level</Badge>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="flex w-full flex-wrap items-start gap-6">
+                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
+                  <span className="text-body-bold font-body-bold text-default-font">Total Sessions</span>
+                  <span className="line-clamp-1 w-full text-caption font-caption text-brand-500">
+                    {loadingSessions ? (
+                      <span className="inline-block h-4 w-10 animate-pulse rounded bg-neutral-200" />
+                    ) : (
+                      String(coach?.bookings_count ?? 0)
+                    )}
+                  </span>
+                </div>
+                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
+                  <span className="text-body-bold font-body-bold text-default-font">Success Rate</span>
+                  <span className="line-clamp-1 w-full text-caption font-caption text-brand-600">94%</span>
+                </div>
+                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
+                  <span className="text-body-bold font-body-bold text-default-font">Languages</span>
+                  <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
+                    {loadingCoach ? (
+                      <span className="inline-block h-4 w-24 animate-pulse rounded bg-neutral-200" />
+                    ) : coach?.languages?.length ? (
+                      coach.languages.join(", ")
+                    ) : (
+                      "—"
+                    )}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Use your existing Tabs UI */}
-        <div className="flex w-full items-end px-6">
-          <div className="flex h-px w-12 flex-none bg-neutral-200" />
-          <div className="ml-4 flex items-center gap-4">
-            {/* Replace with your Tabs if it requires specific structure; keeping simple to avoid refactor */}
-            <div className="flex items-center gap-4">
-              <Link href={base} className={pathname === base ? "font-semibold underline" : ""}>
-                Dashboard
-              </Link>
-              <Link
-                href={`${base}/sessions`}
-                className={pathname === `${base}/sessions` ? "font-semibold underline" : ""}
-              >
-                Sessions
-              </Link>
-              <Link
-                href={`${base}/reviews`}
-                className={pathname === `${base}/reviews` ? "font-semibold underline" : ""}
-              >
-                Reviews
-              </Link>
-            </div>
-          </div>
+        {/* --- TABS --- */}
+        <div className="flex w-full items-end">
+          <div className="flex h-px w-12 flex-none flex-col items-center gap-2 bg-neutral-200" />
+          <Tabs>
+            <Tabs.Item onClick={() => router.push(`${base}`)}>Dashboard</Tabs.Item>
+            <Tabs.Item active={true}>Sessions</Tabs.Item>
+            <Tabs.Item onClick={() => router.push(`${base}/reviews`)}>Reviews</Tabs.Item>
+          </Tabs>
         </div>
 
-        {/* Existing Sessions controls (Calendar/List, filters, etc.) */}
-        <div className="flex w-full items-end px-6 pt-4">
+        {/* --- Controls --- */}
+        <div className="flex w-full items-end px-12 pt-4">
           <div className="flex h-px w-12 flex-none bg-neutral-200" />
           <div className="ml-4 flex items-center gap-4">
             <Button
@@ -243,21 +323,21 @@ export default function CoachSessionsPage() {
               List
             </Button>
 
-            {/* Game filter */}
             <select
               className="ml-4 rounded-md border border-neutral-300 bg-default-background px-3 py-2"
               value={gameFilter}
               onChange={(e) => setGameFilter(e.target.value)}
             >
               <option value="">All Games</option>
-              {games.map((g) => (
-                <option key={g} value={g}>
-                  {g}
-                </option>
-              ))}
+              {Array.from(new Set(sessions.map((s) => (s.game || "").trim()).filter(Boolean)))
+                .sort()
+                .map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
             </select>
 
-            {/* Search */}
             <div className="ml-2 flex items-center gap-2">
               <input
                 className="rounded-md border border-neutral-300 bg-default-background px-3 py-2"
@@ -275,99 +355,98 @@ export default function CoachSessionsPage() {
           </div>
         </div>
 
-        {/* Body */}
-        <div className="flex w-full grow flex-col gap-12 px-6 py-8 overflow-auto">
-          {/* Loading states */}
+        {/* --- Body --- */}
+        <div className="flex w-full grow flex-col gap-12 px-12 py-8 overflow-auto">
           {loadingCoach || loadingSessions ? (
             <div className="text-subtext-color">Loading sessions…</div>
           ) : !coach ? (
             <div className="text-error">Coach not found.</div>
           ) : (
             <>
-              {/* Today’s Sessions (List view only for now) */}
+              {/* Today’s Sessions (List view) */}
               {view === "list" && (
                 <div className="flex w-full flex-col items-start gap-4">
                   <div className="flex w-full items-center justify-between">
                     <span className="text-heading-3 font-heading-3 text-default-font">Today&apos;s Sessions</span>
                   </div>
 
-                  {todays.length === 0 ? (
+                  {filtered.filter((s) => (s.scheduled_time || "").slice(0, 10) === todayKey).length === 0 ? (
                     <div className="text-subtext-color">No sessions today.</div>
                   ) : (
                     <div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
-                      {todays.map((s) => {
-                        const start = new Date(s.scheduled_time);
-                        const timeStr = start.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-                        const dur = s.duration_minutes ? `${s.duration_minutes} min` : "";
-                        const status = s.status || (start > now ? "upcoming" : "completed");
+                      {filtered
+                        .filter((s) => (s.scheduled_time || "").slice(0, 10) === todayKey)
+                        .map((s) => {
+                          const start = new Date(s.scheduled_time);
+                          const timeStr = start.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+                          const dur = s.duration_minutes ? `${s.duration_minutes} min` : "";
+                          const status = s.status || (start > now ? "upcoming" : "completed");
 
-                        return (
-                          <div key={String(s.id)} className="flex w-full items-center gap-4">
-                            <div
-                              className={`inline-flex h-8 w-8 items-center justify-center rounded-md ${
-                                status === "starting"
-                                  ? "bg-success-100 text-success-700"
-                                  : status === "upcoming"
-                                  ? "bg-neutral-100 text-default-font"
-                                  : "bg-neutral-100 text-default-font"
-                              }`}
-                            >
-                              <FeatherClock />
-                            </div>
-
-                            <div className="flex grow flex-col gap-1">
-                              <div className="flex items-center gap-2">
-                                <span className="text-body-bold text-default-font">
-                                  {timeStr} — {s.title}
-                                </span>
-                                {status === "starting" ? (
-                                  <Badge variant="success" icon={<FeatherVideo />}>
-                                    Starting Soon
-                                  </Badge>
-                                ) : status === "upcoming" ? (
-                                  <Badge variant="neutral" icon={<FeatherClock />}>
-                                    Upcoming
-                                  </Badge>
-                                ) : status === "completed" ? (
-                                  <Badge variant="success" icon={<FeatherCheck />}>
-                                    Completed
-                                  </Badge>
-                                ) : null}
+                          return (
+                            <div key={String(s.id)} className="flex w-full items-center gap-4">
+                              <div
+                                className={`inline-flex h-8 w-8 items-center justify-center rounded-md ${
+                                  status === "starting"
+                                    ? "bg-success-100 text-success-700"
+                                    : "bg-neutral-100 text-default-font"
+                                }`}
+                              >
+                                <FeatherClock />
                               </div>
 
-                              <div className="flex items-center gap-2">
-                                <Avatar size="small" image={s.image || undefined}>
-                                  {(s.student_name || "S")[0]}
-                                </Avatar>
-                                <span className="text-body text-subtext-color">
-                                  {s.student_name || "Student"} — {dur || "60 min"}
-                                </span>
-                                {s.game ? <Badge>{s.game}</Badge> : null}
-                              </div>
-                            </div>
+                              <div className="flex grow flex-col gap-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-body-bold text-default-font">
+                                    {timeStr} — {s.title}
+                                  </span>
+                                  {status === "starting" ? (
+                                    <Badge variant="success" icon={<FeatherVideo />}>
+                                      Starting Soon
+                                    </Badge>
+                                  ) : status === "upcoming" ? (
+                                    <Badge variant="neutral" icon={<FeatherClock />}>
+                                      Upcoming
+                                    </Badge>
+                                  ) : status === "completed" ? (
+                                    <Badge variant="success" icon={<FeatherCheck />}>
+                                      Completed
+                                    </Badge>
+                                  ) : null}
+                                </div>
 
-                            {status === "starting" ? (
-                              <Button icon={<FeatherVideo />}>Join Call</Button>
-                            ) : status === "upcoming" ? (
-                              <Button variant="neutral-secondary" icon={<FeatherMessageCircle />}>
-                                Message
-                              </Button>
-                            ) : s.recording_url ? (
-                              <a href={s.recording_url} target="_blank" rel="noopener noreferrer">
-                                <Button variant="neutral-secondary" icon={<FeatherPlay />}>
-                                  Watch
+                                <div className="flex items-center gap-2">
+                                  <Avatar size="small" image={s.image || undefined}>
+                                    {(s.student_name || "S")[0]}
+                                  </Avatar>
+                                  <span className="text-body text-subtext-color">
+                                    {s.student_name || "Student"} — {dur || "60 min"}
+                                  </span>
+                                  {s.game ? <Badge>{s.game}</Badge> : null}
+                                </div>
+                              </div>
+
+                              {status === "starting" ? (
+                                <Button icon={<FeatherVideo />}>Join Call</Button>
+                              ) : status === "upcoming" ? (
+                                <Button variant="neutral-secondary" icon={<FeatherMessageCircle />}>
+                                  Message
                                 </Button>
-                              </a>
-                            ) : null}
-                          </div>
-                        );
-                      })}
+                              ) : s.recording_url ? (
+                                <a href={s.recording_url} target="_blank" rel="noopener noreferrer">
+                                  <Button variant="neutral-secondary" icon={<FeatherPlay />}>
+                                    Watch
+                                  </Button>
+                                </a>
+                              ) : null}
+                            </div>
+                          );
+                        })}
                     </div>
                   )}
                 </div>
               )}
 
-              {/* Past Sessions (simple table-like layout) */}
+              {/* Past Sessions */}
               <div className="flex w-full flex-col items-start gap-4">
                 <div className="flex w-full items-center justify-between">
                   <span className="text-heading-3 font-heading-3 text-default-font">Past Sessions</span>
@@ -375,7 +454,6 @@ export default function CoachSessionsPage() {
 
                 <div className="w-full overflow-x-auto rounded-md border border-neutral-200">
                   <div className="min-w-[720px]">
-                    {/* header */}
                     <div className="grid grid-cols-7 gap-2 px-4 py-3 bg-neutral-50 text-subtext-color text-sm font-semibold">
                       <div>Date & Time</div>
                       <div>Student</div>
@@ -386,7 +464,6 @@ export default function CoachSessionsPage() {
                       <div>Actions</div>
                     </div>
 
-                    {/* rows */}
                     {past.length === 0 ? (
                       <div className="px-4 py-4 text-subtext-color">No past sessions.</div>
                     ) : (
