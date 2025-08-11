@@ -81,7 +81,7 @@ export default function BrandPageLayout({
 
   return (
     <div
-      className="min-h-screen w-full flex flex-col"
+      className="min-h-screen w-full flex flex-col overflow-x-hidden"
       style={{
         backgroundColor: resolvedBackground,
         fontFamily: theme?.fontFamily || fontFamily,

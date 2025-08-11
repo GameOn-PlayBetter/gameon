@@ -1,14 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useBrandTheme } from "@/app/context/BrandThemeContext";
 import { LoginModal } from "@/ui/components/LoginModal";
+import { useRouter } from "next/navigation";
+import { Avatar } from "@/ui/components/Avatar";
+import { DropdownMenu } from "@/ui/components/DropdownMenu";
+import { FeatherUser, FeatherSettings, FeatherLogOut } from "@subframe/core";
 
 export default function BrandHeader() {
   const config = useBrandTheme();
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [sessionRole, setSessionRole] = useState<string | null>(null);
+  const router = useRouter();
+
+useEffect(() => {
+  let role: string | null = null;
+  try {
+    const r = localStorage.getItem("sessionRole");
+    role = r === "user" || r === "coach" ? r : null;
+  } catch {}
+  setSessionRole(role);
+}, []);
+
+useEffect(() => {
+  if (!showLoginModal) {
+    try {
+      const r = localStorage.getItem("sessionRole");
+      const role = r === "user" || r === "coach" ? r : null;
+      if (role !== sessionRole) setSessionRole(role);
+    } catch {
+      if (sessionRole !== null) setSessionRole(null);
+    }
+  }
+}, [showLoginModal, sessionRole]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("sessionRole");
+    setSessionRole(null);
+    router.refresh();
+  };
 
   if (!config) return null;
 
@@ -49,12 +82,64 @@ export default function BrandHeader() {
             <Link href="#experts" className="hover:underline">
               Experts
             </Link>
-            <button
-              onClick={() => setShowLoginModal(true)}
-              className="hover:underline focus:outline-none"
-            >
-              Login
-            </button>
+            {sessionRole ? (
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild>
+                  <button className="focus:outline-none">
+                    <Avatar image="/default-avatar.png">
+                      {sessionRole.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content
+                    side="bottom"
+                    align="end"
+                    className="bg-black/90 text-white border border-white/10 rounded-md shadow-lg py-1 z-[80] text-sm"
+                    style={{
+                      fontFamily: "inherit",
+                      backgroundColor: "rgba(0,0,0,0.9)",
+                      color: "#fff",
+                      border: "1px solid rgba(255,255,255,0.1)"
+                    }}
+                  >
+                    <DropdownMenu.DropdownItem
+                      onSelect={() => {
+                        const target =
+                          sessionRole === "user"
+                            ? `/${currentBrand}/player-profile`
+                            : `/${currentBrand}/coach`;
+                        router.push(target);
+                      }}
+                      icon={<FeatherUser className="w-4 h-4" />}
+                      className="flex items-center gap-2 px-4 py-2 text-white data-[highlighted]:bg-white/10 cursor-pointer w-full leading-6 outline-none focus:outline-none"
+                    >
+                      <span>Profile</span>
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<FeatherSettings className="w-4 h-4" />}
+                      className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer w-full leading-6 outline-none focus:outline-none"
+                    >
+                      <span>Settings</span>
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      onSelect={handleLogout}
+                      icon={<FeatherLogOut className="w-4 h-4" />}
+                      className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer w-full leading-6 outline-none focus:outline-none"
+                    >
+                      <span>Logout</span>
+                    </DropdownMenu.DropdownItem>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
+            ) : (
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="hover:underline focus:outline-none"
+              >
+                Login
+              </button>
+            )}
 
             {/* ✅ Apply to Coach opens Google Form in a new tab */}
             <a
@@ -102,7 +187,14 @@ export default function BrandHeader() {
       </header>
 
       {/* Modal mounts outside of header */}
-      <LoginModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      <LoginModal
+        open={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onLoginSuccess={(role) => {
+          setSessionRole(role);
+          setShowLoginModal(false);
+        }}
+      />
     </>
   );
 }

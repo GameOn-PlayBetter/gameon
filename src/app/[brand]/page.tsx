@@ -10,7 +10,6 @@ import GameOnGames from "@/ui/components/GameOnGames";
 import GameOnWaitlistBlock from "@/ui/components/GameOnWaitlistBlock";
 import { ReserveBlock } from "@/ui/components/ReserveBlock";
 import RotatingSearchInput from "@/ui/components/RotatingSearchInput";
-import { LoginModal } from "@/ui/components/LoginModal";
 import FeaturedCoaches from "@/ui/components/GameOnCoaches";
 import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
 
@@ -168,11 +167,6 @@ export default function BrandLandingPage() {
           colors={colors}
         />
 
-        {/* Login Modal */}
-        <LoginModal
-          open={showLogin}
-          onClose={() => setShowLogin(false)}
-        />
       </BrandPageLayout>
     </BrandThemeProvider>
   );

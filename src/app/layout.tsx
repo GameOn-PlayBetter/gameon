@@ -56,7 +56,7 @@ export default function RootLayout({
   <link rel="apple-touch-icon" href="/skillery_social_512.png" />
 </head>
 
-      <body>{children}</body>
+<body className="w-full min-h-screen overflow-x-hidden">{children}</body>
     </html>
   );
 }

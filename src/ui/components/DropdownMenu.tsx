@@ -20,29 +20,28 @@ interface DropdownItemProps
 
 const DropdownItem = React.forwardRef<HTMLElement, DropdownItemProps>(
   function DropdownItem(
-    { children, icon = <FeatherStar />, className, ...otherProps },
+    { children, icon = null, className, ...otherProps },
     ref
   ) {
     return (
-      <SubframeDropdownMenu.Item asChild={true} {...otherProps}>
-        <div
-          className={SubframeUtils.twClassNames(
-            "group/adcae8d6 flex h-8 w-full cursor-pointer items-center gap-2 rounded-md px-3 hover:bg-neutral-100 active:bg-neutral-50 data-[highlighted]:bg-neutral-100",
-            className
-          )}
-          ref={ref as any}
-        >
-          {icon ? (
-            <SubframeCore.IconWrapper className="text-body font-body text-default-font">
-              {icon}
-            </SubframeCore.IconWrapper>
-          ) : null}
-          {children ? (
-            <span className="line-clamp-1 grow shrink-0 basis-0 text-body font-body text-default-font group-hover/adcae8d6:text-default-font">
-              {children}
-            </span>
-          ) : null}
-        </div>
+      <SubframeDropdownMenu.Item
+        {...otherProps}
+        ref={ref as any}
+        className={SubframeUtils.twClassNames(
+          "group flex h-9 w-full cursor-pointer items-center gap-2 rounded-md px-3 outline-none focus:outline-none text-white data-[highlighted]:bg-white/10",
+          className
+        )}
+      >
+        {icon ? (
+          <SubframeCore.IconWrapper className="text-current">
+            {icon}
+          </SubframeCore.IconWrapper>
+        ) : null}
+        {children ? (
+          <span className="line-clamp-1 grow shrink-0 basis-0 text-white">
+            {children}
+          </span>
+        ) : null}
       </SubframeDropdownMenu.Item>
     );
   }
@@ -66,7 +65,7 @@ const DropdownDivider = React.forwardRef<HTMLElement, DropdownDividerProps>(
         ref={ref as any}
         {...otherProps}
       >
-        <div className="flex h-px grow shrink-0 basis-0 flex-col items-center gap-2 bg-neutral-200" />
+        <div className="flex h-px grow shrink-0 basis-0 flex-col items-center gap-2 bg-white/10" />
       </div>
     );
   }

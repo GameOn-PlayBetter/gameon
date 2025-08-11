@@ -7,9 +7,11 @@ import { useBrandTheme } from "@/app/context/BrandThemeContext";
 export function LoginModal({
   open,
   onClose,
+  onLoginSuccess,
 }: {
   open: boolean;
   onClose: () => void;
+  onLoginSuccess?: (role: 'user' | 'coach') => void;
 }) {
   const router = useRouter();
   const theme = useBrandTheme(); // ✅ Consistent with other components
@@ -23,6 +25,8 @@ export function LoginModal({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [headingText, setHeadingText] = useState("Log in to Earn Tokens");
+  const [selectedRole, setSelectedRole] = useState<'user' | 'coach'>('user');
+  const [returnUrl, setReturnUrl] = useState<string>('');
   const modalRef = useRef<HTMLDivElement>(null);
 
  const brandHeadings: Record<string, string[]> = {
@@ -108,13 +112,26 @@ moneyon: [
   const currentBrand = theme?.name?.toLowerCase?.() || "gameon";
   const headings = brandHeadings[currentBrand] || brandHeadings["gameon"];
 
+  // Capture where to return the user after login
+  useEffect(() => {
+    if (!open) return;
+    try {
+      const url = new URL(window.location.href);
+      const fromQuery = url.searchParams.get('next');
+      const fallback = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      setReturnUrl(fromQuery || fallback || '/');
+    } catch {
+      setReturnUrl('/');
+    }
+  }, [open]);
+
   // Update heading randomly each time modal opens
   useEffect(() => {
     if (open) {
       const random = headings[Math.floor(Math.random() * headings.length)];
       setHeadingText(random);
     }
-  }, [open]);
+  }, [open, headings]);
 
   // Close on ESC key
   useEffect(() => {
@@ -138,11 +155,23 @@ moneyon: [
 
   if (!open) return null;
 
-const handleLogin = () => {
-  onClose(); // Close modal
-  const brandPath = theme?.name?.toLowerCase?.() || "gameon";
-  router.push(`/${brandPath}/player-profile`); // Redirect to brand-specific page
-};
+  const handleLogin = () => {
+    const brandPath = theme?.name?.toLowerCase?.() || 'gameon';
+    try {
+      localStorage.setItem('sessionRole', selectedRole);
+    } catch {}
+    if (onLoginSuccess) {
+      try { onLoginSuccess(selectedRole); } catch {}
+    }
+    onClose(); // Close modal
+    if (selectedRole === 'coach') {
+      router.push(`/${brandPath}/coach`);
+    } else {
+      // return user to the page they were on (or fallback to brand root)
+      const safeReturn = returnUrl && typeof returnUrl === 'string' ? returnUrl : `/${brandPath}`;
+      router.push(safeReturn);
+    }
+  };
 
   return (
     <div
@@ -157,6 +186,25 @@ const handleLogin = () => {
         <h2 className="text-2xl font-bold text-white mb-4 animate-glitchPulse">
           {headingText}
         </h2>
+        {/* Role selector (minimal visual change) */}
+        <div className="mb-3 flex w-full rounded border border-gray-600 overflow-hidden" role="tablist" aria-label="Login role selector">
+          <button
+            type="button"
+            onClick={() => setSelectedRole('user')}
+            className={`flex-1 px-3 py-2 text-sm ${selectedRole === 'user' ? 'bg-gradient-to-r from-pink-500 to-blue-500 text-white' : 'bg-black text-gray-300 hover:text-white'}`}
+            aria-selected={selectedRole === 'user'}
+          >
+            Player
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedRole('coach')}
+            className={`flex-1 px-3 py-2 text-sm border-l border-gray-600 ${selectedRole === 'coach' ? 'bg-gradient-to-r from-pink-500 to-blue-500 text-white' : 'bg-black text-gray-300 hover:text-white'}`}
+            aria-selected={selectedRole === 'coach'}
+          >
+            Coach
+          </button>
+        </div>
         <input
           className="w-full rounded px-4 py-2 border border-gray-500 bg-black text-white placeholder-gray-400"
           type="email"

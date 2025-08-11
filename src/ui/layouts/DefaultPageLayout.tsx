@@ -9,7 +9,6 @@ import * as SubframeCore from "@subframe/core";
 import { Avatar } from "../components/Avatar";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
-import { LoginModal } from "../components/LoginModal";
 import { brands } from "@/lib/brands";
 
 interface DefaultPageLayoutRootProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -105,7 +104,6 @@ const DefaultPageLayoutRoot = React.forwardRef<HTMLElement, DefaultPageLayoutRoo
           </div>
         ) : null}
 
-        <LoginModal open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
       </div>
     );
   }
