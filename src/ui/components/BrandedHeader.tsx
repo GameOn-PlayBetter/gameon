@@ -8,13 +8,16 @@ import { LoginModal } from "@/ui/components/LoginModal";
 import { useRouter, usePathname } from "next/navigation";
 import { Avatar } from "@/ui/components/Avatar";
 import { DropdownMenu } from "@/ui/components/DropdownMenu";
+import { createClient } from "@/utils/supabase/client";
 import { FeatherUser, FeatherSettings, FeatherLogOut } from "@subframe/core";
 import { brands, getBrandConfig } from "@/lib/brands";
 
 export default function BrandHeader({ currentBrand }: { currentBrand?: string }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [sessionRole, setSessionRole] = useState<string | null>(null);
   const router = useRouter();
+  const supabase = createClient();
 
   const pathname = usePathname() || "";
   const segments = pathname.split("/").filter(Boolean);
@@ -56,9 +59,23 @@ export default function BrandHeader({ currentBrand }: { currentBrand?: string })
   }, [showLoginModal, sessionRole]);
 
   const handleLogout = () => {
-    localStorage.removeItem("sessionRole");
+    // Open confirmation modal instead of logging out immediately
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch {}
+    try {
+      localStorage.removeItem("sessionRole");
+      localStorage.clear();
+      if (typeof sessionStorage !== "undefined") sessionStorage.clear();
+    } catch {}
     setSessionRole(null);
+    setShowLogoutConfirm(false);
     router.refresh();
+    router.push(brandSlug === "skillery" ? "/" : `/${brandSlug}`);
   };
 
   if (!config) return null;
@@ -71,6 +88,15 @@ export default function BrandHeader({ currentBrand }: { currentBrand?: string })
          ("pageBackground" in palette && palette.pageBackground) ||
          palette.primary ||
          "#000000");
+
+  // Brand-aware modal colors
+  const cardBg       = (palette?.cardBackground ?? palette?.pageBackground ?? "#0A0F18");
+  const cardText     = (palette?.text ?? "#ffffff");
+  const cardBorder   = (palette?.border ?? "rgba(255,255,255,0.12)");
+  const btnPrimary   = (palette?.button ?? palette?.primary ?? "#2563EB");
+  const btnPrimaryHv = (palette?.buttonHover ?? btnPrimary);
+  const btnSubtle    = "rgba(255,255,255,0.10)";
+  const btnSubtleHv  = "rgba(255,255,255,0.16)";
 
   return (
     <>
@@ -151,7 +177,7 @@ export default function BrandHeader({ currentBrand }: { currentBrand?: string })
                       <span>Settings</span>
                     </DropdownMenu.DropdownItem>
                     <DropdownMenu.DropdownItem
-                      onSelect={handleLogout}
+                      onSelect={() => setShowLogoutConfirm(true)}
                       icon={<FeatherLogOut className="w-4 h-4" />}
                       className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer w-full leading-6 outline-none focus:outline-none"
                     >
@@ -219,10 +245,58 @@ export default function BrandHeader({ currentBrand }: { currentBrand?: string })
         open={showLoginModal}
         onClose={() => setShowLoginModal(false)}
         onLoginSuccess={(role) => {
+          // persist role so brand pages can trust the header login
+          try {
+            localStorage.setItem("sessionRole", role);
+          } catch {}
+
           setSessionRole(role);
           setShowLoginModal(false);
+
+          // brand-aware post-login redirect
+          const dest =
+            role === "coach"
+              ? `/${brandSlug}/coach`
+              : role === "user"
+              ? `/${brandSlug}/player-profile`
+              : `/${brandSlug}`;
+          router.push(dest);
+          router.refresh();
         }}
       />
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center" style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+          <div
+            className="rounded-lg shadow-xl p-6 w-[90%] max-w-sm border"
+            style={{ backgroundColor: cardBg, color: cardText, borderColor: cardBorder }}
+          >
+            <h3 className="text-lg font-semibold mb-2">Log out?</h3>
+            <p className="text-sm opacity-80 mb-4">
+              You'll be signed out and sent to the {config.name} home page.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="px-3 py-2 rounded-md border transition"
+                style={{ borderColor: cardBorder, backgroundColor: btnSubtle, color: cardText }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = btnSubtleHv)}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = btnSubtle)}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="px-3 py-2 rounded-md text-white transition"
+                style={{ backgroundColor: btnPrimary }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = btnPrimaryHv)}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = btnPrimary)}
+              >
+                Log out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

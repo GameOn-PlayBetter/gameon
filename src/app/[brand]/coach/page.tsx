@@ -62,6 +62,7 @@ function CoachPage() {
 
   const [authChecked, setAuthChecked] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [sessionRole, setSessionRole] = useState<string | null>(null);
 
   const [coach, setCoach] = useState<CoachFromDB | null>(null);
   const [loadingCoach, setLoadingCoach] = useState(true);
@@ -70,10 +71,20 @@ function CoachPage() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const { data } = await supabase.auth.getUser();
-      if (!cancelled) {
-        setUserId(data.user?.id ?? null);
-        setAuthChecked(true);
+      try {
+        const { data } = await supabase.auth.getUser();
+        if (!cancelled) {
+          setUserId(data.user?.id ?? null);
+        }
+      } catch (e) {
+        if (!cancelled) setUserId(null);
+      } finally {
+        // read sessionRole from localStorage (set by LoginModal)
+        try {
+          const role = typeof window !== 'undefined' ? window.localStorage.getItem('sessionRole') : null;
+          if (!cancelled) setSessionRole(role);
+        } catch {}
+        if (!cancelled) setAuthChecked(true);
       }
     })();
     return () => {
@@ -129,7 +140,7 @@ function CoachPage() {
     );
   }
 
-  if (!userId) {
+  if (!userId && sessionRole !== 'coach') {
     const next = `/${brandKey}/coach`;
     return (
       <DefaultPageLayout style={{ backgroundColor }}>
