@@ -37,6 +37,7 @@ import { FeatherBook } from "@subframe/core";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
+import { brands } from "@/lib/brands";
 
 // shape we read from Supabase
 type CoachFromDB = {
@@ -50,7 +51,13 @@ type CoachFromDB = {
 const supabase = createClient();
 
 function CoachPage() {
-  const { brand } = useParams() as { brand: string };
+  const params = (useParams() as { brand?: string }) ?? {};
+  const brandRaw = (params as { brand?: string | string[] }).brand;
+  const brandKey = (Array.isArray(brandRaw) ? brandRaw[0] : brandRaw || "gameon").toLowerCase();
+  const brandConfig = brands[brandKey as keyof typeof brands] || brands.gameon;
+
+  const colors = (brandConfig.colors as any) || {};
+  const backgroundColor = colors.pageBackground || colors.background || colors.primary || "#000000";
   const router = useRouter();
 
   const [authChecked, setAuthChecked] = useState(false);
@@ -93,7 +100,7 @@ function CoachPage() {
         .eq("auth_user_id", userId)
         .limit(1) as any;
 
-      if (brand) query = query.ilike("brand", brand);
+      if (brandKey) query = query.ilike("brand", brandKey);
 
       const { data, error } = await query.maybeSingle();
 
@@ -111,21 +118,21 @@ function CoachPage() {
     return () => {
       cancelled = true;
     };
-  }, [authChecked, userId, brand]);
+  }, [authChecked, userId, brandKey]);
 
   // guards
   if (!authChecked) {
     return (
-      <DefaultPageLayout>
+      <DefaultPageLayout style={{ backgroundColor }}>
         <div className="p-8 text-subtext-color">Checking session…</div>
       </DefaultPageLayout>
     );
   }
 
   if (!userId) {
-    const next = `/${brand}/coach`;
+    const next = `/${brandKey}/coach`;
     return (
-      <DefaultPageLayout>
+      <DefaultPageLayout style={{ backgroundColor }}>
         <div className="p-8">
           <p className="text-default-font mb-4">You must be logged in to view your coach dashboard.</p>
           <Link href={`/login?next=${encodeURIComponent(next)}`}>
@@ -145,9 +152,9 @@ function CoachPage() {
         </span>
       </div>
 
-      <DefaultPageLayout>
-        <div className="flex h-full w-full flex-col items-start bg-default-background">
-          <div className="flex w-full flex-col items-start gap-8 px-12 pt-12 pb-6">
+      <DefaultPageLayout style={{ backgroundColor }}>
+        <div className="flex w-full flex-col items-start px-12 pt-24 pb-12 min-h-[60vh]">
+          <div className="flex w-full flex-col items-start gap-8 pb-6">
             <div className="flex w-full flex-wrap items-start gap-4">
               <div className="flex h-36 w-36 flex-none flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-100 relative">
                 {/* CHANGED: avatar skeleton / real / neutral */}
@@ -230,13 +237,13 @@ function CoachPage() {
             <div className="flex h-px w-12 flex-none flex-col items-center gap-2 bg-neutral-200" />
             <Tabs>
               <Tabs.Item active={true}>Dashboard</Tabs.Item>
-              <Tabs.Item onClick={() => router.push(`/${brand}/coach/sessions`)}>Sessions</Tabs.Item>
-              <Tabs.Item onClick={() => router.push(`/${brand}/coach/reviews`)}>Reviews</Tabs.Item>
+              <Tabs.Item onClick={() => router.push(`/${brandKey}/coach/sessions`)}>Sessions</Tabs.Item>
+              <Tabs.Item onClick={() => router.push(`/${brandKey}/coach/reviews`)}>Reviews</Tabs.Item>
             </Tabs>
           </div>
 
           {/* Rest unchanged */}
-          <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-12 px-12 py-12 overflow-auto">
+          <div className="flex w-full flex-col items-start gap-12 py-12">
             <div className="flex w-full flex-wrap items-start gap-6">
               <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
                 <div className="flex w-full items-center gap-2">

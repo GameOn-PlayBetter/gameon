@@ -59,6 +59,15 @@ export default function BrandLandingPage() {
     hover: "#cccccc",
   };
 
+  const reserveColors = brandKey === "fiton"
+    ? {
+        ...colors,
+        primary: "#1B4D6A",
+        pageBackground: (colors as any).pageBackground || "#1B4D6A",
+        ctaBackground: "#1B4D6A",
+      }
+    : colors;
+
   const reserveBlock = brandConfig.reserveBlock ?? {
     headline: "",
     subtext: "",
@@ -164,7 +173,7 @@ export default function BrandLandingPage() {
           subtext={reserveBlock.subtext}
           buttonText={reserveBlock.buttonText}
           formUrl={formUrl}
-          colors={colors}
+          colors={reserveColors}
         />
 
       </BrandPageLayout>

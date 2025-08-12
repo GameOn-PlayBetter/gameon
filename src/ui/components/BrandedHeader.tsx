@@ -5,37 +5,55 @@ import Link from "next/link";
 import Image from "next/image";
 import { useBrandTheme } from "@/app/context/BrandThemeContext";
 import { LoginModal } from "@/ui/components/LoginModal";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Avatar } from "@/ui/components/Avatar";
 import { DropdownMenu } from "@/ui/components/DropdownMenu";
 import { FeatherUser, FeatherSettings, FeatherLogOut } from "@subframe/core";
+import { brands, getBrandConfig } from "@/lib/brands";
 
-export default function BrandHeader() {
-  const config = useBrandTheme();
+export default function BrandHeader({ currentBrand }: { currentBrand?: string }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [sessionRole, setSessionRole] = useState<string | null>(null);
   const router = useRouter();
 
-useEffect(() => {
-  let role: string | null = null;
-  try {
-    const r = localStorage.getItem("sessionRole");
-    role = r === "user" || r === "coach" ? r : null;
-  } catch {}
-  setSessionRole(role);
-}, []);
+  const pathname = usePathname() || "";
+  const segments = pathname.split("/").filter(Boolean);
+  const theme = useBrandTheme();
+  // Prefer prop, then /[brand]/... or /brands/[brand]/..., else theme name
+  const urlBrand =
+    segments[0]?.toLowerCase() === "brands"
+      ? segments[1]?.toLowerCase()
+      : segments[0]?.toLowerCase();
+  let brandSlug =
+    currentBrand?.toLowerCase() ||
+    urlBrand ||
+    theme?.name?.toLowerCase() ||
+    "skillery";
 
-useEffect(() => {
-  if (!showLoginModal) {
+  // Resolve a reliable brand config
+  const resolvedConfig = getBrandConfig?.(brandSlug) || brands[brandSlug as keyof typeof brands];
+  const config = resolvedConfig || theme;
+
+  useEffect(() => {
+    let role: string | null = null;
     try {
       const r = localStorage.getItem("sessionRole");
-      const role = r === "user" || r === "coach" ? r : null;
-      if (role !== sessionRole) setSessionRole(role);
-    } catch {
-      if (sessionRole !== null) setSessionRole(null);
+      role = r === "user" || r === "coach" ? r : null;
+    } catch {}
+    setSessionRole(role);
+  }, []);
+
+  useEffect(() => {
+    if (!showLoginModal) {
+      try {
+        const r = localStorage.getItem("sessionRole");
+        const role = r === "user" || r === "coach" ? r : null;
+        if (role !== sessionRole) setSessionRole(role);
+      } catch {
+        if (sessionRole !== null) setSessionRole(null);
+      }
     }
-  }
-}, [showLoginModal, sessionRole]);
+  }, [showLoginModal, sessionRole]);
 
   const handleLogout = () => {
     localStorage.removeItem("sessionRole");
@@ -45,41 +63,51 @@ useEffect(() => {
 
   if (!config) return null;
 
-  const currentBrand = config.name?.toLowerCase() || "";
+  const palette = (config?.colors as any) || {};
   const headerColor =
-    currentBrand === "skillery" ? "#0A0F18" : config.colors.primary;
+    brandSlug === "skillery"
+      ? "#0A0F18"
+      : (("headerBackground" in palette && palette.headerBackground) ||
+         ("pageBackground" in palette && palette.pageBackground) ||
+         palette.primary ||
+         "#000000");
 
   return (
     <>
       <header
-        className="fixed top-0 left-0 w-full border-b border-white/20 px-6 py-4 flex justify-between items-center z-50"
+        className="fixed top-0 left-0 w-full border-b border-white/20 px-6 py-2 flex justify-between items-center z-50"
         style={{ backgroundColor: headerColor }}
       >
         {/* Left: Logo */}
         <Link
-          href={currentBrand === "skillery" ? "/" : `/${currentBrand}`}
+          href={brandSlug === "skillery" ? "/" : `/${brandSlug}`}
           className="flex items-center"
         >
           <Image
-            src={config.logo}
+            src={
+              (config as any)?.headerLogo ||
+              (config as any)?.navLogo ||
+              (config as any)?.logo ||
+              "/default-logo.png"
+            }
             alt={`${config.name} Logo`}
-            width={64}
-            height={64}
-            className="h-18 w-auto"
+            width={56}
+            height={56}
+            className="h-14 w-auto"
             style={{ display: "block" }}
           />
         </Link>
 
         {/* Right: Nav (hidden for Skillery) */}
-        {currentBrand !== "skillery" && (
+        {brandSlug !== "skillery" && (
           <nav className="flex items-center gap-4 text-sm font-medium text-white">
             <Link href="https://skillery.co" className="hover:underline">
               ← Return to Skillery
             </Link>
-            <Link href="#categories" className="hover:underline">
-              Categories
+            <Link href={`/${brandSlug}/refer-friends`} className="hover:underline">
+              Refer Friends
             </Link>
-            <Link href="#experts" className="hover:underline">
+            <Link href={`/${brandSlug}#experts`} className="hover:underline">
               Experts
             </Link>
             {sessionRole ? (
@@ -107,8 +135,8 @@ useEffect(() => {
                       onSelect={() => {
                         const target =
                           sessionRole === "user"
-                            ? `/${currentBrand}/player-profile`
-                            : `/${currentBrand}/coach`;
+                            ? `/${brandSlug}/player-profile`
+                            : `/${brandSlug}/coach`;
                         router.push(target);
                       }}
                       icon={<FeatherUser className="w-4 h-4" />}
@@ -144,25 +172,25 @@ useEffect(() => {
             {/* ✅ Apply to Coach opens Google Form in a new tab */}
             <a
               href={
-                currentBrand === "gameon"
+                brandSlug === "gameon"
                   ? "https://docs.google.com/forms/d/1LddJuKRXpjIFPaVevI-nyurxjnD3iofQpap8pjC-tII/edit"
-                  : currentBrand === "fixon"
+                  : brandSlug === "fixon"
                   ? "https://docs.google.com/forms/d/e/1FAIpQLSfUcvdybuE4rjzMYfcB8pQp676BxYhOZVWWJjx1cDTao7ZBIA/viewform?usp=dialog"
-                  : currentBrand === "fiton"
+                  : brandSlug === "fiton"
                   ? "https://docs.google.com/forms/d/e/1FAIpQLSdvRLccUqutavNKZLAF7GF2jqfy0PRyJxppNz8hKfUX5dD8pw/viewform?usp=dialog"
-                  : currentBrand === "jamon"
+                  : brandSlug === "jamon"
                   ? "https://docs.google.com/forms/d/e/1FAIpQLScm0_HE0ScDHm2OGFM3DE3i90AeI96gq-fl2p3tV2zkuMJvAw/viewform?usp=dialog"
-                  : currentBrand === "codeon"
+                  : brandSlug === "codeon"
                   ? "https://docs.google.com/forms/d/e/1FAIpQLSeJCKV6nT2K39Y72PXNBkmx6A-12OEYfxu9EOKbYkCVQkul3A/viewform?usp=dialog"
-                  : currentBrand === "learnon"
+                  : brandSlug === "learnon"
                   ? "https://docs.google.com/forms/d/e/1FAIpQLScSimd1XyMa8AWpaSo0qQAyzVwdUwe9EZgGUVcoSPT6o5byJA/viewform?usp=dialog"
-                  : currentBrand === "growon"
+                  : brandSlug === "growon"
                   ? "https://docs.google.com/forms/d/e/1FAIpQLSd5zh3KkUgWT5VqY0leGrdk4csBZ7IgTTy2Qr-y8RB_rFzDWw/viewform?usp=dialog"
-                  : currentBrand === "cookon"
+                  : brandSlug === "cookon"
                   ? "https://docs.google.com/forms/d/e/1FAIpQLSfiahiIqw4e0fq2Ac0IRfTdJHpU7pw0o6Iik0956tdM80Fuiw/viewform?usp=dialog"
-                  : currentBrand === "styleon"
+                  : brandSlug === "styleon"
                   ? "https://docs.google.com/forms/d/e/1FAIpQLSd0dUnJg-m34vIHALS-hAz3UUSTS80-2W3MQcBsFfZSmdGx7Q/viewform?usp=dialog"
-                  : currentBrand === "moneyon"
+                  : brandSlug === "moneyon"
                   ? "https://docs.google.com/forms/d/e/1FAIpQLSdyzHNv2g-DetGnikmWCqQJytU3XUnlyDF9vrvTTCAM6nLcrg/viewform?usp=dialog"
                   : "#"
               }

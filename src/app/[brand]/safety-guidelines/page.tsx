@@ -19,6 +19,12 @@ export default function PrivacyPolicyPage() {
 
   const brandConfig = brands[brandKey as keyof typeof brands];
   if (!brandConfig) return notFound();
+  const colors = brandConfig.colors || {} as any;
+  const backgroundColor =
+    (colors as any)?.pageBackground ||
+    (colors as any)?.background ||
+    (colors as any)?.primary ||
+    "#000000";
 
   const email = "support@skillery.co";
 
@@ -26,7 +32,7 @@ export default function PrivacyPolicyPage() {
     <BrandThemeProvider brandName={brandKey}>
       <BrandPageLayout brandName={brandKey}>
         <LegalPageWrapper>
-          <div className="flex flex-col min-h-screen w-full">
+          <div className="flex flex-col min-h-screen w-full" style={{ backgroundColor }}>
             <div className="flex-grow w-full max-w-4xl mx-auto px-6 py-12 text-white">
               <h1 className="text-4xl font-bold mb-8">
                 {brandConfig.name} Community Safety Guidelines
@@ -58,9 +64,9 @@ export default function PrivacyPolicyPage() {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-semibold mb-2">4. Player Responsibilities</h2>
+                  <h2 className="text-2xl font-semibold mb-2">4. Student Responsibilities</h2>
                   <ul className="list-disc pl-6 space-y-2">
-                    <li>Players must show respect during sessions and follow the coach’s instructions.</li>
+                    <li>Students must show respect during sessions and follow the coach’s instructions.</li>
                     <li>No trolling, baiting, or inappropriate behavior in sessions or chat.</li>
                   </ul>
                 </div>

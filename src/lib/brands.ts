@@ -190,6 +190,8 @@ socialImage: "https://skillery.co/images/fiton/fiton-social-preview.png",
   ],
   colors: {
     primary: "#2A82B5",
+    pageBackground: "#1B4D6A",
+    ctaBackground: "#1B4D6A",
     border: "border-white/30",
     glow: "#67CFFF",
     button: "#CC3333",

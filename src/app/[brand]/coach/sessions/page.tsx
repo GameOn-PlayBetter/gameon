@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { createClient } from "@/utils/supabase/client";
+import { brands } from "@/lib/brands";
 import { Badge } from "@/ui/components/Badge";
 import { Button } from "@/ui/components/Button";
 import { Avatar } from "@/ui/components/Avatar";
@@ -53,9 +54,15 @@ type SessionRow = {
 };
 
 export default function CoachSessionsPage() {
-  const { brand } = useParams() as { brand: string };
+  const params = (useParams() as { brand?: string }) ?? {};
+  const brandRaw = (params as { brand?: string | string[] }).brand;
+  const brandKey = (Array.isArray(brandRaw) ? brandRaw[0] : brandRaw || "gameon").toLowerCase();
   const router = useRouter();
-  const base = `/${brand}/coach`;
+  const base = `/${brandKey}/coach`;
+
+  const brandConfig = brands[brandKey as keyof typeof brands] || brands.gameon;
+  const colors = (brandConfig.colors as any) || {};
+  const backgroundColor = colors.pageBackground || colors.background || colors.primary || "#000000";
 
   const [authChecked, setAuthChecked] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
@@ -104,7 +111,7 @@ export default function CoachSessionsPage() {
         .eq("auth_user_id", userId)
         .eq("is_active", true);
 
-      if (brand) query = query.ilike("brand", String(brand));
+      if (brandKey) query = query.ilike("brand", brandKey);
 
       const { data, error } = await query.maybeSingle();
 
@@ -122,7 +129,7 @@ export default function CoachSessionsPage() {
     return () => {
       cancelled = true;
     };
-  }, [authChecked, userId, brand]);
+  }, [authChecked, userId, brandKey]);
 
   // Sessions by coach
   useEffect(() => {
@@ -177,8 +184,8 @@ export default function CoachSessionsPage() {
   const filtered = useMemo(() => {
     let out = sessions.slice();
 
-    if (brand) {
-      out = out.filter((s) => !s.brand || s.brand.toLowerCase() === brand.toLowerCase());
+    if (brandKey) {
+      out = out.filter((s) => !s.brand || s.brand.toLowerCase() === brandKey);
     }
     if (gameFilter) {
       out = out.filter((s) => (s.game || "").toLowerCase() === gameFilter.toLowerCase());
@@ -194,7 +201,7 @@ export default function CoachSessionsPage() {
       );
     }
     return out;
-  }, [sessions, brand, gameFilter, search]);
+  }, [sessions, brandKey, gameFilter, search]);
 
   const todays = filtered.filter((s) => (s.scheduled_time || "").slice(0, 10) === todayKey);
   const past = filtered.filter((s) => new Date(s.scheduled_time) < now);
@@ -202,7 +209,7 @@ export default function CoachSessionsPage() {
   // Guards
   if (!authChecked) {
     return (
-      <DefaultPageLayout>
+      <DefaultPageLayout style={{ backgroundColor }}>
         <div className="p-6 text-subtext-color">Checking session…</div>
       </DefaultPageLayout>
     );
@@ -210,7 +217,7 @@ export default function CoachSessionsPage() {
 
   if (!userId) {
     return (
-      <DefaultPageLayout>
+      <DefaultPageLayout style={{ backgroundColor }}>
         <div className="p-6">
           <p className="text-default-font">You must be logged in to view your Sessions.</p>
           <div className="mt-4">
@@ -224,11 +231,11 @@ export default function CoachSessionsPage() {
   }
 
   return (
-    <DefaultPageLayout>
-      <div className="flex h-full w-full flex-col items-start bg-default-background">
+    <DefaultPageLayout style={{ backgroundColor }}>
+      <div className="flex w-full flex-col items-start px-12 pt-24 pb-12 min-h-[60vh]">
 
         {/* --- HEADER: same structure as Dashboard; no placeholders that show other names/images --- */}
-        <div className="flex w-full flex-col items-start gap-8 px-12 pt-12 pb-6">
+        <div className="flex w-full flex-col items-start gap-8 pb-6">
           <div className="flex w-full flex-wrap items-start gap-4">
             <div className="flex h-36 w-36 flex-none flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-100 relative">
               {/* Skeleton while loading; neutral circle if no avatar; never a stock image */}
@@ -305,7 +312,7 @@ export default function CoachSessionsPage() {
         </div>
 
         {/* --- Controls --- */}
-        <div className="flex w-full items-end px-12 pt-4">
+        <div className="flex w-full items-end pt-4">
           <div className="flex h-px w-12 flex-none bg-neutral-200" />
           <div className="ml-4 flex items-center gap-4">
             <Button
@@ -356,7 +363,7 @@ export default function CoachSessionsPage() {
         </div>
 
         {/* --- Body --- */}
-        <div className="flex w-full grow flex-col gap-12 px-12 py-8 overflow-auto">
+        <div className="flex w-full flex-col gap-12 py-8">
           {loadingCoach || loadingSessions ? (
             <div className="text-subtext-color">Loading sessions…</div>
           ) : !coach ? (

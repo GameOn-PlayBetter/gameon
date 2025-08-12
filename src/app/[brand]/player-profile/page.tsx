@@ -179,8 +179,9 @@ function PlayerProfilePage() {
       </div>
 
       <DefaultPageLayout>
-        <div className="flex h-full w-full flex-col items-start bg-default-background">
-          <div className="flex w-full flex-col items-start gap-8 px-12 pt-12 pb-6">
+        <div className="sticky top-20 z-20 w-full bg-transparent backdrop-blur mb-6">
+          <div className="flex w-full flex-col items-start pb-2">
+          <div className="flex w-full flex-col items-start gap-6 px-12 pt-6 pb-4">
             <div className="flex w-full flex-wrap items-start gap-4">
               <div className="flex h-36 w-36 flex-none flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-100 relative cursor-pointer">
                 <img
@@ -264,10 +265,11 @@ function PlayerProfilePage() {
               </Tabs.Item>
             </Tabs>
           </div>
+        </div>
 
           {/* ===== OVERVIEW TAB ===== */}
           {activeTab === "overview" && (
-            <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-12 px-12 py-12 overflow-auto">
+            <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-12 px-12 py-12 pb-40 min-h-[70vh] overflow-visible">
               <div className="flex w-full flex-wrap items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
                 <div className="flex grow shrink-0 basis-0 flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
                   <Alert
@@ -596,7 +598,7 @@ function PlayerProfilePage() {
 
           {/* ===== SESSIONS TAB ===== */}
           {activeTab === "sessions" && (
-            <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-12 px-12 py-12 overflow-auto">
+            <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-12 px-12 py-12 pb-40 min-h-[70vh] overflow-visible">
               <div className="flex w-full items-start gap-8">
                 {/* Filters */}
                 <div className="flex w-64 flex-none flex-col items-start gap-4">
@@ -748,7 +750,7 @@ function PlayerProfilePage() {
 
           {/* ===== BADGE SHOP TAB ===== */}
           {activeTab === "badges" && (
-            <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-12 px-12 py-12 overflow-auto">
+            <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-12 px-12 py-12 pb-40 min-h-[70vh] overflow-visible">
               {/* Brand promo */}
               <Alert
                 variant="brand"

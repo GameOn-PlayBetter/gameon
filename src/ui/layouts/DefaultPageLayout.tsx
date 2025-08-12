@@ -8,8 +8,9 @@ import { FeatherUser, FeatherSettings, FeatherLogOut } from "@subframe/core";
 import * as SubframeCore from "@subframe/core";
 import { Avatar } from "../components/Avatar";
 import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
-import { brands } from "@/lib/brands";
+import { useRouter, useParams, usePathname } from "next/navigation";
+import { getBrandConfig, brands } from "@/lib/brands";
+import BrandPageLayout from "./BrandPageLayout";
 
 interface DefaultPageLayoutRootProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -23,10 +24,36 @@ const DefaultPageLayoutRoot = React.forwardRef<HTMLElement, DefaultPageLayoutRoo
     const params = useParams() || {};
     const brand = (params as Record<string, string | string[]>).brand;
 
-    const brandKey = Array.isArray(brand)
-      ? brand[0].toLowerCase()
-      : brand?.toLowerCase() || "gameon";
-    const brandConfig = brands[brandKey] || brands.gameon;
+    const pathname = usePathname() || "";
+    const segments = pathname.split("/").filter(Boolean);
+    
+    // Prefer the dynamic route param if present
+    let rawSlug = (Array.isArray(brand) ? brand[0] : brand) || "";
+    
+    // Fallback to URL path inspection
+    if (!rawSlug) {
+      const first = segments[0];
+      const second = segments[1];
+      // Support both /[brand]/... and /brands/[brand]/...
+      rawSlug = (first?.toLowerCase() === "brands" ? second : first) || "";
+    }
+    
+    // Map the raw slug to the real key in `brands` (handles casing like fixOn vs fixon)
+    const brandKeys = Object.keys(brands || {});
+    const resolvedKey =
+      brandKeys.find((k) => k.toLowerCase() === rawSlug.toLowerCase()) || "";
+    
+    const detectedBrandKey = resolvedKey || rawSlug.toLowerCase() || "";
+    const brandConfig = detectedBrandKey ? getBrandConfig?.(detectedBrandKey) : undefined;
+
+    if (detectedBrandKey && brandConfig) {
+      // Delegate to the brand-aware layout with explicit brandName so header/footer/logo theme correctly
+      return (
+        <BrandPageLayout brandName={detectedBrandKey}>
+          {children}
+        </BrandPageLayout>
+      );
+    }
 
     const handleEarnTokensClick = () => {
       const isLoggedIn = false; // Temporary logic
@@ -42,30 +69,24 @@ const DefaultPageLayoutRoot = React.forwardRef<HTMLElement, DefaultPageLayoutRoo
       router.push("/refer-friends");
     };
 
+    const fallbackBrand = getBrandConfig?.("skillery") || getBrandConfig?.("gameon");
+
     return (
       <div
         className={SubframeUtils.twClassNames(
-          "flex h-screen w-full flex-col items-center bg-black text-white",
+          "flex min-h-screen w-full flex-col items-center bg-default-background text-default-font",
           className
         )}
-        style={{ backgroundColor: "#000000", color: "#ffffff" }}
         ref={ref as any}
         {...otherProps}
       >
         <TopbarWithRightNav
           leftSlot={
-            <Link
-              href={
-                brandKey === "skillery"
-                  ? "/"
-                  : `/${brandKey || "gameon"}`
-              }
-              passHref
-            >
+            <Link href="/" passHref>
               <img
                 className="h-20 min-w-[24px] flex-none object-cover cursor-pointer"
-                src={brandConfig.logo}
-                alt={`${brandConfig.name} Logo`}
+                src={fallbackBrand.logo}
+                alt={`${fallbackBrand.name} Logo`}
               />
             </Link>
           }
@@ -99,7 +120,7 @@ const DefaultPageLayoutRoot = React.forwardRef<HTMLElement, DefaultPageLayoutRoo
         />
 
         {children ? (
-          <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-4 overflow-y-auto bg-black text-white">
+          <div className="flex w-full flex-1 min-h-0 flex-col items-start gap-4 bg-default-background text-default-font">
             {children}
           </div>
         ) : null}

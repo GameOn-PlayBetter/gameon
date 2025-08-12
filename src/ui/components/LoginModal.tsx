@@ -192,7 +192,7 @@ moneyon: [
             type="button"
             onClick={() => setSelectedRole('user')}
             className={`flex-1 px-3 py-2 text-sm ${selectedRole === 'user' ? 'bg-gradient-to-r from-pink-500 to-blue-500 text-white' : 'bg-black text-gray-300 hover:text-white'}`}
-            aria-selected={selectedRole === 'user'}
+            aria-pressed={selectedRole === 'user'}
           >
             Player
           </button>
@@ -200,7 +200,7 @@ moneyon: [
             type="button"
             onClick={() => setSelectedRole('coach')}
             className={`flex-1 px-3 py-2 text-sm border-l border-gray-600 ${selectedRole === 'coach' ? 'bg-gradient-to-r from-pink-500 to-blue-500 text-white' : 'bg-black text-gray-300 hover:text-white'}`}
-            aria-selected={selectedRole === 'coach'}
+            aria-pressed={selectedRole === 'coach'}
           >
             Coach
           </button>

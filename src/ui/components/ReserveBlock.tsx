@@ -47,6 +47,14 @@ export function ReserveBlock({
     theme?.colors.primary ||
     "#000000";
 
+  const pageBackground =
+    backgroundColor ||
+    colors?.primary ||
+    (theme?.colors as any)?.pageBackground ||
+    (theme?.colors as any)?.background ||
+    theme?.colors.primary ||
+    "#000000";
+
   const text =
     textColor || colors?.text || theme?.colors.text || "#FFFFFF";
 
@@ -92,12 +100,12 @@ const finalFormUrl =
   return (
     <div
       className="flex w-full flex-col items-center justify-center px-6 py-12"
-      style={{ backgroundColor: primary }}
+      style={{ backgroundColor: pageBackground }}
     >
       <div
         className="flex w-full max-w-[448px] flex-col items-center gap-6 rounded-2xl px-8 py-10"
         style={{
-          backgroundColor: primary,
+          backgroundColor: pageBackground,
           boxShadow: `0 0 16px ${glow}`,
           border: `1px solid ${glow}`,
         }}

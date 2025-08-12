@@ -77,12 +77,15 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
     const brandLegal =
       legalLinks.length ? legalLinks : (theme as any)?.legalLinks || [];
 
-    // ✅ Skillery-specific gradient, fallback for other brands
-    const isSkillery = brandCompany.toLowerCase().includes("skillery");
-
-    const footerBackground = isSkillery
-      ? "linear-gradient(to bottom, #0A0A12, #000000)"
-      : brandColors.primary || "#0A0A0A";
+    // ✅ Use brand colors only (no overrides)
+    const palette =
+      (colors as any) || (theme?.colors as any) || ({} as Record<string, string>);
+    const footerBackground =
+      palette.footerBackground ??
+      palette.pageBackground ??
+      palette.background ??
+      palette.primary ??
+      "#0A0A0A";
 
     const hoverColor = brandColors.button || "#FF00C8";
 
@@ -115,7 +118,7 @@ const formatHref = (href: string) => {
           "w-full border-t border-solid border-neutral-100 px-6 py-24 text-white",
           className
         )}
-        style={{ background: footerBackground, color: "white" }}
+        style={{ backgroundColor: footerBackground, color: "white" }}
         ref={ref}
         {...otherProps}
       >

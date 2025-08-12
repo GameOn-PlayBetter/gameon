@@ -36,6 +36,13 @@ export default function GameOnWaitlistBlock({
     buttonHover = "#00CFFF",
   } = { ...colors, ...theme.colors };
 
+  const palette = (theme?.colors as any) || {};
+  const pageBackground =
+    palette.pageBackground ||
+    palette.background ||
+    palette.primary ||
+    primary;
+
   // ✅ Hardcoded Google Form URLs
   const gameOnFormUrl =
     "https://docs.google.com/forms/d/e/1FAIpQLSchRbr7JxV_pGQuP24j46fguvDiaQCveeFKvilhh_mWFt4I9w/viewform?usp=dialog";
@@ -110,13 +117,13 @@ const buttonText = "Join the Waitlist"; // ✅ add this line
   return (
     <div
       className="flex w-full flex-col items-center justify-center gap-6 px-6 py-12"
-      style={{ backgroundColor: primary }}
+      style={{ backgroundColor: pageBackground }}
     >
       <div
         className="flex w-full max-w-[448px] flex-col items-center gap-6 rounded-2xl px-8 py-10"
         style={{
           boxShadow: `0 0 16px ${glow}`,
-          backgroundColor: primary,
+          backgroundColor: pageBackground,
           border: `1px solid ${glow}`,
         }}
       >

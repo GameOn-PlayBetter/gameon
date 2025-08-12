@@ -22,7 +22,10 @@ export default function LegalPage() {
 
   const colors = brandConfig.colors;
   const backgroundColor =
-    (colors as any).primary || (colors as any).background || "#000000";
+    (colors as any)?.pageBackground ||
+    (colors as any)?.background ||
+    (colors as any)?.primary ||
+    "#000000";
 
   return (
     <BrandThemeProvider brandName={brandKey}>

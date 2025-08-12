@@ -15,6 +15,7 @@ interface BrandPageLayoutProps {
   ctaButton?: { label: string; href: string };
   fontFamily?: string;
   showLogo?: boolean;
+  demoBadge?: React.ReactNode;
 }
 
 export default function BrandPageLayout({
@@ -23,17 +24,33 @@ export default function BrandPageLayout({
   navLinks,
   ctaButton,
   fontFamily = "sans-serif",
+  showLogo = true,
+  demoBadge,
 }: BrandPageLayoutProps) {
-  const theme = useBrandTheme() || brands[brandName as keyof typeof brands];
+  const configTheme = brands[brandName as keyof typeof brands];
+  const contextTheme = useBrandTheme();
+  const theme = configTheme || contextTheme;
 
   const colors = theme?.colors || {};
   const socials = theme?.socials || [];
   const legalLinks = theme?.legalLinks || [];
-  const companyName = theme?.companyName || brandName || "Your Brand";
-  const backgroundColor = (colors as any)?.primary || "#0A0A0A";
+  const companyName =
+    (configTheme as any)?.companyName ||
+    (configTheme as any)?.name ||
+    (theme as any)?.companyName ||
+    brandName ||
+    "Your Brand";
+  const backgroundColor =
+    (colors as any)?.pageBackground ||
+    (colors as any)?.background ||
+    (colors as any)?.primary ||
+    "#0A0A0A";
 
   const headerLogo =
-    brandName === "gameon"
+    (theme as any)?.headerLogo ||
+    (theme as any)?.navLogo ||
+    (theme as any)?.logo ||
+    (brandName === "gameon"
       ? "/images/gameon/go-logo.png"
       : brandName === "skillery"
       ? "/images/skillery_logo_wheadline.png"
@@ -55,16 +72,25 @@ export default function BrandPageLayout({
       ? "/images/styleon/styleon-logo.png"
       : brandName === "moneyon"
       ? "/images/moneyon/moneyon-logo.png"
-      : "";
+      : "");
 
   const resolvedBackground =
     brandName === "skillery" ? "transparent" : backgroundColor;
+
+  const footerColor =
+    (colors as any)?.footerBackground ||
+    (colors as any)?.pageBackground ||
+    (colors as any)?.background ||
+    (colors as any)?.primary ||
+    resolvedBackground;
 
   // ✅ Canonical fix
   const pathname = usePathname() || "/";
   const parts = pathname.split("/").filter(Boolean);
   const restSegs = parts.slice(1); // skip brand
   const slug = restSegs.join("/");
+  // Pages with dense dashboards should use a compact hero
+  const isCompactPage = /^(coach($|\/)|player-profile($|\/)|coach-search$)/.test(slug);
 
   const DUPLICATE_SLUGS = new Set([
     "contact",
@@ -93,37 +119,65 @@ export default function BrandPageLayout({
         </Head>
       )}
 
-      <BrandedHeader />
+      <style jsx global>{`
+        html, body { background-color: ${resolvedBackground} !important; }
+      `}</style>
 
-      <div
-        className="flex justify-center my-6 md:my-10 pt-20"
-        style={{ backgroundColor: resolvedBackground }}
-      >
-        <img
-          src={headerLogo}
-          alt={`${brandName} logo`}
-          className="max-h-[400px] w-auto max-w-[600px] mx-auto"
-          style={{ display: "block" }}
-        />
-      </div>
+      <BrandedHeader currentBrand={brandName} />
+
+      {showLogo && (
+        <div
+          className={`flex justify-center ${
+            isCompactPage ? "mt-16 md:mt-20 mb-0" : "mt-20 md:mt-24 mb-1 md:mb-2"
+          }`}
+          style={{ backgroundColor: resolvedBackground }}
+        >
+          {(() => {
+            const sizeDefault = isCompactPage
+              ? "max-h-[210px] md:max-h-[231px]"
+              : "max-h-[231px] md:max-h-[254px]";
+            const sizeSmall = isCompactPage
+              ? "max-h-[170px] md:max-h-[190px]"
+              : "max-h-[185px] md:max-h-[208px]";
+            return (
+              <img
+                src={headerLogo}
+                alt={`${brandName} logo`}
+                className={`w-auto max-w-[520px] mx-auto ${
+                  ["styleon", "moneyon"].includes(brandName) ? sizeSmall : sizeDefault
+                }`}
+                style={{ display: "block" }}
+              />
+            );
+          })()}
+        </div>
+      )}
+
+      {demoBadge && (
+        <div className="flex justify-center mt-3">
+          {demoBadge}
+        </div>
+      )}
 
       <main
-        className="flex flex-col grow w-full -mt-12"
+        className="flex flex-col flex-1 w-full"
         style={{ backgroundColor: resolvedBackground }}
       >
         {children}
       </main>
 
-      <BoldFooter
-        className="mt-auto"
-        brandName={brandName}
-        companyName={companyName}
-        socials={socials}
-        colors={colors}
-        legalLinks={legalLinks}
-        ctaButton={ctaButton}
-        logoSrc={headerLogo}
-      />
+      <div style={{ backgroundColor: footerColor }}>
+        <BoldFooter
+          className="mt-auto"
+          brandName={brandName}
+          companyName={companyName}
+          socials={socials}
+          colors={colors}
+          legalLinks={legalLinks}
+          ctaButton={ctaButton}
+          logoSrc={headerLogo}
+        />
+      </div>
     </div>
   );
 }

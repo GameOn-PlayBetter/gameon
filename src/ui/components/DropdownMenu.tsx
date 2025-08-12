@@ -16,13 +16,20 @@ interface DropdownItemProps
   children?: React.ReactNode;
   icon?: React.ReactNode;
   className?: string;
+  iconSize?: number; // pixel size for the icon; default 16
 }
 
 const DropdownItem = React.forwardRef<HTMLElement, DropdownItemProps>(
   function DropdownItem(
-    { children, icon = null, className, ...otherProps },
+    { children, icon = null, className, iconSize = 16, ...otherProps },
     ref
   ) {
+    const renderedIcon = React.isValidElement(icon)
+      ? React.cloneElement(icon as React.ReactElement<any>, {
+          style: { width: iconSize, height: iconSize, ...(icon as any)?.props?.style },
+          className: SubframeUtils.twClassNames("shrink-0", (icon as any)?.props?.className),
+        })
+      : icon;
     return (
       <SubframeDropdownMenu.Item
         {...otherProps}
@@ -33,8 +40,8 @@ const DropdownItem = React.forwardRef<HTMLElement, DropdownItemProps>(
         )}
       >
         {icon ? (
-          <SubframeCore.IconWrapper className="text-current">
-            {icon}
+          <SubframeCore.IconWrapper className="text-current shrink-0">
+            {renderedIcon}
           </SubframeCore.IconWrapper>
         ) : null}
         {children ? (
