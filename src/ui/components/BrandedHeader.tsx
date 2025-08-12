@@ -107,7 +107,7 @@ export default function BrandHeader({ currentBrand }: { currentBrand?: string })
             <Link href={`/${brandSlug}/refer-friends`} className="hover:underline">
               Refer Friends
             </Link>
-            <Link href={`/${brandSlug}#experts`} className="hover:underline">
+            <Link href={`/${brandSlug}/coach-search`} className="hover:underline">
               Experts
             </Link>
             {sessionRole ? (
