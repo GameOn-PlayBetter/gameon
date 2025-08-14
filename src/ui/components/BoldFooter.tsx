@@ -78,6 +78,12 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
     const brandLegal =
       legalLinks.length ? legalLinks : (theme as any)?.legalLinks || [];
 
+    const isSkillery = (
+      (brandName ?? (theme as any)?.brandName ?? (theme as any)?.companyName ?? "")
+        .toLowerCase()
+        .includes("skillery")
+    );
+
     // ✅ Prefer tokens first, then colors
     const palette = (theme?.colors as any) || {};
     const footerBackground =
@@ -88,6 +94,10 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
       palette.background ??
       palette.primary ??
       "#0A0A0A";
+
+    const finalFooterBackground = (isSkillery ? "transparent" : footerBackground);
+
+    const isNavyFooter = (footerBackground || "").toLowerCase() === "#0f1e30";
 
     const hoverColor = brandColors.button || "#FF00C8";
 
@@ -117,10 +127,11 @@ const formatHref = (href: string) => {
     return (
       <div
         className={SubframeUtils.twClassNames(
-          "w-full border-t border-solid border-neutral-100 px-6 py-24 text-white",
+          "w-full border-t border-solid px-6 py-24 text-white",
+          (isSkillery || isNavyFooter) ? "border-white/5" : "border-neutral-100",
           className
         )}
-        style={{ backgroundColor: footerBackground, color: "white" }}
+        style={{ backgroundColor: finalFooterBackground, color: "white" }}
         ref={ref}
         {...otherProps}
       >
@@ -196,7 +207,7 @@ const formatHref = (href: string) => {
         </div>
 
         {/* Divider */}
-        <div className="h-px w-full bg-neutral-200 mt-12" />
+        <div className={`h-px w-full ${(isSkillery || isNavyFooter) ? "bg-white/5" : "bg-neutral-200"} mt-12`} />
 
         {/* Footer Text */}
         <div className="mx-auto max-w-[768px] flex flex-col items-center gap-4 mt-6 text-center text-subtext-color text-[16px] font-medium leading-[22px] font-['Montserrat'] whitespace-pre-wrap">

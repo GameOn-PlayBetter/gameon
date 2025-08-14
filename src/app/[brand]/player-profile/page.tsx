@@ -443,7 +443,7 @@ function PlayerProfilePage() {
                   <Alert variant="brand" title="Loading data…" description="Fetching your latest stats" />
                 )}
                 {loadErr && (
-                  <Alert variant="destructive" title="Error" description={loadErr} />
+                  <Alert variant="error" title="Error" description={loadErr} />
                 )}
                 <div className="flex grow shrink-0 basis-0 flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
                   <Alert

@@ -95,6 +95,13 @@ legalLinks: [
       text: "#FFFFFF",
       hover: "#FF9C00",
     },
+    tokens: {
+      footerBackground: "#0F1E30",
+    },
+    footerOverrides: {
+      borderClass: "border-white/10",
+      dividerClass: "bg-white/10"
+    },
     reserveBlock: {
       formUrl: "#",
       buttonColor: "default",

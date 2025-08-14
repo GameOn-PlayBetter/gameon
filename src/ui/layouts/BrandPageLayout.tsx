@@ -74,15 +74,18 @@ export default function BrandPageLayout({
       ? "/images/moneyon/moneyon-logo.png"
       : "");
 
+  const isSkillery = (brandName || "").toLowerCase() === "skillery";
+
   const resolvedBackground =
     brandName === "skillery" ? "transparent" : backgroundColor;
 
-  const footerColor =
-    (colors as any)?.footerBackground ||
-    (colors as any)?.pageBackground ||
-    (colors as any)?.background ||
-    (colors as any)?.primary ||
-    resolvedBackground;
+  const footerColor = isSkillery
+    ? ((colors as any)?.pageBackground || (colors as any)?.background || "#0A0A0A")
+    : ((colors as any)?.footerBackground ||
+       (colors as any)?.pageBackground ||
+       (colors as any)?.background ||
+       (colors as any)?.primary ||
+       resolvedBackground);
 
   // ✅ Canonical fix
   const pathname = usePathname() || "/";
@@ -166,9 +169,14 @@ export default function BrandPageLayout({
         {children}
       </main>
 
-      <div style={{ backgroundColor: footerColor }}>
+      <div
+        style={{
+          backgroundColor: footerColor,
+          borderTop: isSkillery ? "1px solid rgba(255,255,255,0.10)" : undefined,
+        }}
+      >
         <BoldFooter
-          className="mt-auto"
+          className={isSkillery ? "mt-auto border-white/10" : "mt-auto"}
           brandName={brandName}
           companyName={companyName}
           socials={socials}

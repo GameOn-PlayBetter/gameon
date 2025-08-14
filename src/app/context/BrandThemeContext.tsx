@@ -13,6 +13,10 @@ interface BrandThemeContextProps {
     text?: string;
     hover?: string;
     glow?: string;
+    headerBackground?: string;
+    pageBackground?: string;
+    footerBackground?: string;
+    background?: string;
   };
   name: string;
   logo: string;
