@@ -19,23 +19,23 @@ const coaches =
     ? [
         {
           name: "AutoPro99",
-          color: "text-warning-500",
+          color: "text-success-700",
           badge: "Auto Specialist",
           image: "/images/fixon/experts/autopro.jpg",
           description: "Car diagnostics, battery swaps, brake repairs",
-          badgeVariant: "warning",
+          badgeVariant: "brand",
         },
         {
           name: "HomeHackR",
-          color: "text-warning-500",
+          color: "text-warning-700",
           badge: "DIY Pro",
           image: "/images/fixon/experts/homehackr.jpg",
           description: "Wall patching, painting, faucet leaks",
-          badgeVariant: "warning",
+          badgeVariant: "success",
         },
         {
           name: "SafeSpark",
-          color: "text-warning-500",
+          color: "text-brand-700",
           badge: "Electrician",
           image: "/images/fixon/experts/safespark.jpg",
           description: "Outlet repair, light installs, breaker fixes",
@@ -188,11 +188,11 @@ const coaches =
           badgeVariant: "brand",
         },
         {
-          name: "BakerBella",
+          name: "ChefLo",
           color: "text-success-700",
-          badge: "Baking Expert",
+          badge: "From prep to plate, I make every bite count.",
           image: "/images/cookon/bakerbella.jpg",
-          description: "Cakes, pastries, and bread making in real-time",
+          description: "Meal prep, dinner prep, desserts and baking in real-time",
           badgeVariant: "success",
         },
         {

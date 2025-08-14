@@ -18,7 +18,12 @@ export default function LegalPageWrapper({ children }: LegalPageWrapperProps) {
   const brandConfig = brands[brandKey as keyof typeof brands];
   if (!brandConfig) return notFound();
 
-const backgroundColor = (brandConfig.colors as any).primary || "#000000";
+const backgroundColor =
+  (brandConfig as any)?.tokens?.pageBackground ||
+  (brandConfig as any)?.tokens?.headerBackground ||
+  (brandConfig.colors as any)?.pageBackground ||
+  (brandConfig.colors as any)?.primary ||
+  "#000000";
 
   return (
     <div

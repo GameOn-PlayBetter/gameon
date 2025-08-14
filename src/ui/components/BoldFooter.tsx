@@ -72,15 +72,17 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
 
     const brandCompany = companyName || theme?.companyName || "Your Brand";
     const brandLogo = logoSrc || theme?.logo || "";
+    const brandTokens = (theme as any)?.tokens || {};
     const brandColors = { ...theme?.colors, ...colors };
     const brandSocials = socials.length ? socials : theme?.socials || [];
     const brandLegal =
       legalLinks.length ? legalLinks : (theme as any)?.legalLinks || [];
 
-    // ✅ Use brand colors only (no overrides)
-    const palette =
-      (colors as any) || (theme?.colors as any) || ({} as Record<string, string>);
+    // ✅ Prefer tokens first, then colors
+    const palette = (theme?.colors as any) || {};
     const footerBackground =
+      brandTokens.footerBackground ??
+      brandTokens.pageBackground ??
       palette.footerBackground ??
       palette.pageBackground ??
       palette.background ??

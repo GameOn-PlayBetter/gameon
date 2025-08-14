@@ -80,21 +80,24 @@ export default function BrandHeader({ currentBrand }: { currentBrand?: string })
 
   if (!config) return null;
 
-  const palette = (config?.colors as any) || {};
+  const tokens  = (config as any)?.tokens || {};
+  const palette = (config as any)?.colors || {};
   const headerColor =
     brandSlug === "skillery"
       ? "#0A0F18"
-      : (("headerBackground" in palette && palette.headerBackground) ||
-         ("pageBackground" in palette && palette.pageBackground) ||
-         palette.primary ||
+      : (tokens.headerBackground ??
+         tokens.pageBackground ??
+         (palette as any).headerBackground ??
+         (palette as any).pageBackground ??
+         (palette as any).primary ??
          "#000000");
 
-  // Brand-aware modal colors
-  const cardBg       = (palette?.cardBackground ?? palette?.pageBackground ?? "#0A0F18");
-  const cardText     = (palette?.text ?? "#ffffff");
-  const cardBorder   = (palette?.border ?? "rgba(255,255,255,0.12)");
-  const btnPrimary   = (palette?.button ?? palette?.primary ?? "#2563EB");
-  const btnPrimaryHv = (palette?.buttonHover ?? btnPrimary);
+  // Brand-aware modal colors (prefer tokens, then colors)
+  const cardBg       = (tokens.pageBackground ?? (palette as any)?.cardBackground ?? (palette as any)?.pageBackground ?? "#0A0F18");
+  const cardText     = ((palette as any)?.text ?? "#ffffff");
+  const cardBorder   = ((palette as any)?.border ?? "rgba(255,255,255,0.12)");
+  const btnPrimary   = ((palette as any)?.button ?? (palette as any)?.primary ?? "#2563EB");
+  const btnPrimaryHv = ((palette as any)?.buttonHover ?? btnPrimary);
   const btnSubtle    = "rgba(255,255,255,0.10)";
   const btnSubtleHv  = "rgba(255,255,255,0.16)";
 

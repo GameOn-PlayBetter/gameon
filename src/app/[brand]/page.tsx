@@ -30,8 +30,10 @@ export default function BrandLandingPage() {
   // ✅ Safe handling for strictNullChecks
   const params = useParams() || {};
   const brand = (params as Record<string, string | string[]>).brand;
-  const brandKey = (brand as keyof typeof brands) || "gameon";
+  const rawBrand = (Array.isArray(brand) ? brand[0] : brand) || "gameon";
+  const brandKey = (rawBrand as string).toLowerCase() as keyof typeof brands;
   const brandConfig = brands[brandKey];
+  const brandTokens = (brandConfig as any)?.tokens || {};
 
   const [showLogin, setShowLogin] = useState(false);
 
@@ -49,22 +51,27 @@ export default function BrandLandingPage() {
       : brandConfig.reserveBlock?.formUrl || "#";
 
   // ✅ Safe fallback references for build stability
-  const colors = brandConfig.colors ?? {
-    primary: "#000000",
-    border: "#333333",
-    glow: "#ffffff",
-    button: "#ff00c8",
-    buttonHover: "#00cfff",
-    text: "#ffffff",
-    hover: "#cccccc",
-  };
+  const colors = {
+    ...(brandConfig.colors ?? {
+      primary: "#000000",
+      border: "#333333",
+      glow: "#ffffff",
+      button: "#ff00c8",
+      buttonHover: "#00cfff",
+      text: "#ffffff",
+      hover: "#cccccc",
+    }),
+    pageBackground: brandTokens.pageBackground ?? (brandConfig.colors as any)?.pageBackground,
+    headerBackground: brandTokens.headerBackground ?? (brandConfig.colors as any)?.headerBackground,
+    footerBackground: brandTokens.footerBackground ?? (brandConfig.colors as any)?.footerBackground,
+  } as any;
 
   const reserveColors = brandKey === "fiton"
     ? {
         ...colors,
-        primary: "#1B4D6A",
-        pageBackground: (colors as any).pageBackground || "#1B4D6A",
-        ctaBackground: "#1B4D6A",
+        primary: brandTokens.headerBackground ?? brandTokens.pageBackground ?? (colors as any).primary ?? "#1B4D6A",
+        pageBackground: brandTokens.pageBackground ?? (colors as any).pageBackground ?? "#1B4D6A",
+        ctaBackground: brandTokens.headerBackground ?? brandTokens.pageBackground ?? "#1B4D6A",
       }
     : colors;
 

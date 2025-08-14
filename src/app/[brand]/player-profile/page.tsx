@@ -56,6 +56,7 @@ import {
   FeatherUser, // ✅ for the coach selector icon
 } from "@subframe/core";
 import { usePathname } from "next/navigation";
+import { supa } from "@/utils/supabaseClient";
 
 // ---- placeholder text for Coach Feedback table ----
 const feedbackSamples = [
@@ -108,6 +109,27 @@ function PlayerProfilePage() {
   const pathname = usePathname();
   const brandSeg = pathname?.split("/").filter(Boolean)?.[0]?.toLowerCase();
   const tokenLabel = brandSeg === "fiton" ? "Points" : "Tokens";
+
+  // ==== Supabase-fed state (brand-aware) ====
+  const [summary, setSummary] = useState<any | null>(null);
+  const [goals, setGoals] = useState<any[]>([]);
+  const [skills, setSkills] = useState<any[]>([]);
+  const [feedbackRows, setFeedbackRows] = useState<any[]>([]);
+  const [ownedBadges, setOwnedBadges] = useState<any[]>([]);
+  const [recentSessions, setRecentSessions] = useState<any[]>([]);
+  const [upcomingSessions, setUpcomingSessions] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [loadErr, setLoadErr] = useState<string | null>(null);
+
+  // Coach profile cache for names/avatars
+  const [coachMap, setCoachMap] = useState<Record<string, { display_name?: string; avatar_url?: string }>>({});
+
+  function fmt(dt?: string | null) {
+    try {
+      if (!dt) return "—";
+      return new Date(dt).toLocaleString();
+    } catch { return String(dt ?? "—"); }
+  }
 
   // Tip dialog state
   const [tipOpen, setTipOpen] = useState(false);
@@ -163,6 +185,150 @@ function PlayerProfilePage() {
     };
   }, [brandSeg]);
 
+  // Brand-aware data load from Supabase (current user)
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      setLoading(true);
+      setLoadErr(null);
+      try {
+        const sb = supa();
+        const { data: { user } } = await sb.auth.getUser();
+        const uid = user?.id ?? "7c1e55f2-0160-468e-ba1a-4f31c08fee13"; // TEST USER FALLBACK
+        if (!user) {
+          console.warn("Not signed in; using TEST user for local dev.");
+        } else {
+          console.log("Signed-in user:", user.id);
+        }
+
+        // 1) Top summary from view
+        const { data: sum, error: sumErr } = await sb
+          .from("v_user_dashboard_summary")
+          .select("*")
+          .eq("user_id", uid)
+          .single();
+        if (sumErr) throw sumErr;
+
+        // 2) Goals (brand-filtered)
+        const { data: goalsData, error: goalsErr } = await sb
+          .from("user_goals")
+          .select("id,title,progress_percent,sort_order,updated_at,brand")
+          .eq("user_id", uid)
+          .eq("brand", brandSeg ?? "gameon")
+          .order("sort_order", { ascending: true });
+        if (goalsErr) throw goalsErr;
+
+        // 3) Skills (brand-filtered)
+        const { data: skillsData, error: skillsErr } = await sb
+          .from("user_skills_progress")
+          .select("id,skill_name,initial_level,current_level,improvement_note,coach_notes,sort_order,updated_at,brand")
+          .eq("user_id", uid)
+          .eq("brand", brandSeg ?? "gameon")
+          .order("sort_order", { ascending: true });
+        if (skillsErr) throw skillsErr;
+
+        // 4) Coach feedback (brand-filtered)
+        const { data: fbData, error: fbErr } = await sb
+          .from("coach_feedback")
+          .select("id,coach_id,game,feedback,action_items,created_at,brand")
+          .eq("user_id", uid)
+          .eq("brand", brandSeg ?? "gameon")
+          .order("created_at", { ascending: false })
+          .limit(10);
+        if (fbErr) throw fbErr;
+
+        // 5) Owned badges (brand-filtered)
+        const { data: badgesData, error: badgesErr } = await sb
+          .from("user_badges")
+          .select("badge_id, acquired_at, brand, badges ( slug, name, icon_url )")
+          .eq("user_id", uid)
+          .eq("brand", brandSeg ?? "gameon")
+          .order("acquired_at", { ascending: false });
+        if (badgesErr) throw badgesErr;
+
+        // 6) Recent sessions (brand-filtered, with recording)
+        const { data: recentData, error: recentErr } = await sb
+          .from("user_sessions")
+          .select("id, game, focus_area, duration_minutes, ended_at, starts_at, coach_id, session_recordings ( recording_url, created_at )")
+          .eq("user_id", uid)
+          .eq("brand", brandSeg ?? "gameon")
+          .not("ended_at", "is", null)
+          .order("ended_at", { ascending: false })
+          .limit(5);
+        if (recentErr) throw recentErr;
+
+        // 7) Upcoming sessions (brand-filtered)
+        const { data: upcomingData, error: upcomingErr } = await sb
+          .from("user_sessions")
+          .select("id, game, focus_area, duration_minutes, starts_at, coach_id")
+          .eq("user_id", uid)
+          .eq("brand", brandSeg ?? "gameon")
+          .gt("starts_at", new Date().toISOString())
+          .order("starts_at", { ascending: true })
+          .limit(5);
+        if (upcomingErr) throw upcomingErr;
+
+        // 8) Brand-scoped token balance from ledger
+        const { data: ledgerRows, error: ledgerErr } = await sb
+          .from("user_tokens_ledger")
+          .select("delta")
+          .eq("user_id", uid)
+          .eq("brand", brandSeg ?? "gameon");
+        if (ledgerErr) throw ledgerErr;
+        const computedTokens = (ledgerRows ?? []).reduce((acc: number, r: any) => acc + (Number(r.delta) || 0), 0);
+
+        // 9) Brand-scoped total sessions completed
+        const { count: completedCount, error: countErr } = await sb
+          .from("user_sessions")
+          .select("id", { count: "exact", head: true })
+          .eq("user_id", uid)
+          .eq("brand", brandSeg ?? "gameon")
+          .not("ended_at", "is", null);
+        if (countErr) throw countErr;
+
+        // 10) Load coach display names/avatars for any coach_ids present
+        const coachIdsSet = new Set<string>();
+        (recentData ?? []).forEach((s: any) => { if (s.coach_id) coachIdsSet.add(String(s.coach_id)); });
+        (upcomingData ?? []).forEach((s: any) => { if (s.coach_id) coachIdsSet.add(String(s.coach_id)); });
+        (fbData ?? []).forEach((r: any) => { if (r.coach_id) coachIdsSet.add(String(r.coach_id)); });
+
+        let coachProfilesMap: Record<string, { display_name?: string; avatar_url?: string }> = {};
+        if (coachIdsSet.size > 0) {
+          const coachIds = Array.from(coachIdsSet);
+          const { data: coachProfiles, error: coachErr } = await sb
+            .from("profiles")
+            .select("id, display_name, avatar_url")
+            .in("id", coachIds);
+          if (coachErr) throw coachErr;
+          (coachProfiles ?? []).forEach((p: any) => {
+            coachProfilesMap[p.id] = { display_name: p.display_name, avatar_url: p.avatar_url };
+          });
+        }
+
+        if (!isMounted) return;
+        setSummary({
+          ...(sum as any),
+          tokens_balance: computedTokens,
+          total_sessions_completed: completedCount ?? 0,
+          next_sessions: upcomingData ?? (sum as any)?.next_sessions ?? [],
+        });
+        setGoals(goalsData ?? []);
+        setSkills(skillsData ?? []);
+        setFeedbackRows(fbData ?? []);
+        setOwnedBadges(badgesData ?? []);
+        setRecentSessions(recentData ?? []);
+        setUpcomingSessions(upcomingData ?? []);
+        setCoachMap(coachProfilesMap);
+      } catch (e: any) {
+        if (!isMounted) return;
+        setLoadErr(e?.message ?? "Failed to load data");
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    })();
+    return () => { isMounted = false; };
+  }, [brandSeg]);
+
   const coachA = coaches[0]?.display_name || "Coach Alex";
   const coachAImg = coaches[0]?.avatar_url || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde";
   const coachB = coaches[1]?.display_name || "Coach Sarah";
@@ -171,22 +337,22 @@ function PlayerProfilePage() {
 
   return (
     <>
-      {/* Glowing "DEMO DATA ONLY" banner */}
-      <div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 bg-red-600 px-6 py-2 rounded-md shadow-lg shadow-red-400 pointer-events-none">
+      {/* Glowing banner to confirm LIVE code + data */}
+      <div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 bg-emerald-600 px-6 py-2 rounded-md shadow-lg shadow-emerald-400 pointer-events-none">
         <span className="font-['Orbitron'] text-white text-[16px] font-bold tracking-widest uppercase drop-shadow-[0_0_6px_#ffffff]">
-          DEMO DATA ONLY
+          {summary ? `LIVE DATA — ${summary.display_name ?? "Player"} — ${(summary.tokens_balance ?? 0)} ${tokenLabel}` : "LIVE DATA"}
         </span>
       </div>
 
       <DefaultPageLayout>
-        <div className="sticky top-20 z-20 w-full bg-transparent backdrop-blur mb-6">
+        <div className="sticky top-20 z-20 w-full bg-neutral-0/60 backdrop-blur supports-[backdrop-filter]:bg-neutral-0/40 mb-6">
           <div className="flex w-full flex-col items-start pb-2">
           <div className="flex w-full flex-col items-start gap-6 px-12 pt-6 pb-4">
             <div className="flex w-full flex-wrap items-start gap-4">
               <div className="flex h-36 w-36 flex-none flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-100 relative cursor-pointer">
                 <img
                   className="h-36 w-36 flex-none object-cover absolute"
-                  src="https://images.unsplash.com/photo-1618336753974-aae8e04506aa?ixlib=rb-4.0.3"
+                  src={summary?.avatar_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(summary?.display_name ?? "Player")}`}
                 />
                 <div className="flex items-center justify-center bg-neutral-0 group:hover .group-hover:opacity-70 absolute inset-0 opacity-0" />
               </div>
@@ -194,14 +360,15 @@ function PlayerProfilePage() {
                 <div className="flex w-full items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-heading-2 font-heading-2 text-default-font">
-                      GameMaster_Pro
+                      {summary?.display_name ?? "Player"}
                     </span>
-                    <Badge>Premium Member</Badge>
-                    <Badge variant="success">Founding Member</Badge>
+                    {Array.isArray(summary?.active_memberships) && summary.active_memberships.length > 0 && summary.active_memberships.map((tier: string) => (
+                      <Badge key={tier}>{tier.charAt(0).toUpperCase() + tier.slice(1)} Member</Badge>
+                    ))}
                   </div>
                   <div className="flex items-center gap-2">
                     <Button icon={<FeatherCoins />} onClick={() => {}}>
-                      25 Tokens
+                      {(summary?.tokens_balance ?? 0)} {tokenLabel}
                     </Button>
                     <Button variant="neutral-secondary" icon={<FeatherShoppingCart />} onClick={() => {}}>
                       Buy Tokens
@@ -214,7 +381,7 @@ function PlayerProfilePage() {
                       Total Sessions
                     </span>
                     <span className="line-clamp-1 w-full text-heading-3 font-caption text-brand-500">
-                      48 Completed
+                      {(summary?.total_sessions_completed ?? 0)} Completed
                     </span>
                   </div>
                   <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
@@ -222,7 +389,7 @@ function PlayerProfilePage() {
                       Favorite Game
                     </span>
                     <span className="line-clamp-1 w-full text-heading-3 font-caption text-brand-600">
-                      Minecraft
+                      {summary?.favorite_game ?? "—"}
                     </span>
                   </div>
                   <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
@@ -230,25 +397,26 @@ function PlayerProfilePage() {
                       Next Sessions
                     </span>
                     <div className="flex flex-col items-start gap-1">
-                      <span className="line-clamp-1 w-full text-heading-3 font-caption text-brand-600 cursor-pointer">
-                        Today at 4:00 PM
-                      </span>
-                      <span className="line-clamp-1 w-full text-heading-3 font-caption text-brand-600 cursor-pointer">
-                        Tomorrow at 2:00 PM
-                      </span>
+                      {(Array.isArray(summary?.next_sessions) ? summary?.next_sessions : []).slice(0,2).map((s, i) => (
+                        <button
+                          key={s.session_id ?? i}
+                          type="button"
+                          onClick={() => {
+                            const el = document.getElementById("upcoming-sessions");
+                            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }}
+                          className="text-left line-clamp-1 w-full text-heading-3 font-caption text-brand-600 hover:underline focus:outline-none focus:ring-2 focus:ring-brand-500 rounded cursor-pointer"
+                        >
+                          {fmt(s.starts_at)}{s.game ? ` — ${s.game}` : ""}
+                        </button>
+                      ))}
+                      {(!summary?.next_sessions || summary?.next_sessions?.length === 0) && (
+                        <span className="line-clamp-1 w-full text-heading-3 font-caption text-subtext-color">No upcoming</span>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge icon={<FeatherStar />}>Pro</Badge>
-              <Badge variant="success" icon={<FeatherTrophy />}>
-                Elite
-              </Badge>
-              <Badge variant="warning" icon={<FeatherZap />}>
-                VIP
-              </Badge>
             </div>
           </div>
           <div className="flex w-full items-end">
@@ -271,6 +439,12 @@ function PlayerProfilePage() {
           {activeTab === "overview" && (
             <div className="flex w-full grow shrink-0 basis-0 flex-col items-start gap-12 px-12 py-12 pb-40 min-h-[70vh] overflow-visible">
               <div className="flex w-full flex-wrap items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
+                {loading && (
+                  <Alert variant="brand" title="Loading data…" description="Fetching your latest stats" />
+                )}
+                {loadErr && (
+                  <Alert variant="destructive" title="Error" description={loadErr} />
+                )}
                 <div className="flex grow shrink-0 basis-0 flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
                   <Alert
                     variant="success"
@@ -290,24 +464,20 @@ function PlayerProfilePage() {
                         <span className="text-heading-3 font-heading-3 text-default-font">Current Goals</span>
                       </div>
                       <div className="flex w-full flex-col items-start">
-                        <div className="flex w-full items-center gap-2 py-4">
-                          <span className="line-clamp-1 w-24 flex-none text-caption-bold font-caption-bold text-default-font">
-                            Building
-                          </span>
-                          <Progress value={75} />
-                          <span className="line-clamp-1 w-12 flex-none text-caption font-caption text-brand-500 text-right">
-                            75%
-                          </span>
-                        </div>
-                        <div className="flex w-full items-center gap-2 py-4">
-                          <span className="line-clamp-1 w-24 flex-none text-caption-bold font-caption-bold text-default-font">
-                            Survival
-                          </span>
-                          <Progress value={60} />
-                          <span className="line-clamp-1 w-12 flex-none text-caption font-caption text-brand-600 text-right">
-                            60%
-                          </span>
-                        </div>
+                        {goals.map(g => (
+                          <div key={g.id} className="flex w-full items-center gap-2 py-4">
+                            <span className="line-clamp-1 w-40 flex-none text-caption-bold font-caption-bold text-default-font">
+                              {g.title}
+                            </span>
+                            <Progress value={Math.max(0, Math.min(100, g.progress_percent ?? 0))} />
+                            <span className="line-clamp-1 w-14 flex-none text-caption font-caption text-brand-500 text-right">
+                              {(g.progress_percent ?? 0)}%
+                            </span>
+                          </div>
+                        ))}
+                        {goals.length === 0 && (
+                          <div className="text-subtext-color text-caption py-2">No goals yet</div>
+                        )}
                       </div>
                     </div>
                     <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
@@ -337,12 +507,17 @@ function PlayerProfilePage() {
                         Buy Badges
                       </Button>
                     </div>
-                    <div className="flex w-full flex-wrap items-start gap-2">
-                      <LargeBadge icon={<FeatherPickaxe />}>Master Builder</LargeBadge>
-                      <LargeBadge icon={<FeatherGhost />}>Survivor Pro</LargeBadge>
-                      <LargeBadge icon={<FeatherStar />}>Party Champion</LargeBadge>
-                      <LargeBadge icon={<FeatherCrown />}>Elite Player</LargeBadge>
-                    </div>
+                    {ownedBadges.length > 0 ? (
+                      <div className="flex w-full flex-wrap items-start gap-2">
+                        {ownedBadges.map((b) => (
+                          <LargeBadge key={b.badge_id} icon={<FeatherAward />}>
+                            {b.badges?.name ?? b.badges?.slug ?? "Badge"}
+                          </LargeBadge>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-subtext-color text-caption">No badges yet</div>
+                    )}
                   </div>
                   <Table
                     header={
@@ -409,57 +584,59 @@ function PlayerProfilePage() {
                   <span className="text-heading-3 font-heading-3 text-default-font">Latest Notes</span>
                 </div>
 
-                <Table
-                  header={
-                    <Table.HeaderRow>
-                      <Table.HeaderCell>Coach</Table.HeaderCell>
-                      <Table.HeaderCell>Game</Table.HeaderCell>
-                      <Table.HeaderCell>Feedback</Table.HeaderCell>
-                      <Table.HeaderCell>Action Items</Table.HeaderCell>
-                      <Table.HeaderCell>Date</Table.HeaderCell>
-                    </Table.HeaderRow>
-                  }
-                >
-                  {coaches.slice(0, 5).map((coach, idx) => (
-                    <Table.Row key={coach.id ?? idx}>
-                      <Table.Cell>
-                        <div className="flex items-center gap-2">
-                          <Avatar size="small" image={coach.avatar_url}>
-                            {coach.display_name?.[0] ?? "C"}
-                          </Avatar>
+                  <Table
+                    header={
+                      <Table.HeaderRow>
+                        <Table.HeaderCell>Coach</Table.HeaderCell>
+                        <Table.HeaderCell>Game</Table.HeaderCell>
+                        <Table.HeaderCell>Feedback</Table.HeaderCell>
+                        <Table.HeaderCell>Action Items</Table.HeaderCell>
+                        <Table.HeaderCell>Date</Table.HeaderCell>
+                      </Table.HeaderRow>
+                    }
+                  >
+                    {feedbackRows.length > 0 ? feedbackRows.map((row) => (
+                      <Table.Row key={row.id}>
+                        <Table.Cell>
+                          <div className="flex items-center gap-2">
+                            <Avatar size="small" image={coachMap[String(row.coach_id)]?.avatar_url}>
+                              {(coachMap[String(row.coach_id)]?.display_name ?? "C").toString().slice(0,1)}
+                            </Avatar>
+                            <span className="text-body font-body text-default-font">
+                              {coachMap[String(row.coach_id)]?.display_name ?? String(row.coach_id) ?? "Coach"}
+                            </span>
+                          </div>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Badge>{row.game ?? "—"}</Badge>
+                        </Table.Cell>
+                        <Table.Cell>
                           <span className="text-body font-body text-default-font">
-                            {coach.display_name ?? "Coach"}
+                            {row.feedback}
                           </span>
-                        </div>
-                      </Table.Cell>
-
-                      <Table.Cell>
-                        <Badge>{coach.games?.[0] || "N/A"}</Badge>
-                      </Table.Cell>
-
-                      <Table.Cell>
-                        <span className="text-body font-body text-default-font">
-                          {pickSample(feedbackSamples, idx)}
-                        </span>
-                      </Table.Cell>
-
-                      <Table.Cell>
-                        <Badge variant="warning">
-                          {pickSample(actionItemSamples, idx)}
-                        </Badge>
-                      </Table.Cell>
-
-                      <Table.Cell>
-                        <span className="text-body font-body text-subtext-color">
-                          {idx + 1}d ago
-                        </span>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Badge variant="warning">
+                            {row.action_items ?? "—"}
+                          </Badge>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <span className="text-body font-body text-subtext-color">
+                            {fmt(row.created_at)}
+                          </span>
+                        </Table.Cell>
+                      </Table.Row>
+                    )) : (
+                      <Table.Row>
+                        <Table.Cell colSpan={5}>
+                          <span className="text-subtext-color text-caption">No feedback yet</span>
+                        </Table.Cell>
+                      </Table.Row>
+                    )}
+                  </Table>
               </div>
 
-              <div className="flex w-full flex-col items-start gap-4">
+              <div id="upcoming-sessions" className="flex w-full flex-col items-start gap-4">
                 <div className="flex w-full items-center justify-between">
                   <span className="text-heading-3 font-heading-3 text-default-font">Recent Sessions</span>
                   <Button variant="neutral-secondary" onClick={() => {}}>
@@ -478,68 +655,53 @@ function PlayerProfilePage() {
                     </Table.HeaderRow>
                   }
                 >
-                  <Table.Row>
-                    <Table.Cell>
-                      <div className="flex items-center gap-4">
-                        <IconWithBackground icon={<FeatherBox />} />
-                        <span className="text-body-bold font-body-bold text-default-font">Minecraft</span>
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <div className="flex items-center gap-2">
-                        <Avatar size="small" image={coachAImg}>
-                          {coachA?.[0] ?? "C"}
-                        </Avatar>
-                        <span className="text-body font-body text-default-font">{coachA}</span>
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-body font-body text-brand-500">60 min</span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Badge variant="neutral">Building</Badge>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Button variant="neutral-secondary" size="small" icon={<FeatherPlay />} onClick={() => {}}>
-                        Watch
-                      </Button>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-body font-body text-subtext-color">2h ago</span>
-                    </Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell>
-                      <div className="flex items-center gap-4">
-                        <IconWithBackground icon={<FeatherSkull />} />
-                        <span className="text-body-bold font-body-bold text-default-font">
-                          Dead By Daylight
-                        </span>
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <div className="flex items-center gap-2">
-                        <Avatar size="small" image={coachBImg}>
-                          {coachB?.[0] ?? "C"}
-                        </Avatar>
-                        <span className="text-body font-body text-default-font">{coachB}</span>
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-body font-body text-brand-500">45 min</span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Badge variant="neutral">Strategy</Badge>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Button variant="neutral-secondary" size="small" icon={<FeatherPlay />} onClick={() => {}}>
-                        Watch
-                      </Button>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-body font-body text-subtext-color">1d ago</span>
-                    </Table.Cell>
-                  </Table.Row>
+                  {recentSessions.length > 0 ? recentSessions.map((s) => {
+                    const recUrl = Array.isArray(s.session_recordings) ? s.session_recordings[0]?.recording_url : null;
+                    return (
+                      <Table.Row key={s.id}>
+                        <Table.Cell>
+                          <div className="flex items-center gap-4">
+                            <IconWithBackground icon={<FeatherBox />} />
+                            <span className="text-body-bold font-body-bold text-default-font">{s.game ?? "—"}</span>
+                          </div>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <div className="flex items-center gap-2">
+                            <Avatar size="small" image={coachMap[String(s.coach_id)]?.avatar_url}>
+                              {(coachMap[String(s.coach_id)]?.display_name ?? "C").toString().slice(0,1)}
+                            </Avatar>
+                            <span className="text-body font-body text-default-font">
+                              {coachMap[String(s.coach_id)]?.display_name ?? String(s.coach_id) ?? "Coach"}
+                            </span>
+                          </div>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <span className="text-body font-body text-brand-500">{s.duration_minutes ?? 0} min</span>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Badge variant="neutral">{s.focus_area ?? "—"}</Badge>
+                        </Table.Cell>
+                        <Table.Cell>
+                          {recUrl ? (
+                            <Button variant="neutral-secondary" size="small" icon={<FeatherPlay />} onClick={() => window.open(recUrl, "_blank")}>
+                              Watch
+                            </Button>
+                          ) : (
+                            <span className="text-subtext-color text-caption">—</span>
+                          )}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <span className="text-body font-body text-subtext-color">{fmt(s.ended_at)}</span>
+                        </Table.Cell>
+                      </Table.Row>
+                    );
+                  }) : (
+                    <Table.Row>
+                      <Table.Cell colSpan={6}>
+                        <span className="text-subtext-color text-caption">No recent sessions</span>
+                      </Table.Cell>
+                    </Table.Row>
+                  )}
                 </Table>
               </div>
 
@@ -551,46 +713,24 @@ function PlayerProfilePage() {
                   </Button>
                 </div>
                 <div className="flex w-full flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
-                  <div className="flex w-full items-center gap-4">
-                    <IconWithBackground variant="success" icon={<FeatherCalendar />} />
-                    <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
-                      <span className="text-body-bold font-body-bold text-default-font">Mario Party Coaching</span>
-                      <span className="text-body font-body text-subtext-color">Today at 4:00 PM with Coach Mike</span>
+                  {upcomingSessions.length > 0 ? upcomingSessions.map((s) => (
+                    <div key={s.id} className="flex w-full items-center gap-4">
+                      <IconWithBackground icon={<FeatherCalendar />} />
+                      <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
+                        <span className="text-body-bold font-body-bold text-default-font">
+                          {s.game ?? "Session"}
+                        </span>
+                        <span className="text-body font-body text-subtext-color">
+                          {fmt(s.starts_at)} — Coach {coachMap[String(s.coach_id)]?.display_name ?? String(s.coach_id) ?? "?"}
+                        </span>
+                      </div>
+                      <Button variant="neutral-tertiary" icon={<FeatherClock />} onClick={() => {}}>
+                        Upcoming
+                      </Button>
                     </div>
-                    <Button variant="neutral-secondary" icon={<FeatherVideo />} onClick={() => {}}>
-                      Join Call
-                    </Button>
-                  </div>
-                  <div className="flex w-full items-center gap-4">
-                    <IconWithBackground icon={<FeatherCalendar />} />
-                    <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
-                      <span className="text-body-bold font-body-bold text-default-font">
-                        The Last of Us Speedrun
-                      </span>
-                      <span className="text-body font-body text-subtext-color">Today at 8:00 PM with Coach Mandy</span>
-                    </div>
-                    <Button disabled variant="neutral-tertiary" icon={<FeatherXCircle />} onClick={() => {}}>
-                      Cancel
-                    </Button>
-                    <Button variant="neutral-tertiary" icon={<FeatherClock />} onClick={() => {}}>
-                      Upcoming
-                    </Button>
-                  </div>
-                  <div className="flex w-full items-center gap-4">
-                    <IconWithBackground icon={<FeatherCalendar />} />
-                    <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
-                      <span className="text-body-bold font-body-bold text-default-font">
-                        Minecraft Advanced Building
-                      </span>
-                      <span className="text-body font-body text-subtext-color">Tomorrow at 2:00 PM with Coach Alex</span>
-                    </div>
-                    <Button variant="neutral-tertiary" icon={<FeatherXCircle />} onClick={() => {}}>
-                      Cancel
-                    </Button>
-                    <Button variant="neutral-tertiary" icon={<FeatherClock />} onClick={() => {}}>
-                      Upcoming
-                    </Button>
-                  </div>
+                  )) : (
+                    <div className="text-subtext-color text-caption">No upcoming sessions</div>
+                  )}
                 </div>
               </div>
             </div>
@@ -901,7 +1041,7 @@ function PlayerProfilePage() {
                 variant="brand"
                 icon={<FeatherCoins />}
                 title="Your Token Balance"
-                description={`You have 25 ${tokenLabel.toLowerCase()} available`}
+                description={`You have ${(summary?.tokens_balance ?? 0)} ${tokenLabel.toLowerCase()} available`}
               />
             </div>
 

@@ -71,12 +71,18 @@ const DefaultPageLayoutRoot = React.forwardRef<HTMLElement, DefaultPageLayoutRoo
 
     const fallbackBrand = getBrandConfig?.("skillery") || getBrandConfig?.("gameon");
 
+    const fbTokens = (fallbackBrand as any)?.tokens || {};
+    const fbColors = (fallbackBrand as any)?.colors || {};
+    const fbPageBg = fbTokens.pageBackground ?? fbColors.pageBackground ?? fbColors.primary ?? "#0A0F18";
+    const fbText = fbColors.text ?? "#FFFFFF";
+
     return (
       <div
         className={SubframeUtils.twClassNames(
-          "flex min-h-screen w-full flex-col items-center bg-default-background text-default-font",
+          "flex min-h-screen w-full flex-col items-center",
           className
         )}
+        style={{ background: fbPageBg, color: fbText }}
         ref={ref as any}
         {...otherProps}
       >
@@ -107,7 +113,7 @@ const DefaultPageLayoutRoot = React.forwardRef<HTMLElement, DefaultPageLayoutRoo
   side="bottom"
   align="end"
   sideOffset={4}
-  className="bg-white rounded-md shadow-lg py-1 w-48"
+  className="bg-black/90 text-white border border-white/10 rounded-md shadow-lg py-1 w-48"
 >
   <DropdownMenu.DropdownItem icon={<FeatherUser />}>Profile</DropdownMenu.DropdownItem>
   <DropdownMenu.DropdownItem icon={<FeatherSettings />}>Settings</DropdownMenu.DropdownItem>
@@ -120,7 +126,7 @@ const DefaultPageLayoutRoot = React.forwardRef<HTMLElement, DefaultPageLayoutRoo
         />
 
         {children ? (
-          <div className="flex w-full flex-1 min-h-0 flex-col items-start gap-4 bg-default-background text-default-font">
+          <div className="flex w-full flex-1 min-h-0 flex-col items-start gap-4">
             {children}
           </div>
         ) : null}

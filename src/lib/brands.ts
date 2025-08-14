@@ -173,7 +173,7 @@ fiton: {
   fontFamily: "Montserrat, sans-serif",
   fontClass: "font-['Montserrat']",
   showCenterLogo: true,
-socialImage: "https://skillery.co/images/fiton/fiton-social-preview.png",
+  socialImage: "https://skillery.co/images/fiton/fiton-social-preview.png",
   socials: [
     { icon: "tiktok", href: "#" },
     { icon: "instagram", href: "#" },
@@ -198,6 +198,11 @@ socialImage: "https://skillery.co/images/fiton/fiton-social-preview.png",
     buttonHover: "#DDAF2E",
     text: "#FFFFFF",
     hover: "#67CFFF",
+  },
+  tokens: {
+    pageBackground: "#1B4D6A",
+    headerBackground: "#1B4D6A",
+    footerBackground: "#1B4D6A",
   },
   forms: {
     waitlistUrl:
@@ -679,5 +684,6 @@ socialImage: "https://skillery.co/images/moneyon/moneyon-social-preview.png",
 }, // ✅ End MoneyOn brand
 }; // ✅ close brands object completely
 export function getBrandConfig(brand: string) {
-  return brands[brand as keyof typeof brands];
+  const key = (brand ?? "").toString().toLowerCase();
+  return brands[key as keyof typeof brands];
 }

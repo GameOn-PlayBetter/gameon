@@ -59,7 +59,13 @@ export function BrandThemeProvider({
     }
 
     setTheme({
-colors: { primary: (brandConfig.colors as any).primary ?? (brandConfig.colors as any).background ?? "#000000", ...brandConfig.colors },
+      colors: {
+        primary: (brandConfig.colors as any).primary ?? (brandConfig.colors as any).background ?? "#000000",
+        ...brandConfig.colors,
+        headerBackground: (brandConfig as any)?.tokens?.headerBackground ?? (brandConfig.colors as any)?.headerBackground,
+        pageBackground: (brandConfig as any)?.tokens?.pageBackground ?? (brandConfig.colors as any)?.pageBackground,
+        footerBackground: (brandConfig as any)?.tokens?.footerBackground ?? (brandConfig.colors as any)?.footerBackground,
+      },
       name: brandConfig.name,
       logo: brandConfig.logo ?? "/images/skillery_logo_footer_hd.png",
       companyName: brandConfig.companyName ?? "Your Brand",
