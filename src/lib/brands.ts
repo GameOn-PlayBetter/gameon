@@ -77,7 +77,11 @@ legalLinks: [
     fontClass: "font-sans", // ✅ Added
     showCenterLogo: true,
 socialImage: "https://skillery.co/images/skillery/skillery-social-preview.png",
-    socials: [], // ✅ empty array prevents TS errors
+socials: [
+  { icon: "linkedin", href: "https://www.linkedin.com/company/skillery-co" },
+  { icon: "bluesky", href: "https://bsky.app/profile/skillery.bsky.social" },
+  { icon: "instagram", href: "https://www.instagram.com/skillery.co/" },
+],
 legalLinks: [
   { label: "Privacy Policy", href: "/privacy-policy" },
   { label: "Cookie Policy", href: "/cookie-policy" },

@@ -11,28 +11,43 @@ import {
   FeatherTwitter,
   FeatherTwitch,
   FeatherMessageCircle,
+  FeatherLinkedin,
 } from "@subframe/core";
 
-interface BoldFooterRootProps extends React.HTMLAttributes<HTMLDivElement> {
+
+import { siX } from "simple-icons/icons";
+import { siBluesky } from "simple-icons/icons";
+
+type BoldFooterRootProps = {
   brandName?: string;
   className?: string;
-  ctaButton?: { label: string; href: string };
+  ctaButton?: React.ReactNode;
   companyName?: string;
   logoSrc?: string;
   socials?: { icon: string; href: string }[];
-  colors?: {
-    primary?: string;
-    button?: string;
-    buttonHover?: string;
-    text?: string;
-    hover?: string;
-  };
+  colors?: Record<string, string>;
   legalLinks?: { label: string; href: string }[];
-}
+  [key: string]: any;
+};
+
+const IconX: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" className="w-[18px] h-[18px]" {...props}>
+    <path d={siX.path} />
+  </svg>
+);
+
+const IconBlueSky: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" className="w-[18px] h-[18px]" {...props}>
+    <path d={siBluesky.path} />
+  </svg>
+);
 
 const FeatherIconsMap: Record<string, React.ElementType> = {
   instagram: FeatherInstagram,
-  twitter: FeatherTwitter,
+  twitter: IconX,
+  x: IconX,
+  bluesky: IconBlueSky,
+  linkedin: FeatherLinkedin,
   tiktok: FeatherTwitch,
   discord: FeatherMessageCircle,
 };
@@ -78,11 +93,22 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
     const brandLegal =
       legalLinks.length ? legalLinks : (theme as any)?.legalLinks || [];
 
+    const fallbackSkillerySocials = [
+      { icon: "linkedin", href: "https://www.linkedin.com/company/skillery-co" },
+      { icon: "bluesky",  href: "https://bsky.app/profile/skillery.bsky.social" },
+      { icon: "instagram", href: "https://www.instagram.com/skillery.co/" },
+    ];
+
     const isSkillery = (
       (brandName ?? (theme as any)?.brandName ?? (theme as any)?.companyName ?? "")
         .toLowerCase()
         .includes("skillery")
     );
+
+    const effectiveSocials =
+      brandSocials.length > 0
+        ? brandSocials
+        : (isSkillery ? fallbackSkillerySocials : []);
 
     // ✅ Prefer tokens first, then colors
     const palette = (theme?.colors as any) || {};
@@ -106,7 +132,6 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
     for (let i = 0; i < brandLegal.length; i += 4) {
       legalRows.push(brandLegal.slice(i, i + 4));
     }
-
 // ✅ Safe link handler: prevents /brand/brand/path
 const formatHref = (href: string) => {
   if (!brandName) return href;
@@ -183,7 +208,7 @@ const formatHref = (href: string) => {
           {/* Right: Neon Glowing Social Icons */}
           <div className="flex w-full md:w-1/3 justify-start pl-4">
             <div className="flex items-center gap-6">
-              {brandSocials.map((social) => {
+              {effectiveSocials.map((social) => {
                 const Icon = FeatherIconsMap[social.icon];
                 return Icon ? (
                   <a
@@ -191,10 +216,14 @@ const formatHref = (href: string) => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="transition-transform hover:scale-125"
+                    className="inline-flex items-center justify-center w-5 h-5 transition-transform hover:scale-125"
                   >
                     <Icon
-                      className="w-12 h-12 text-white"
+                      className={`text-white align-middle ${
+                        social.icon === "bluesky" || social.icon === "x" || social.icon === "twitter"
+                          ? "w-[16px] h-[16px]"
+                          : "w-5 h-5"
+                      }`}
                       style={{
                         animation: "neonPulse 2s infinite ease-in-out",
                       }}
