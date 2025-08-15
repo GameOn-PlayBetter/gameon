@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { Badge } from "@/ui/components/Badge";
 import { FeatherShield } from "@subframe/core";
@@ -19,11 +19,15 @@ import { FeatherClock } from "@subframe/core";
 import { FeatherX } from "@subframe/core";
 import { FeatherCheck } from "@subframe/core";
 import { FeatherSave } from "@subframe/core";
+import { FeatherEdit } from "@subframe/core";
+import { FeatherTrash } from "@subframe/core";
+import { FeatherCopy } from "@subframe/core";
 import { IconButton } from "@/ui/components/IconButton";
 import { FeatherZap } from "@subframe/core";
 import { FeatherEye } from "@subframe/core";
 import { FeatherHelpCircle } from "@subframe/core";
 import { FeatherUsers } from "@subframe/core";
+import { FeatherPlus } from "@subframe/core";
 import { TextField } from "@/ui/components/TextField";
 import { Select } from "@/ui/components/Select";
 import { FeatherCalendar } from "@subframe/core";
@@ -34,6 +38,8 @@ import { FeatherPlay } from "@subframe/core";
 import { FeatherFlag } from "@subframe/core";
 import { FeatherTicket } from "@subframe/core";
 import { FeatherBook } from "@subframe/core";
+import { FeatherArrowUp } from "@subframe/core";
+import { FeatherArrowDown } from "@subframe/core";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
@@ -46,11 +52,36 @@ type CoachFromDB = {
   avatar_url: string;
   languages: string[] | null;
   bookings_count: number | null;
+  brand?: string | null;
+  specialty?: string | string[] | Record<string, any> | null;
 };
 
-const supabase = createClient();
 
-function CoachPage() {
+type CoachSpecialtyRow = {
+  coach_id: number;
+  brand: string;
+  specialty: string;
+  tokens_per_hour: number | null;
+  minutes_15: number | null;
+  minutes_30: number | null;
+  minutes_60: number | null;
+  minutes_120: number | null;
+  offered_durations: number[] | null;
+  sort_order: number | null;
+};
+
+// Helpers to support parent::variant grouping without a DB migration
+function parseSpecialtyName(name: string | null | undefined): { parent: string; variant: string } {
+  const raw = String(name ?? "").trim();
+  if (!raw) return { parent: "General", variant: "General" };
+  const parts = raw.split("::");
+  const parent = (parts[0] ?? "").trim() || "General";
+  const variant = (parts[1] ?? "General").trim() || "General";
+  return { parent, variant };
+}
+
+export default function CoachPage() {
+  const supabase = createClient();
   const params = (useParams() as { brand?: string }) ?? {};
   const brandRaw = (params as { brand?: string | string[] }).brand;
   const brandKey = (Array.isArray(brandRaw) ? brandRaw[0] : brandRaw || "gameon").toLowerCase();
@@ -67,6 +98,59 @@ function CoachPage() {
   const [coach, setCoach] = useState<CoachFromDB | null>(null);
   const [loadingCoach, setLoadingCoach] = useState(true);
 
+  // ---- Unified durations + state ----
+  const DURATION_OPTIONS = [
+    { label: "15 mins", value: 15 },
+    { label: "30 mins", value: 30 },
+    { label: "1 hr", value: 60 },
+    { label: "2 hrs", value: 120 },
+  ];
+
+  function formatDurationLabel(m: number) {
+    switch (m) {
+      case 15: return "15 mins.";
+      case 30: return "30 mins.";
+      case 60: return "1 hr.";
+      case 120: return "2 hrs.";
+      default: return `${m} mins.`;
+    }
+  }
+
+  const [durations, setDurations] = useState<Array<number | null>>([]);
+  const [rates, setRates] = useState<Array<string>>([]);
+  const [defaultSessionLength, setDefaultSessionLength] = useState<number | null>(null);
+  const [prevDefaultSessionLength, setPrevDefaultSessionLength] = useState<number | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingDefault, setPendingDefault] = useState<number | null>(null);
+  const [specRows, setSpecRows] = useState<CoachSpecialtyRow[]>([]);
+  const [newSpecParent, setNewSpecParent] = useState("");
+  const [newSpecVariant, setNewSpecVariant] = useState("");
+  const [newSpecDuration, setNewSpecDuration] = useState<string>("none");
+  const [newSpecRate, setNewSpecRate] = useState("");
+  const [editingIdx, setEditingIdx] = useState<number | null>(null);
+  const [editingName, setEditingName] = useState<string>("");
+  const [editingParent, setEditingParent] = useState<string | null>(null);
+  const [newParentName, setNewParentName] = useState<string>("");
+
+  const [addingParent, setAddingParent] = useState<string | null>(null);
+  const [addVariantName, setAddVariantName] = useState<string>("");
+  const [addVariantDuration, setAddVariantDuration] = useState<string>("none");
+  const [addVariantRate, setAddVariantRate] = useState<string>("");
+  const [selectedBrand, setSelectedBrand] = useState<string>(brandKey);
+  const brandOptions = Object.keys(brands || {});
+  const brandLabelMap: Record<string, string> = {
+    gameon: "GameOn",
+    styleon: "StyleOn",
+    fixon: "FixOn",
+    jamon: "JamOn",
+    learnon: "LearnOn",
+    growon: "GrowOn",
+    fiton: "FitOn",
+    codeon: "CodeOn",
+    cookon: "CookOn",
+    moneyon: "MoneyOn",
+  };
+
   // auth
   useEffect(() => {
     let cancelled = false;
@@ -76,12 +160,11 @@ function CoachPage() {
         if (!cancelled) {
           setUserId(data.user?.id ?? null);
         }
-      } catch (e) {
+      } catch {
         if (!cancelled) setUserId(null);
       } finally {
-        // read sessionRole from localStorage (set by LoginModal)
         try {
-          const role = typeof window !== 'undefined' ? window.localStorage.getItem('sessionRole') : null;
+          const role = typeof window !== "undefined" ? window.localStorage.getItem("sessionRole") : null;
           if (!cancelled) setSessionRole(role);
         } catch {}
         if (!cancelled) setAuthChecked(true);
@@ -90,7 +173,7 @@ function CoachPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [supabase]);
 
   // fetch coach by auth_user_id (+ brand)
   useEffect(() => {
@@ -107,7 +190,7 @@ function CoachPage() {
       setLoadingCoach(true);
       let query = supabase
         .from("coaches")
-        .select("id, display_name, avatar_url, languages, bookings_count")
+        .select("id, display_name, avatar_url, languages, bookings_count, brand, specialty")
         .eq("auth_user_id", userId)
         .limit(1) as any;
 
@@ -129,7 +212,436 @@ function CoachPage() {
     return () => {
       cancelled = true;
     };
-  }, [authChecked, userId, brandKey]);
+  }, [authChecked, userId, brandKey, supabase]);
+
+  // fetch coach_specialties for this coach and brand (scoped)
+  useEffect(() => {
+    if (!coach?.id) return;
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase
+        .from("coach_specialties")
+        .select("coach_id, brand, specialty, tokens_per_hour, minutes_15, minutes_30, minutes_60, minutes_120, offered_durations, sort_order")
+        .eq("coach_id", coach.id)
+        .eq("brand", selectedBrand)
+        .order("sort_order", { ascending: true });
+      if (error) {
+        console.error("coach_specialties fetch error:", error.message, { coachId: coach.id, selectedBrand });
+        return;
+      }
+      if (!cancelled) {
+        setSpecRows((data as CoachSpecialtyRow[]) || []);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [coach?.id, selectedBrand, supabase]);
+  // Group rows by parent specialty (e.g., "Hair::Styling" -> parent "Hair")
+  const groupedSpecs = useMemo(() => {
+    const map = new Map<string, { parent: string; items: { row: CoachSpecialtyRow; index: number; variant: string }[] }>();
+    specRows.forEach((row, index) => {
+      const { parent, variant } = parseSpecialtyName(row.specialty);
+      if (!map.has(parent)) map.set(parent, { parent, items: [] });
+      map.get(parent)!.items.push({ row, index, variant });
+    });
+    // sort variants inside each parent by sort_order then variant name
+    const groups = Array.from(map.values());
+    groups.forEach(g => {
+      g.items.sort((a, b) => {
+        const soA = a.row.sort_order ?? 0;
+        const soB = b.row.sort_order ?? 0;
+        if (soA !== soB) return soA - soB;
+        return a.variant.localeCompare(b.variant);
+      });
+    });
+    // sort parents by name
+    groups.sort((a, b) => a.parent.localeCompare(b.parent));
+    return groups;
+  }, [specRows]);
+
+  // prefill durations and rates from fetched specialties
+  useEffect(() => {
+    if (!specRows || specRows.length === 0) return;
+
+    const pickFromRow = (row: CoachSpecialtyRow): { dur: number | null; rate: string } => {
+      const pairs: Array<[number, number | null]> = [
+        [15, row.minutes_15],
+        [30, row.minutes_30],
+        [60, row.minutes_60],
+        [120, row.minutes_120],
+      ];
+      for (const [mins, val] of pairs) {
+        if (val != null) return { dur: mins, rate: String(val) };
+      }
+      if (row.tokens_per_hour != null) {
+        return { dur: 60, rate: String(row.tokens_per_hour) };
+      }
+      return { dur: null, rate: "" };
+    };
+
+    const nextDur: Array<number | null> = [];
+    const nextRates: Array<string> = [];
+
+    for (let i = 0; i < specRows.length; i++) {
+      const picked = pickFromRow(specRows[i]);
+      nextDur.push(picked.dur);
+      nextRates.push(picked.rate);
+    }
+
+    setDurations(nextDur);
+    setRates(nextRates);
+  }, [specRows]);
+
+  // Helpers & handlers
+  function durationField(mins: number): "minutes_15" | "minutes_30" | "minutes_60" | "minutes_120" {
+    switch (mins) {
+      case 15: return "minutes_15";
+      case 30: return "minutes_30";
+      case 60: return "minutes_60";
+      case 120: return "minutes_120";
+      default: return "minutes_60";
+    }
+  }
+  function startEditParent(parent: string) {
+    setEditingParent(parent);
+    setNewParentName(parent);
+  }
+
+  function cancelEditParent() {
+    setEditingParent(null);
+    setNewParentName("");
+  }
+
+  async function saveEditParent(oldParent: string) {
+    if (!coach?.id) return;
+    const nextParent = newParentName.trim();
+    if (!nextParent || nextParent === oldParent) { cancelEditParent(); return; }
+
+    // Update all rows under this parent for the selected brand
+    const rowsToUpdate = specRows.filter(r => parseSpecialtyName(r.specialty).parent === oldParent);
+    for (const row of rowsToUpdate) {
+      const { variant } = parseSpecialtyName(row.specialty);
+      const { error } = await supabase
+        .from("coach_specialties")
+        .update({ specialty: `${nextParent}::${variant}` })
+        .eq("coach_id", coach.id)
+        .eq("brand", selectedBrand)
+        .eq("specialty", row.specialty);
+      if (error) {
+        console.error("rename parent error:", error.message, { row });
+        return;
+      }
+    }
+    cancelEditParent();
+    await refetchSpecialties();
+  }
+
+  function startAddVariant(parent: string) {
+    setAddingParent(parent);
+    setAddVariantName("");
+    setAddVariantDuration("none");
+    setAddVariantRate("");
+  }
+
+  function cancelAddVariant() {
+    setAddingParent(null);
+    setAddVariantName("");
+    setAddVariantDuration("none");
+    setAddVariantRate("");
+  }
+
+  async function addVariantToParent(parent: string) {
+    if (!coach?.id) return;
+    const variant = addVariantName.trim();
+    const dur = addVariantDuration === "none" ? null : Number(addVariantDuration);
+    const rate = Number(addVariantRate);
+    if (!variant || dur == null || !Number.isFinite(rate)) return;
+
+    // choose next sort order within parent (append)
+    const nextSort =
+      (specRows
+        .filter(r => parseSpecialtyName(r.specialty).parent === parent)
+        .reduce((m, r) => Math.max(m, r.sort_order ?? 0), 0) || 0) + 1;
+
+    const field = durationField(dur);
+    const payload: any = {
+      coach_id: coach.id,
+      brand: selectedBrand,
+      specialty: `${parent}::${variant}`,
+      is_active: true,
+      offered_durations: [dur],
+      sort_order: nextSort,
+    };
+    payload[field] = rate;
+    if (dur === 60) payload.tokens_per_hour = rate;
+
+    const { error } = await supabase.from("coach_specialties").insert(payload);
+    if (error) {
+      console.error("add variant insert error:", error.message);
+      return;
+    }
+    cancelAddVariant();
+    await refetchSpecialties();
+  }
+  async function moveVariant(i: number, dir: "up" | "down") {
+    if (!coach?.id) return;
+    const row = specRows[i];
+    if (!row) return;
+    const { parent } = parseSpecialtyName(row.specialty);
+    // Build a list of sibling indices (indices into specRows) under the same parent
+    const siblingIndices: number[] = [];
+    specRows.forEach((r, idx) => {
+      if (parseSpecialtyName(r.specialty).parent === parent) siblingIndices.push(idx);
+    });
+    // Sort siblings by sort_order then variant name to mirror UI order
+    siblingIndices.sort((ia, ib) => {
+      const a = specRows[ia];
+      const b = specRows[ib];
+      const soA = a.sort_order ?? 0;
+      const soB = b.sort_order ?? 0;
+      if (soA !== soB) return soA - soB;
+      const va = parseSpecialtyName(a.specialty).variant;
+      const vb = parseSpecialtyName(b.specialty).variant;
+      return va.localeCompare(vb);
+    });
+    const pos = siblingIndices.indexOf(i);
+    if (pos === -1) return;
+    if (dir === "up" && pos === 0) return;
+    if (dir === "down" && pos === siblingIndices.length - 1) return;
+    const neighborPos = dir === "up" ? pos - 1 : pos + 1;
+    const aIdx = siblingIndices[pos];
+    const bIdx = siblingIndices[neighborPos];
+    const a = specRows[aIdx];
+    const b = specRows[bIdx];
+    const aSort = a.sort_order ?? 0;
+    const bSort = b.sort_order ?? 0;
+    // Swap sort_order values in Supabase
+    const { error: err1 } = await supabase
+      .from("coach_specialties")
+      .update({ sort_order: bSort })
+      .eq("coach_id", coach.id)
+      .eq("brand", selectedBrand)
+      .eq("specialty", a.specialty);
+    if (err1) {
+      console.error("reorder update error (first)", err1.message);
+      return;
+    }
+    const { error: err2 } = await supabase
+      .from("coach_specialties")
+      .update({ sort_order: aSort })
+      .eq("coach_id", coach.id)
+      .eq("brand", selectedBrand)
+      .eq("specialty", b.specialty);
+    if (err2) {
+      console.error("reorder update error (second)", err2.message);
+      return;
+    }
+    await refetchSpecialties();
+  }
+
+  async function handleCopySpecialty(i: number) {
+    if (!coach?.id) return;
+    const row = specRows[i];
+    if (!row) return;
+    const { parent, variant } = parseSpecialtyName(row.specialty);
+    // Generate a unique variant name like "Variant (copy)", "(copy 2)", etc.
+    const siblings = specRows.filter(r => parseSpecialtyName(r.specialty).parent === parent);
+    let base = `${variant} (copy)`;
+    let candidate = base;
+    let counter = 2;
+    while (siblings.some(r => parseSpecialtyName(r.specialty).variant === candidate)) {
+      candidate = `${base} ${counter++}`;
+    }
+
+    const dur = (() => {
+      if (row.minutes_15 != null) return 15;
+      if (row.minutes_30 != null) return 30;
+      if (row.minutes_60 != null) return 60;
+      if (row.minutes_120 != null) return 120;
+      if (row.tokens_per_hour != null) return 60;
+      return 60;
+    })();
+    const rate =
+      row[durationField(15)] ?? row[durationField(30)] ?? row[durationField(60)] ?? row[durationField(120)] ?? row.tokens_per_hour ?? 0;
+
+    const newSort = (row.sort_order ?? 0) + 1;
+    const field = durationField(dur);
+    const payload: any = {
+      coach_id: coach.id,
+      brand: selectedBrand,
+      specialty: `${parent}::${candidate}`,
+      is_active: true,
+      offered_durations: [dur],
+      sort_order: newSort,
+    };
+    payload[field] = rate;
+    if (dur === 60) payload.tokens_per_hour = rate;
+
+    const { error } = await supabase.from("coach_specialties").insert(payload);
+    if (error) {
+      console.error("copy specialty insert error:", error.message);
+      return;
+    }
+    await refetchSpecialties();
+  }
+
+  async function refetchSpecialties() {
+    if (!coach?.id) return;
+    const { data } = await supabase
+      .from("coach_specialties")
+      .select("coach_id, brand, specialty, tokens_per_hour, minutes_15, minutes_30, minutes_60, minutes_120, offered_durations, sort_order")
+      .eq("coach_id", coach.id)
+      .eq("brand", selectedBrand)
+      .order("sort_order", { ascending: true });
+    setSpecRows((data as CoachSpecialtyRow[]) || []);
+  }
+
+  async function handleAddSpecialty() {
+    if (!coach?.id) return;
+    const parent = newSpecParent.trim();
+    const variant = newSpecVariant.trim();
+    const dur = newSpecDuration === "none" ? null : Number(newSpecDuration);
+    const rate = Number(newSpecRate);
+    if (!parent || !variant || dur == null || !Number.isFinite(rate)) return;
+
+    // determine next sort order (append) within this parent
+    const nextSort =
+      (specRows
+        .filter(r => parseSpecialtyName(r.specialty).parent === parent)
+        .reduce((m, r) => Math.max(m, r.sort_order ?? 0), 0) || 0) + 1;
+
+    const field = durationField(dur);
+    const payload: any = {
+      coach_id: coach.id,
+      brand: selectedBrand,
+      specialty: `${parent}::${variant}`,
+      is_active: true,
+      offered_durations: [dur],
+      sort_order: nextSort,
+    };
+    payload[field] = rate;
+    if (dur === 60) payload.tokens_per_hour = rate;
+
+    const { error } = await supabase.from("coach_specialties").insert(payload);
+
+    if (error) {
+      console.error("add specialty insert error:", error.message);
+      return;
+    }
+
+    setNewSpecParent("");
+    setNewSpecVariant("");
+    setNewSpecDuration("none");
+    setNewSpecRate("");
+    await refetchSpecialties();
+  }
+
+  function startEditSpecialty(i: number) {
+    const current = specRows[i]?.specialty ?? "";
+    const { variant } = parseSpecialtyName(current);
+    setEditingIdx(i);
+    setEditingName(variant);
+  }
+
+  function cancelEditSpecialty() {
+    setEditingIdx(null);
+    setEditingName("");
+  }
+
+  async function saveEditSpecialty(i: number) {
+    if (!coach?.id) return;
+    const oldName = specRows[i]?.specialty;
+    const newName = editingName.trim();
+    if (!oldName || !newName || oldName === newName) {
+      cancelEditSpecialty();
+      return;
+    }
+
+    const parts = parseSpecialtyName(oldName);
+    const { error } = await supabase
+      .from("coach_specialties")
+      .update({ specialty: `${parts.parent}::${newName}` })
+      .eq("coach_id", coach.id)
+      .eq("brand", selectedBrand)
+      .eq("specialty", oldName);
+
+    if (error) {
+      console.error("rename specialty error:", error.message);
+      return;
+    }
+
+    cancelEditSpecialty();
+    await refetchSpecialties();
+  }
+  async function handleDeleteParent(parent: string) {
+    if (!coach?.id) return;
+    const ok = typeof window !== "undefined" ? window.confirm(`Delete ALL variants under "${parent}" for ${brandLabelMap[selectedBrand] || selectedBrand}?`) : true;
+    if (!ok) return;
+
+    const { error } = await supabase
+      .from("coach_specialties")
+      .delete()
+      .eq("coach_id", coach.id)
+      .eq("brand", selectedBrand)
+      .ilike("specialty", `${parent}::%`);
+
+    if (error) {
+      console.error("delete parent specialties error:", error.message);
+      return;
+    }
+    await refetchSpecialties();
+  }
+
+  async function handleDeleteSpecialty(i: number) {
+    if (!coach?.id) return;
+    const row = specRows[i];
+    if (!row) return;
+    const ok = typeof window !== "undefined" ? window.confirm(`Delete specialty "${row.specialty}" for ${brandLabelMap[selectedBrand] || selectedBrand}?`) : true;
+    if (!ok) return;
+
+    const { error } = await supabase
+      .from("coach_specialties")
+      .delete()
+      .eq("coach_id", coach.id)
+      .eq("brand", selectedBrand)
+      .eq("specialty", row.specialty);
+
+    if (error) {
+      console.error("delete specialty error:", error.message);
+      return;
+    }
+
+    await refetchSpecialties();
+  }
+
+  async function handleSaveChanges() {
+    if (!coach?.id) return;
+
+    for (let i = 0; i < specRows.length; i++) {
+      const dur = durations[i];
+      const rateNum = Number(rates[i]);
+      const row = specRows[i];
+      if (dur == null || !Number.isFinite(rateNum) || !row) continue;
+
+      const field = durationField(dur);
+      const offered = Array.from(new Set([...(row.offered_durations || []), dur]));
+      const patch: any = { [field]: rateNum, offered_durations: offered, is_active: true };
+      if (dur === 60 && (row.tokens_per_hour == null || row.tokens_per_hour === 0)) {
+        patch.tokens_per_hour = rateNum;
+      }
+
+      const { error } = await supabase
+        .from("coach_specialties")
+        .update(patch)
+        .eq("coach_id", coach.id)
+        .eq("brand", selectedBrand)
+        .eq("specialty", row.specialty);
+      if (error) {
+        console.error("save patch error:", error.message, { i, row });
+      }
+    }
+
+    await refetchSpecialties();
+  }
 
   // guards
   if (!authChecked) {
@@ -140,7 +652,7 @@ function CoachPage() {
     );
   }
 
-  if (!userId && sessionRole !== 'coach') {
+  if (!userId && sessionRole !== "coach") {
     const next = `/${brandKey}/coach`;
     return (
       <DefaultPageLayout style={{ backgroundColor }}>
@@ -154,427 +666,738 @@ function CoachPage() {
     );
   }
 
+  // normalize specialties
+  function normalizeSpecialties(v: unknown): string[] {
+    if (Array.isArray(v)) return v.map(x => String(x).trim()).filter(Boolean);
+    if (typeof v === "string") {
+      try {
+        const parsed = JSON.parse(v);
+        if (Array.isArray(parsed)) return parsed.map((x: any) => String(x).trim()).filter(Boolean);
+        if (parsed && typeof parsed === "object") return Object.keys(parsed as any);
+      } catch {}
+      return v.split(",").map(s => s.trim()).filter(Boolean);
+    }
+    if (v && typeof v === "object") return Object.keys(v as any);
+    return [];
+  }
+  const specialties = normalizeSpecialties(coach?.specialty ?? null);
+
   return (
-    <>
-      {/* Glowing "DEMO DATA ONLY" banner */}
-      <div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 bg-red-600 px-6 py-2 rounded-md shadow-lg shadow-red-400 pointer-events-none">
-        <span className="font-['Orbitron'] text-white text-[16px] font-bold tracking-widest uppercase drop-shadow-[0_0_6px_#ffffff]">
-          DEMO DATA ONLY
-        </span>
-      </div>
-
-      <DefaultPageLayout style={{ backgroundColor }}>
-        <div className="flex w-full flex-col items-start px-12 pt-24 pb-12 min-h-[60vh]">
-          <div className="flex w-full flex-col items-start gap-8 pb-6">
-            <div className="flex w-full flex-wrap items-start gap-4">
-              <div className="flex h-36 w-36 flex-none flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-100 relative">
-                {/* CHANGED: avatar skeleton / real / neutral */}
-                {loadingCoach ? (
-                  <div className="h-36 w-36 animate-pulse rounded-full bg-neutral-200" />
-                ) : coach?.avatar_url ? (
-                  <img
-                    className="h-36 w-36 flex-none object-cover absolute"
-                    src={coach.avatar_url}
-                    alt={coach?.display_name ?? "Coach avatar"}
-                  />
-                ) : (
-                  <div className="h-36 w-36 flex items-center justify-center rounded-full bg-neutral-200" />
-                )}
-              </div>
-              <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-6 pt-4">
-                <div className="flex w-full items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-heading-2 font-heading-2 text-default-font">
-                      {/* CHANGED: name skeleton instead of "…" */}
-                      {loadingCoach ? (
-                        <span className="inline-block h-6 w-32 animate-pulse rounded bg-neutral-200" />
-                      ) : (
-                        coach?.display_name ?? "—"
-                      )}
-                    </span>
-                    {!loadingCoach && (
-                      <>
-                        <Badge variant="success" icon={<FeatherShield />}>
-                          Verified Coach
-                        </Badge>
-                        <Badge>Elite Level</Badge>
-                      </>
-                    )}
-                  </div>
-                  <Button
-                    variant="neutral-secondary"
-                    icon={<FeatherDownload />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  >
-                    Export Data
-                  </Button>
-                </div>
-                <div className="flex w-full flex-wrap items-start gap-6">
-                  <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
-                    <span className="text-body-bold font-body-bold text-default-font">Total Sessions</span>
-                    <span className="line-clamp-1 w-full text-caption font-caption text-brand-500">
-                      {/* CHANGED: count skeleton instead of "…" */}
-                      {loadingCoach ? (
-                        <span className="inline-block h-4 w-10 animate-pulse rounded bg-neutral-200" />
-                      ) : (
-                        String(coach?.bookings_count ?? 0)
-                      )}
-                    </span>
-                  </div>
-                  <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
-                    <span className="text-body-bold font-body-bold text-default-font">Success Rate</span>
-                    <span className="line-clamp-1 w-full text-caption font-caption text-brand-600">94%</span>
-                  </div>
-                  <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
-                    <span className="text-body-bold font-body-bold text-default-font">Languages</span>
-                    <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
-                      {/* CHANGED: languages skeleton instead of "…" */}
-                      {loadingCoach ? (
-                        <span className="inline-block h-4 w-24 animate-pulse rounded bg-neutral-200" />
-                      ) : coach?.languages?.length ? (
-                        coach.languages.join(", ")
-                      ) : (
-                        "—"
-                      )}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Private tabs */}
-          <div className="flex w-full items-end">
-            <div className="flex h-px w-12 flex-none flex-col items-center gap-2 bg-neutral-200" />
-            <Tabs>
-              <Tabs.Item active={true}>Dashboard</Tabs.Item>
-              <Tabs.Item onClick={() => router.push(`/${brandKey}/coach/sessions`)}>Sessions</Tabs.Item>
-              <Tabs.Item onClick={() => router.push(`/${brandKey}/coach/reviews`)}>Reviews</Tabs.Item>
-            </Tabs>
-          </div>
-
-          {/* Rest unchanged */}
-          <div className="flex w-full flex-col items-start gap-12 py-12">
-            <div className="flex w-full flex-wrap items-start gap-6">
-              <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
-                <div className="flex w-full items-center gap-2">
-                  <IconWithBackground icon={<FeatherDollarSign />} />
-                  <span className="text-heading-3 font-heading-3 text-default-font">Current Month Earnings</span>
-                </div>
-                <div className="flex w-full flex-col items-start">
-                  <span className="text-heading-1 font-heading-1 text-brand-500">$146.25</span>
-                  <div className="flex w-full items-center gap-2 py-4">
-                    <span className="line-clamp-1 w-24 flex-none text-caption-bold font-caption-bold text-default-font">
-                      Target
-                    </span>
-                    <Progress value={85} />
-                    <span className="line-clamp-1 w-12 flex-none text-caption font-caption text-brand-500 text-right">
-                      85%
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex min-w=[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
-                <div className="flex w-full items-center gap-2">
-                  <IconWithBackground icon={<FeatherTrendingUp />} />
-                  <span className="text-heading-3 font-heading-3 text-default-font">Previous Month Earnings</span>
-                </div>
-                <div className="flex w-full flex-col items-start gap-2">
-                  <span className="text-heading-1 font-heading-1 text-brand-600">$3,156.00</span>
-                  <span className="text-caption font-caption text-success-600">Final</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex w-full flex-col items-start gap-4">
-              <div className="flex w-full items-center justify-between">
-                <span className="text-heading-3 font-heading-3 text-default-font">Pending Requests</span>
-              </div>
-              <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
-                <Alert
-                  variant="warning"
-                  icon={<FeatherAlertTriangle />}
-                  title="Connect Stripe to accept bookings"
-                  description="You need to connect your Stripe account before you can start accepting booking requests."
-                  actions={
-                    <Button icon={<FeatherCreditCard />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                      Connect Stripe
-                    </Button>
-                  }
+    <DefaultPageLayout style={{ backgroundColor }}>
+      <div className="flex w-full flex-col items-start px-12 pt-24 pb-12 min-h-[60vh]">
+        <div className="flex w-full flex-col items-start gap-8 pb-6">
+          <div className="flex w-full flex-wrap items-start gap-4">
+            <div className="flex h-36 w-36 flex-none flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-100 relative">
+              {loadingCoach ? (
+                <div className="h-36 w-36 animate-pulse rounded-full bg-neutral-200" />
+              ) : coach?.avatar_url ? (
+                <img
+                  className="h-36 w-36 flex-none object-cover absolute"
+                  src={coach.avatar_url}
+                  alt={coach?.display_name ?? "Coach avatar"}
                 />
-                <div className="flex w-full items-center gap-4">
-                  <Avatar
-                    size="large"
-                    image="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=800&q=80"
-                  >
-                    A
-                  </Avatar>
-                  <div className="flex flex-col items-start gap-1 grow">
-                    <div className="flex items-center gap-2">
-                      <span className="text-heading-3 font-heading-3 text-default-font">Alex Chen</span>
-                      <Badge>Minecraft</Badge>
-                      <Badge variant="warning" icon={<FeatherClock />}>
-                        Pending
-                      </Badge>
-                    </div>
-                    <span className="text-body font-body text-subtext-color">60 min Speedrun coaching session</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="neutral-secondary" icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                      Decline
-                    </Button>
-                    <Button disabled={true} icon={<FeatherCheck />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                      Accept
-                    </Button>
-                  </div>
-                </div>
-                <div className="flex w-full items-center gap-4">
-                  <Avatar
-                    size="large"
-                    image="https://res.cloudinary.com/subframe/image/upload/v1711417512/shared/m0kfajqpwkfief00it4v.jpg"
-                  >
-                    A
-                  </Avatar>
-                  <div className="flex flex-col items-start gap-1 grow">
-                    <div className="flex items-center gap-2">
-                      <span className="text-heading-3 font-heading-3 text-default-font">Mandy Lopez</span>
-                      <Badge>Dead By Daylight</Badge>
-                      <Badge variant="warning" icon={<FeatherClock />}>
-                        Pending
-                      </Badge>
-                    </div>
-                    <span className="text-body font-body text-subtext-color">60 min Speedrun coaching session</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="neutral-secondary" icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                      Decline
-                    </Button>
-                    <Button disabled={true} icon={<FeatherCheck />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                      Accept
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              ) : (
+                <div className="h-36 w-36 flex items-center justify-center rounded-full bg-neutral-200" />
+              )}
             </div>
-
-            <div className="flex w-full flex-col items-start gap-4">
+            <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-6 pt-4">
               <div className="flex w-full items-center justify-between">
-                <span className="text-heading-3 font-heading-3 text-default-font">Rate Configuration</span>
-                <Button icon={<FeatherSave />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                  Save Changes
-                </Button>
-              </div>
-              <div className="flex w-full flex-col items-start gap-4">
-                <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
-                  <Alert
-                    title="Set your rates and session durations"
-                    description="Configure your rates and available durations for each game and category. "
-                    actions={<IconButton icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} />}
-                  />
-                  <div className="flex w-full items-center gap-4 border-b border-solid border-neutral-border pb-4">
-                    <div className="flex w-48 flex-none items-start" />
-                    <div className="flex items-center justify-between px-4 grow">
-                      <Badge icon={<FeatherZap />}>Speedrun</Badge>
-                      <Badge variant="warning" icon={<FeatherEye />}>
-                        Watcher/Friend
-                      </Badge>
-                      <Badge variant="error" icon={<FeatherHelpCircle />}>
-                        Quick Help
-                      </Badge>
-                      <Badge variant="success" icon={<FeatherUsers />}>
-                        Co-op Player
-                      </Badge>
-                    </div>
-                  </div>
-                  <div className="flex w-full flex-col items-start gap-4">
-                    <div className="flex w-full items-center gap-4">
-                      <div className="flex w-48 flex-none items-center gap-2">
-                        <Badge>Minecraft</Badge>
-                      </div>
-                      <div className="flex items-center justify-between grow">
-                        <div className="flex flex-col items-start gap-2">
-                          <TextField className="h-auto w-32 flex-none" label="" helpText="" icon={<FeatherDollarSign />}>
-                            <TextField.Input placeholder="0.00" value="" onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}} />
-                          </TextField>
-                          <Select className="h-auto w-32 flex-none" label="" placeholder="Duration" helpText="" value={undefined} onValueChange={(value: string) => {}}>
-                            <Select.Item value="30">30</Select.Item>
-                            <Select.Item value="60">60</Select.Item>
-                          </Select>
-                        </div>
-                        <div className="flex flex-col items-start gap-2">
-                          <TextField className="h-auto w-32 flex-none" label="" helpText="" icon={<FeatherDollarSign />}>
-                            <TextField.Input placeholder="0.00" value="" onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}} />
-                          </TextField>
-                          <Select className="h-auto w-32 flex-none" label="" placeholder="Duration" helpText="" value={undefined} onValueChange={(value: string) => {}}>
-                            <Select.Item value="30">30</Select.Item>
-                            <Select.Item value="60">60</Select.Item>
-                          </Select>
-                        </div>
-                        <div className="flex flex-col items-start gap-2">
-                          <TextField className="h-auto w-32 flex-none" label="" helpText="" icon={<FeatherDollarSign />}>
-                            <TextField.Input placeholder="0.00" value="" onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}} />
-                          </TextField>
-                          <Select className="h-auto w-32 flex-none" label="" placeholder="Duration" helpText="" value={undefined} onValueChange={(value: string) => {}}>
-                            <Select.Item value="15">15</Select.Item>
-                            <Select.Item value="30">30</Select.Item>
-                          </Select>
-                        </div>
-                        <div className="flex flex-col items-start gap-2">
-                          <TextField className="h-auto w-32 flex-none" label="" helpText="" icon={<FeatherDollarSign />}>
-                            <TextField.Input placeholder="0.00" value="" onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}} />
-                          </TextField>
-                          <Select className="h-auto w-32 flex-none" label="" placeholder="Duration" helpText="" value={undefined} onValueChange={(value: string) => {}}>
-                            <Select.Item value="30">30</Select.Item>
-                            <Select.Item value="60">60</Select.Item>
-                          </Select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-6">
-                    <span className="text-body-bold font-body-bold text-default-font">Default Session Length</span>
-                  </div>
-                  <Select className="h-auto w-48 flex-none" label="" placeholder="" helpText="" value={undefined} onValueChange={(value: string) => {}}>
-                    <Select.Item value="30">30</Select.Item>
-                    <Select.Item value="60">60</Select.Item>
-                    <Select.Item value="90">90</Select.Item>
-                  </Select>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex w-full flex-col items-start gap-4">
-              <div className="flex w-full items-center justify-between">
-                <span className="text-heading-3 font-heading-3 text-default-font">Calendar Integration</span>
-                <Button variant="brand-secondary" icon={<FeatherCalendar />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                  Sync Calendar
-                </Button>
-              </div>
-              <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
-                <div className="flex w-full items-center gap-4">
-                  <IconWithBackground size="large" icon={<FeatherCalendar />} square={true} />
-                  <div className="flex flex-col items-start gap-1 grow">
-                    <span className="text-heading-3 font-heading-3 text-default-font">Google Calendar</span>
-                    <span className="text-body font-body text-subtext-color">Manage your coaching availability</span>
-                  </div>
-                  <Badge variant="success" icon={<FeatherCheck />}>
-                    Connected
-                  </Badge>
-                </div>
-                <Alert
-                  title="Your calendar is synced"
-                  description="Players can now book sessions during your available time slots"
-                  actions={<IconButton icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} />}
-                />
-                <div className="flex w-full items-center gap-4" />
-              </div>
-            </div>
-
-            <div className="flex w-full flex-col items-start gap-4">
-              <div className="flex w-full items-center justify-between">
-                <span className="text-heading-3 font-heading-3 text-default-font">Recent Sessions</span>
                 <div className="flex items-center gap-2">
-                  <Button variant="neutral-secondary" icon={<FeatherSearch />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                    Search Recordings
-                  </Button>
-                  <Button variant="neutral-secondary" icon={<FeatherFilter />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                    Filter
-                  </Button>
-                  <Button variant="neutral-secondary" onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                    View all
-                  </Button>
+                  <span className="text-heading-2 font-heading-2 text-default-font">
+                    {loadingCoach ? (
+                      <span className="inline-block h-6 w-32 animate-pulse rounded bg-neutral-200" />
+                    ) : (
+                      coach?.display_name ?? "—"
+                    )}
+                  </span>
+                  {!loadingCoach && (
+                    <>
+                      <Badge variant="success" icon={<FeatherShield />}>
+                        Verified Coach
+                      </Badge>
+                      <Badge>Elite Level</Badge>
+                    </>
+                  )}
                 </div>
+                <Button
+                  variant="neutral-secondary"
+                  icon={<FeatherDownload />}
+                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                >
+                  Export Data
+                </Button>
               </div>
-              <Table
-                header={
-                  <Table.HeaderRow>
-                    <Table.HeaderCell>Session Date</Table.HeaderCell>
-                    <Table.HeaderCell>Player</Table.HeaderCell>
-                    <Table.HeaderCell>Game</Table.HeaderCell>
-                    <Table.HeaderCell>Duration</Table.HeaderCell>
-                    <Table.HeaderCell>Status</Table.HeaderCell>
-                    <Table.HeaderCell>Rating</Table.HeaderCell>
-                    <Table.HeaderCell>Earnings</Table.HeaderCell>
-                    <Table.HeaderCell>Actions</Table.HeaderCell>
-                  </Table.HeaderRow>
-                }
-              >
-                <Table.Row>
-                  <Table.Cell>
-                    <span className="text-body font-body text-default-font">Mar 15, 2024</span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex items-center gap-2">
-                      <Avatar size="small" image="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=800&q=80">
-                        J
-                      </Avatar>
-                      <span className="text-body font-body text-default-font">John Smith</span>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Badge>Minecraft</Badge>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <span className="text-body font-body text-default-font">60 min</span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Badge variant="success" icon={<FeatherCheck />}>
-                      Complete
-                    </Badge>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Badge variant="neutral">Pending</Badge>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <span className="text-body font-body text-brand-primary">$45.00</span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="neutral-secondary" size="small" icon={<FeatherPlay />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                        Watch
-                      </Button>
-                      <Button variant="neutral-secondary" size="small" icon={<FeatherFlag />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                        Report
-                      </Button>
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              </Table>
-            </div>
-
-            <div className="flex w-full flex-col items-start gap-4">
-              <div className="flex w-full items-center justify-between">
-                <span className="text-heading-3 font-heading-3 text-default-font">Support &amp; Help</span>
-              </div>
-              <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
-                <div className="flex w-full items-center gap-4">
-                  <IconWithBackground size="large" icon={<FeatherHelpCircle />} square={true} />
-                  <div className="flex flex-col items-start gap-1 grow">
-                    <span className="text-heading-3 font-heading-3 text-default-font">Need assistance?</span>
-                    <span className="text-body font-body text-subtext-color">Get help with your coaching account or report issues</span>
-                  </div>
+              <div className="flex w-full flex-wrap items-start gap-6">
+                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
+                  <span className="text-body-bold font-body-bold text-default-font">Total Sessions</span>
+                  <span className="line-clamp-1 w-full text-caption font-caption text-brand-500">
+                    {loadingCoach ? (
+                      <span className="inline-block h-4 w-10 animate-pulse rounded bg-neutral-200" />
+                    ) : (
+                      String(coach?.bookings_count ?? 0)
+                    )}
+                  </span>
                 </div>
-                <div className="flex w-full flex-wrap items-start gap-4">
-                  <Button variant="neutral-primary" icon={<FeatherTicket />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                    Submit a ticket
-                  </Button>
-                  <Button variant="neutral-primary" icon={<FeatherBook />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                    Coach Code of Conduct
-                  </Button>
-                  <Button variant="neutral-primary" icon={<FeatherHelpCircle />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                    FAQs
-                  </Button>
-                  <Button variant="neutral-primary" icon={<FeatherFlag />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                    Report a player
-                  </Button>
+                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
+                  <span className="text-body-bold font-body-bold text-default-font">Success Rate</span>
+                  <span className="line-clamp-1 w-full text-caption font-caption text-brand-600">94%</span>
+                </div>
+                <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
+                  <span className="text-body-bold font-body-bold text-default-font">Languages</span>
+                  <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
+                    {loadingCoach ? (
+                      <span className="inline-block h-4 w-24 animate-pulse rounded bg-neutral-200" />
+                    ) : coach?.languages?.length ? (
+                      coach.languages.join(", ")
+                    ) : (
+                      "—"
+                    )}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </DefaultPageLayout>
-    </>
+
+        {/* Private tabs */}
+        <div className="flex w-full items-end">
+          <div className="flex h-px w-12 flex-none flex-col items-center gap-2 bg-neutral-200" />
+          <Tabs>
+            <Tabs.Item active={true}>Dashboard</Tabs.Item>
+            <Tabs.Item onClick={() => router.push(`/${brandKey}/coach/sessions`)}>Sessions</Tabs.Item>
+            <Tabs.Item onClick={() => router.push(`/${brandKey}/coach/reviews`)}>Reviews</Tabs.Item>
+          </Tabs>
+        </div>
+
+        {/* Rest unchanged */}
+        <div className="flex w-full flex-col items-start gap-12 py-12">
+          <div className="flex w-full flex-wrap items-start gap-6">
+            <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
+              <div className="flex w-full items-center gap-2">
+                <IconWithBackground icon={<FeatherDollarSign />} />
+                <span className="text-heading-3 font-heading-3 text-default-font">Current Month Earnings</span>
+              </div>
+              <div className="flex w-full flex-col items-start">
+                <span className="text-heading-1 font-heading-1 text-brand-500">$146.25</span>
+                <div className="flex w-full items-center gap-2 py-4">
+                  <span className="line-clamp-1 w-24 flex-none text-caption-bold font-caption-bold text-default-font">
+                    Target
+                  </span>
+                  <Progress value={85} />
+                  <span className="line-clamp-1 w-12 flex-none text-caption font-caption text-brand-500 text-right">
+                    85%
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
+              <div className="flex w-full items-center gap-2">
+                <IconWithBackground icon={<FeatherTrendingUp />} />
+                <span className="text-heading-3 font-heading-3 text-default-font">Previous Month Earnings</span>
+              </div>
+              <div className="flex w-full flex-col items-start gap-2">
+                <span className="text-heading-1 font-heading-1 text-brand-600">$3,156.00</span>
+                <span className="text-caption font-caption text-success-600">Final</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex w-full flex-col items-start gap-4">
+            <div className="flex w-full items-center justify-between">
+              <span className="text-heading-3 font-heading-3 text-default-font">Pending Requests</span>
+            </div>
+            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
+              <Alert
+                variant="warning"
+                icon={<FeatherAlertTriangle />}
+                title="Connect Stripe to accept bookings"
+                description="You need to connect your Stripe account before you can start accepting booking requests."
+                actions={
+                  <Button icon={<FeatherCreditCard />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                    Connect Stripe
+                  </Button>
+                }
+              />
+              <div className="flex w-full items-center gap-4">
+                <Avatar
+                  size="large"
+                  image="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=800&q=80"
+                >
+                  A
+                </Avatar>
+                <div className="flex flex-col items-start gap-1 grow">
+                  <div className="flex items-center gap-2">
+                    <span className="text-heading-3 font-heading-3 text-default-font">Alex Chen</span>
+                    {specialties[0] ? <Badge>{specialties[0]}</Badge> : null}
+                    <Badge variant="warning" icon={<FeatherClock />}>
+                      Pending
+                    </Badge>
+                  </div>
+                  <span className="text-body font-body text-subtext-color">60 min Speedrun coaching session</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="neutral-secondary" icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                    Decline
+                  </Button>
+                  <Button disabled={true} icon={<FeatherCheck />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                    Accept
+                  </Button>
+                </div>
+              </div>
+              <div className="flex w-full items-center gap-4">
+                <Avatar
+                  size="large"
+                  image="https://res.cloudinary.com/subframe/image/upload/v1711417512/shared/m0kfajqpwkfief00it4v.jpg"
+                >
+                  A
+                </Avatar>
+                <div className="flex flex-col items-start gap-1 grow">
+                  <div className="flex items-center gap-2">
+                    <span className="text-heading-3 font-heading-3 text-default-font">Mandy Lopez</span>
+                    {(specialties[1] ?? specialties[0]) ? <Badge>{specialties[1] ?? specialties[0]}</Badge> : null}
+                    <Badge variant="warning" icon={<FeatherClock />}>
+                      Pending
+                    </Badge>
+                  </div>
+                  <span className="text-body font-body text-subtext-color">60 min Speedrun coaching session</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="neutral-secondary" icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                    Decline
+                  </Button>
+                  <Button disabled={true} icon={<FeatherCheck />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                    Accept
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex w-full flex-col items-start gap-4">
+            <div className="flex w-full items-center justify-between gap-3">
+              <span className="text-heading-3 font-heading-3 text-default-font">Rate Configuration</span>
+              <div className="flex items-center gap-2">
+                <Select
+                  className="h-auto w-48"
+                  label=""
+                  placeholder="Brand"
+                  helpText=""
+                  value={selectedBrand}
+                  onValueChange={(value: string) => {
+                    setSelectedBrand(value);
+                    // After selecting a different brand, refresh specialties for that brand
+                    void (async () => { await refetchSpecialties(); })();
+                  }}
+                >
+                  {brandOptions.map((b) => (
+                    <Select.Item key={b} value={b}>{brandLabelMap[b] || b}</Select.Item>
+                  ))}
+                </Select>
+                <Button icon={<FeatherSave />} onClick={() => { void handleSaveChanges(); }}>
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+            <div className="flex w-full flex-col items-start gap-4">
+              <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
+                <Alert
+                  title="Set your rates and session durations"
+                  description="Configure your rates and available durations for each specialty and category. "
+                  actions={<IconButton icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} />}
+                />
+                <div className="w-full border-b border-solid border-neutral-border pb-3">
+                  <div className="text-body-bold font-body-bold text-default-font">
+                    Specialties for {brandLabelMap[selectedBrand] || selectedBrand}
+                  </div>
+                <div className="hidden md:grid w-full grid-cols-[2fr_1fr_1fr_auto] gap-x-8 mt-2 text-caption font-caption text-subtext-color">
+                  <span className="text-left">Specialty</span>
+                  <span className="text-left">Duration</span>
+                  <span className="text-left">Rate</span>
+                  <span className="text-right">Actions</span>
+                </div>
+                </div>
+                <div className="flex w-full flex-col items-start gap-6">
+                  {groupedSpecs.map((group) => (
+                    <div key={group.parent} className="w-full">
+                      <div className="flex items-center py-2">
+                        <div className="flex items-center gap-2">
+                          {editingParent === group.parent ? (
+                            <>
+                              <TextField className="h-auto w-56" label="" helpText="">
+                                <TextField.Input
+                                  placeholder="Group name"
+                                  value={newParentName}
+                                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewParentName(e.target.value)}
+                                />
+                              </TextField>
+                              <Button size="small" icon={<FeatherSave />} onClick={() => { void saveEditParent(group.parent); }}>
+                                Save
+                              </Button>
+                              <Button size="small" variant="neutral-secondary" icon={<FeatherX />} onClick={cancelEditParent}>
+                                Cancel
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-body-bold font-body-bold text-default-font">{group.parent}</span>
+                              <IconButton
+                                icon={<FeatherEdit />}
+                                onClick={() => startEditParent(group.parent)}
+                                aria-label={`Edit ${group.parent}`}
+                              />
+                              <Button
+                                size="small"
+                                variant="neutral-secondary"
+                                icon={<FeatherPlus />}
+                                onClick={() => startAddVariant(group.parent)}
+                              >
+                                Add variant
+                              </Button>
+                              <Button
+                                size="small"
+                                variant="neutral-secondary"
+                                icon={<FeatherTrash />}
+                                onClick={() => { void handleDeleteParent(group.parent); }}
+                              >
+                                Delete group
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex w-full flex-col items-start gap-3">
+                        {group.items.map(({ row, index, variant }) => (
+                          <div key={`${row.specialty}-${index}`} className="grid w-full grid-cols-[2fr_1fr_1fr_auto] gap-x-8 items-center py-2">
+                            {/* Name column */}
+                            <div className="flex items-center gap-2">
+                              {editingIdx === index ? (
+                                <>
+                                  <TextField className="h-auto" label="" helpText="">
+                                    <TextField.Input
+                                      placeholder="Variant name"
+                                      value={editingName}
+                                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingName(e.target.value)}
+                                    />
+                                  </TextField>
+                                  <Button size="small" icon={<FeatherSave />} onClick={() => saveEditSpecialty(index)}>
+                                    Save
+                                  </Button>
+                                  <Button size="small" variant="neutral-secondary" icon={<FeatherX />} onClick={cancelEditSpecialty}>
+                                    Cancel
+                                  </Button>
+                                </>
+                              ) : (
+                                <>
+                                  <Badge>{variant}</Badge>
+                                  <IconButton
+                                    icon={<FeatherEdit />}
+                                    onClick={() => startEditSpecialty(index)}
+                                    aria-label={`Edit ${variant}`}
+                                  />
+                                </>
+                              )}
+                            </div>
+
+                            {/* Duration column */}
+                            <div>
+                              <Select
+                                className="h-auto w-full"
+                                label=""
+                                placeholder="Duration"
+                                helpText=""
+                                value={durations[index] == null ? "none" : String(durations[index])}
+                                onValueChange={(value: string) => {
+                                  setDurations(d => {
+                                    const next = [...d];
+                                    next[index] = value === "none" ? null : Number(value);
+                                    return next;
+                                  });
+                                  if (value === "none") {
+                                    setRates(r => {
+                                      const next = [...r];
+                                      next[index] = "";
+                                      return next;
+                                    });
+                                  }
+                                }}
+                              >
+                                <Select.Item value="none">None</Select.Item>
+                                {DURATION_OPTIONS.map((opt) => (
+                                  <Select.Item key={opt.value} value={String(opt.value)}>{opt.label}</Select.Item>
+                                ))}
+                              </Select>
+                            </div>
+
+                            {/* Rate column */}
+                            <div>
+                              <TextField className="h-auto w-full" label="" helpText="" icon={<FeatherDollarSign />}>
+                                <TextField.Input
+                                  placeholder="0.00"
+                                  value={rates[index] ?? ""}
+                                  disabled={durations[index] == null}
+                                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                    const v = event.target.value;
+                                    setRates(r => {
+                                      const next = [...r];
+                                      next[index] = v;
+                                      return next;
+                                    });
+                                  }}
+                                />
+                              </TextField>
+                            </div>
+
+                            {/* Actions column */}
+                            <div className="hidden md:flex items-center justify-end">
+                              {(() => {
+                                const pos = group.items.findIndex(it => it.index === index);
+                                const last = group.items.length - 1;
+                                return (
+                                  <div className="flex items-center gap-2">
+                                    <IconButton
+                                      icon={<FeatherArrowUp />}
+                                      onClick={() => { void moveVariant(index, "up"); }}
+                                      aria-label={`Move ${variant} up`}
+                                      disabled={pos <= 0}
+                                    />
+                                    <IconButton
+                                      icon={<FeatherArrowDown />}
+                                      onClick={() => { void moveVariant(index, "down"); }}
+                                      aria-label={`Move ${variant} down`}
+                                      disabled={pos >= last}
+                                    />
+                                    <IconButton
+                                      icon={<FeatherCopy />}
+                                      onClick={() => { void handleCopySpecialty(index); }}
+                                      aria-label={`Copy ${variant}`}
+                                    />
+                                    <IconButton
+                                      icon={<FeatherTrash />}
+                                      onClick={() => { void handleDeleteSpecialty(index); }}
+                                      aria-label={`Delete ${variant}`}
+                                    />
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      {addingParent === group.parent ? (
+                        <div className="grid w-full grid-cols-[2fr_1fr_1fr_auto] gap-x-8 items-center pt-2">
+                          {/* Name column */}
+                          <div>
+                            <TextField className="h-auto w-full" label="" helpText="">
+                              <TextField.Input
+                                placeholder="Variant name"
+                                value={addVariantName}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddVariantName(e.target.value)}
+                              />
+                            </TextField>
+                          </div>
+                          {/* Duration column */}
+                          <div>
+                            <Select
+                              className="h-auto w-full"
+                              label=""
+                              placeholder="Duration"
+                              helpText=""
+                              value={addVariantDuration}
+                              onValueChange={(value: string) => setAddVariantDuration(value)}
+                            >
+                              <Select.Item value="none">Select duration</Select.Item>
+                              {DURATION_OPTIONS.map((opt) => (
+                                <Select.Item key={opt.value} value={String(opt.value)}>{opt.label}</Select.Item>
+                              ))}
+                            </Select>
+                          </div>
+                          {/* Rate column */}
+                          <div>
+                            <TextField className="h-auto w-full" label="" helpText="" icon={<FeatherDollarSign />}>
+                              <TextField.Input
+                                placeholder="0.00"
+                                value={addVariantRate}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddVariantRate(e.target.value)}
+                              />
+                            </TextField>
+                          </div>
+                          {/* Actions column */}
+                          <div className="hidden md:flex items-center justify-end">
+                            <Button
+                              size="small"
+                              variant="brand-secondary"
+                              onClick={() => { void addVariantToParent(group.parent); }}
+                              disabled={!addVariantName.trim() || addVariantDuration === "none" || !Number.isFinite(Number(addVariantRate))}
+                            >
+                              Add
+                            </Button>
+                            <Button
+                              size="small"
+                              variant="neutral-secondary"
+                              onClick={cancelAddVariant}
+                              className="ml-2"
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+                <div className="flex w-full items-center gap-4 py-2">
+                  <div className="flex w-48 flex-none items-center gap-2">
+                    <TextField className="h-auto w-full" label="" helpText="">
+                      <TextField.Input
+                        placeholder="Parent (e.g., Hair)"
+                        value={newSpecParent}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSpecParent(e.target.value)}
+                      />
+                    </TextField>
+                  </div>
+                  <div className="flex items-center gap-4 grow">
+                    <div className="flex flex-col items-start gap-2 w-full">
+                      <TextField className="h-auto w-full" label="" helpText="">
+                        <TextField.Input
+                          placeholder="Variant (e.g., Styling)"
+                          value={newSpecVariant}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSpecVariant(e.target.value)}
+                        />
+                      </TextField>
+                    </div>
+                    <div className="flex flex-col items-start gap-2 w-full">
+                      <Select
+                        className="h-auto w-full"
+                        label=""
+                        placeholder="Duration"
+                        helpText=""
+                        value={newSpecDuration}
+                        onValueChange={(value: string) => setNewSpecDuration(value)}
+                      >
+                        <Select.Item value="none">Select duration</Select.Item>
+                        {DURATION_OPTIONS.map((opt) => (
+                          <Select.Item key={opt.value} value={String(opt.value)}>{opt.label}</Select.Item>
+                        ))}
+                      </Select>
+                    </div>
+                    <div className="flex flex-col items-start gap-2 w-full">
+                      <TextField className="h-auto w-full" label="" helpText="" icon={<FeatherDollarSign />}>
+                        <TextField.Input
+                          placeholder="0.00"
+                          value={newSpecRate}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSpecRate(e.target.value)}
+                        />
+                      </TextField>
+                    </div>
+                    <div className="flex items-center">
+                      <Button
+                        variant="brand-secondary"
+                        icon={<FeatherPlus />}
+                        onClick={() => { void handleAddSpecialty(); }}
+                        disabled={!newSpecParent.trim() || !newSpecVariant.trim() || newSpecDuration === "none" || !Number.isFinite(Number(newSpecRate))}
+                      >
+                        Add specialty
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-6">
+                  <span className="text-body-bold font-body-bold text-default-font">Default Session Length</span>
+                </div>
+                <Select
+                  className="h-auto w-48 flex-none"
+                  label=""
+                  placeholder="Select default"
+                  helpText=""
+                  value={defaultSessionLength == null ? "none" : String(defaultSessionLength)}
+                  onValueChange={(value: string) => {
+                    setPrevDefaultSessionLength(defaultSessionLength);
+                    if (value === "none") {
+                      setPendingDefault(null);
+                      setConfirmOpen(true);
+                      return;
+                    }
+                    const nextVal = Number(value);
+                    if (!Number.isFinite(nextVal)) return;
+                    setPendingDefault(nextVal);
+                    setConfirmOpen(true);
+                  }}
+                >
+                  <Select.Item value="none">None</Select.Item>
+                  {DURATION_OPTIONS.map((opt) => (
+                    <Select.Item key={opt.value} value={String(opt.value)}>{opt.label}</Select.Item>
+                  ))}
+                </Select>
+                {confirmOpen ? (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+                    <div className="w-full max-w-md rounded-lg border border-neutral-border bg-default-background p-6 shadow-2xl">
+                      <span className="block text-heading-3 font-heading-3 text-default-font mb-2">Overwrite durations?</span>
+                      <p className="text-body text-subtext-color mb-4">
+                        Are you sure you want to overwrite all specialties to{" "}
+                        <span className="font-semibold text-default-font">
+                          {pendingDefault != null ? formatDurationLabel(pendingDefault) : "—"}
+                        </span>
+                        ?
+                      </p>
+                      <div className="flex items-center justify-end gap-2">
+                        <Button variant="neutral-secondary" onClick={() => { setConfirmOpen(false); setPendingDefault(null); }}>
+                          No
+                        </Button>
+                        <Button onClick={() => {
+                          if (pendingDefault != null) {
+                            setDefaultSessionLength(pendingDefault);
+                            setDurations(Array.from({ length: specRows.length }, () => pendingDefault));
+                            // keep existing rates as-is when a duration is set globally
+                          } else {
+                            setDefaultSessionLength(null);
+                            setDurations(Array.from({ length: specRows.length }, () => null));
+                            setRates(Array.from({ length: specRows.length }, () => ""));
+                          }
+                          setConfirmOpen(false);
+                          setPendingDefault(null);
+                        }}>
+                          Yes, overwrite
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex w-full flex-col items-start gap-4">
+            <div className="flex w-full items-center justify-between">
+              <span className="text-heading-3 font-heading-3 text-default-font">Calendar Integration</span>
+              <Button variant="brand-secondary" icon={<FeatherCalendar />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                Sync Calendar
+              </Button>
+            </div>
+            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
+              <div className="flex w-full items-center gap-4">
+                <IconWithBackground size="large" icon={<FeatherCalendar />} square={true} />
+                <div className="flex flex-col items-start gap-1 grow">
+                  <span className="text-heading-3 font-heading-3 text-default-font">Google Calendar</span>
+                  <span className="text-body font-body text-subtext-color">Manage your coaching availability</span>
+                </div>
+                <Badge variant="success" icon={<FeatherCheck />}>
+                  Connected
+                </Badge>
+              </div>
+              <Alert
+                title="Your calendar is synced"
+                description="Players can now book sessions during your available time slots"
+                actions={<IconButton icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} />}
+              />
+              <div className="flex w-full items-center gap-4" />
+            </div>
+          </div>
+
+          <div className="flex w-full flex-col items-start gap-4">
+            <div className="flex w-full items-center justify-between">
+              <span className="text-heading-3 font-heading-3 text-default-font">Recent Sessions</span>
+              <div className="flex items-center gap-2">
+                <Button variant="neutral-secondary" icon={<FeatherSearch />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                  Search Recordings
+                </Button>
+                <Button variant="neutral-secondary" icon={<FeatherFilter />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                  Filter
+                </Button>
+                <Button variant="neutral-secondary" onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                  View all
+                </Button>
+              </div>
+            </div>
+            <Table
+              header={
+                <Table.HeaderRow>
+                  <Table.HeaderCell>Session Date</Table.HeaderCell>
+                  <Table.HeaderCell>Player</Table.HeaderCell>
+                  <Table.HeaderCell>Game</Table.HeaderCell>
+                  <Table.HeaderCell>Duration</Table.HeaderCell>
+                  <Table.HeaderCell>Status</Table.HeaderCell>
+                  <Table.HeaderCell>Rating</Table.HeaderCell>
+                  <Table.HeaderCell>Earnings</Table.HeaderCell>
+                  <Table.HeaderCell>Actions</Table.HeaderCell>
+                </Table.HeaderRow>
+              }
+            >
+              <Table.Row>
+                <Table.Cell>
+                  <span className="text-body font-body text-default-font">Mar 15, 2024</span>
+                </Table.Cell>
+                <Table.Cell>
+                  <div className="flex items-center gap-2">
+                    <Avatar size="small" image="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=800&q=80">
+                      J
+                    </Avatar>
+                    <span className="text-body font-body text-default-font">John Smith</span>
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge>{specialties[0] ?? "Specialty"}</Badge>
+                </Table.Cell>
+                <Table.Cell>
+                  <span className="text-body font-body text-default-font">
+                    {defaultSessionLength != null ? formatDurationLabel(defaultSessionLength) : "—"}
+                  </span>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge variant="success" icon={<FeatherCheck />}>
+                    Complete
+                  </Badge>
+                </Table.Cell>
+                <Table.Cell>
+                  <Badge variant="neutral">Pending</Badge>
+                </Table.Cell>
+                <Table.Cell>
+                  <span className="text-body font-body text-brand-primary">$45.00</span>
+                </Table.Cell>
+                <Table.Cell>
+                  <div className="flex items-center gap-2">
+                    <Button variant="neutral-secondary" size="small" icon={<FeatherPlay />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                      Watch
+                    </Button>
+                    <Button variant="neutral-secondary" size="small" icon={<FeatherFlag />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                      Report
+                    </Button>
+                  </div>
+                </Table.Cell>
+              </Table.Row>
+            </Table>
+          </div>
+
+          <div className="flex w-full flex-col items-start gap-4">
+            <div className="flex w-full items-center justify-between">
+              <span className="text-heading-3 font-heading-3 text-default-font">Support &amp; Help</span>
+            </div>
+            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
+              <div className="flex w-full items-center gap-4">
+                <IconWithBackground size="large" icon={<FeatherHelpCircle />} square={true} />
+                <div className="flex flex-col items-start gap-1 grow">
+                  <span className="text-heading-3 font-heading-3 text-default-font">Need assistance?</span>
+                  <span className="text-body font-body text-subtext-color">Get help with your coaching account or report issues</span>
+                </div>
+              </div>
+              <div className="flex w-full flex-wrap items-start gap-4">
+                <Button variant="neutral-primary" icon={<FeatherTicket />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                  Submit a ticket
+                </Button>
+                <Button variant="neutral-primary" icon={<FeatherBook />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                  Coach Code of Conduct
+                </Button>
+                <Button variant="neutral-primary" icon={<FeatherHelpCircle />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                  FAQs
+                </Button>
+                <Button variant="neutral-primary" icon={<FeatherFlag />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                  Report a player
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </DefaultPageLayout>
   );
 }
-
-export default CoachPage;
