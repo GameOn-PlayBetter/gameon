@@ -1,8 +1,4 @@
 "use client";
-/*
- * Documentation:
- * Badge — https://app.subframe.com/2dcb043d3f5e/library?component=Badge_97bdb082-1124-4dd7-a335-b14b822d0157
- */
 
 import React from "react";
 import * as SubframeUtils from "../utils";
@@ -14,6 +10,7 @@ interface BadgeRootProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   iconRight?: React.ReactNode;
   className?: string;
+  size?: "sm" | "md" | "lg";
 }
 
 const BadgeRoot = React.forwardRef<HTMLElement, BadgeRootProps>(
@@ -24,14 +21,21 @@ const BadgeRoot = React.forwardRef<HTMLElement, BadgeRootProps>(
       children,
       iconRight = null,
       className,
+      size = "md",
       ...otherProps
     }: BadgeRootProps,
     ref
   ) {
+    const sizeMap = {
+      sm: "h-5 px-2 text-xs",
+      md: "h-6 px-3 text-sm",
+      lg: "h-8 px-4 text-base",
+    };
+
     return (
       <div
         className={SubframeUtils.twClassNames(
-          "group/97bdb082 flex h-6 items-center gap-1 rounded-md border border-solid border-brand-100 bg-brand-100 px-2",
+          `group/97bdb082 flex items-center gap-1 rounded-md border border-solid border-brand-100 bg-brand-100 ${sizeMap[size]}`,
           {
             "border border-solid border-success-100 bg-success-100":
               variant === "success",
@@ -65,7 +69,7 @@ const BadgeRoot = React.forwardRef<HTMLElement, BadgeRootProps>(
         {children ? (
           <span
             className={SubframeUtils.twClassNames(
-              "whitespace-nowrap text-caption font-caption text-brand-800",
+              `whitespace-nowrap font-caption text-brand-800 ${sizeMap[size].split(' ').find(c => c.startsWith('text-'))}`,
               {
                 "text-success-800": variant === "success",
                 "text-warning-800": variant === "warning",
