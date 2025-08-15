@@ -111,6 +111,33 @@ const brands: Brand[] = [
     variant: "neutral",
     live: true,
   },
+  {
+    name: "LawyerUp",
+    badge: "Legal",
+    description: "On‑demand legal guidance and document prep",
+    image: "images/lawyerup/logo.png",
+    href: "lawyerup",
+    variant: "neutral",
+    live: false,
+  },
+  {
+    name: "InfluenceOn",
+    badge: "Creators",
+    description: "Grow, manage, and monetize your influence",
+    image: "images/influenceon/logo.png",
+    href: "influenceon",
+    variant: "neutral",
+    live: false,
+  },
+  {
+    name: "Suggest a Brand",
+    badge: "Feedback",
+    description: "Tell us what you want us to build next — brand ideas welcome.",
+    image: "images/skillery/feedback.jpg",
+    href: "/feedback",
+    variant: "neutral",
+    live: true,
+  },
 ];
 
 
