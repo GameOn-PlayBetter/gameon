@@ -137,7 +137,17 @@ export default function CoachPage() {
   const [addVariantDuration, setAddVariantDuration] = useState<string>("none");
   const [addVariantRate, setAddVariantRate] = useState<string>("");
   const [selectedBrand, setSelectedBrand] = useState<string>(brandKey);
-  const brandOptions = Object.keys(brands || {});
+  // Keep the brand dropdown in sync with the URL segment. When the route changes
+  // (e.g., /fiton/coach -> /gameon/coach), reset the selected brand and clear
+  // any staged duration/rate edits to avoid cross-brand bleed/overwrites.
+  useEffect(() => {
+    setSelectedBrand(brandKey);
+    // Clear staged edits; the prefill effect will repopulate after refetch
+    setDurations([]);
+    setRates([]);
+    void (async () => { await refetchSpecialties(); })();
+  }, [brandKey]);
+  const brandOptions = Object.keys(brands || {}).filter(b => b !== "skillery");
   const brandLabelMap: Record<string, string> = {
     gameon: "GameOn",
     styleon: "StyleOn",
@@ -175,7 +185,7 @@ export default function CoachPage() {
     };
   }, [supabase]);
 
-  // fetch coach by auth_user_id (+ brand)
+  // fetch coach by auth_user_id (no brand filter)
   useEffect(() => {
     if (!authChecked) return;
     let cancelled = false;
@@ -188,15 +198,12 @@ export default function CoachPage() {
       }
 
       setLoadingCoach(true);
-      let query = supabase
+      const { data, error } = await supabase
         .from("coaches")
         .select("id, display_name, avatar_url, languages, bookings_count, brand, specialty")
         .eq("auth_user_id", userId)
-        .limit(1) as any;
-
-      if (brandKey) query = query.ilike("brand", brandKey);
-
-      const { data, error } = await query.maybeSingle();
+        .limit(1)
+        .maybeSingle();
 
       if (!cancelled) {
         if (error) {
@@ -643,7 +650,7 @@ export default function CoachPage() {
     await refetchSpecialties();
   }
 
-  // guards
+  // BRAND-STRICT GUARDS: require real auth + a coach row for THIS brand before rendering anything
   if (!authChecked) {
     return (
       <DefaultPageLayout style={{ backgroundColor }}>
@@ -652,14 +659,42 @@ export default function CoachPage() {
     );
   }
 
-  if (!userId && sessionRole !== "coach") {
-    const next = `/${brandKey}/coach`;
+  const next = `/${brandKey}/coach`;
+
+  // Not logged in at all → prompt login
+  if (!userId) {
     return (
       <DefaultPageLayout style={{ backgroundColor }}>
         <div className="p-8">
-          <p className="text-default-font mb-4">You must be logged in to view your coach dashboard.</p>
+          <p className="text-default-font mb-4">
+            You must be logged in to view your {brandLabelMap[brandKey] ?? brandKey} coach dashboard.
+          </p>
           <Link href={`/login?next=${encodeURIComponent(next)}`}>
             <Button>Log in</Button>
+          </Link>
+        </div>
+      </DefaultPageLayout>
+    );
+  }
+
+  // We have a user; ensure they are a coach for THIS brand
+  if (loadingCoach) {
+    return (
+      <DefaultPageLayout style={{ backgroundColor }}>
+        <div className="p-8 text-subtext-color">Checking coach access…</div>
+      </DefaultPageLayout>
+    );
+  }
+
+  if (!coach?.id) {
+    return (
+      <DefaultPageLayout style={{ backgroundColor }}>
+        <div className="p-8">
+          <p className="text-default-font mb-4">
+            You’re logged in, but this account isn’t set up as a coach yet.
+          </p>
+          <Link href={`/login?next=${encodeURIComponent(next)}`}>
+            <Button>Switch account</Button>
           </Link>
         </div>
       </DefaultPageLayout>
@@ -885,7 +920,8 @@ export default function CoachPage() {
                   value={selectedBrand}
                   onValueChange={(value: string) => {
                     setSelectedBrand(value);
-                    // After selecting a different brand, refresh specialties for that brand
+                    setDurations([]);
+                    setRates([]);
                     void (async () => { await refetchSpecialties(); })();
                   }}
                 >
