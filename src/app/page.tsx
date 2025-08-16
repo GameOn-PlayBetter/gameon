@@ -134,7 +134,7 @@ const brands: Brand[] = [
     badge: "Feedback",
     description: "Tell us what you want us to build next — brand ideas welcome.",
     image: "images/skillery/feedback.jpg",
-    href: "/feedback",
+    href: "https://docs.google.com/forms/d/e/1FAIpQLScjMqsnU1zRFq8w8Nvb_xFm8wYT8mlYTDGUaGbUMKDx81prag/viewform?usp=dialog",
     variant: "neutral",
     live: true,
   },
