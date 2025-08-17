@@ -15,8 +15,7 @@ import {
 } from "@subframe/core";
 
 
-import { siX } from "simple-icons/icons";
-import { siBluesky } from "simple-icons/icons";
+import { siX, siBluesky, siDiscord } from "simple-icons/icons";
 
 type BoldFooterRootProps = {
   brandName?: string;
@@ -42,6 +41,12 @@ const IconBlueSky: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
+const IconDiscord: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" className="w-[20px] h-[20px]" {...props}>
+    <path d={siDiscord.path} />
+  </svg>
+);
+
 const FeatherIconsMap: Record<string, React.ElementType> = {
   instagram: FeatherInstagram,
   twitter: IconX,
@@ -49,7 +54,7 @@ const FeatherIconsMap: Record<string, React.ElementType> = {
   bluesky: IconBlueSky,
   linkedin: FeatherLinkedin,
   tiktok: FeatherTwitch,
-  discord: FeatherMessageCircle,
+  discord: IconDiscord,
 };
 
 // 🔹 Neon pulse animation for social icons
@@ -109,6 +114,13 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
       brandSocials.length > 0
         ? brandSocials
         : (isSkillery ? fallbackSkillerySocials : []);
+
+    const globalDiscord = { icon: "discord", href: "https://discord.gg/FpydNne7" };
+    const socialsWithDiscord = (
+      effectiveSocials.some(s => (s.icon || "").toLowerCase() === "discord")
+        ? effectiveSocials
+        : [...effectiveSocials, globalDiscord]
+    );
 
     // ✅ Prefer tokens first, then colors
     const palette = (theme?.colors as any) || {};
@@ -208,7 +220,7 @@ const formatHref = (href: string) => {
           {/* Right: Neon Glowing Social Icons */}
           <div className="flex w-full md:w-1/3 justify-start pl-4">
             <div className="flex items-center gap-6">
-              {effectiveSocials.map((social) => {
+              {socialsWithDiscord.map((social) => {
                 const Icon = FeatherIconsMap[social.icon];
                 return Icon ? (
                   <a

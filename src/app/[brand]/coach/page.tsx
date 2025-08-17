@@ -118,11 +118,51 @@ export default function CoachPage() {
 
   const [durations, setDurations] = useState<Array<number | null>>([]);
   const [rates, setRates] = useState<Array<string>>([]);
+  const [specRows, setSpecRows] = useState<CoachSpecialtyRow[]>([]);
+
+  // Compute a baseline (durations/rates) from fetched spec rows and detect if form is dirty
+  const baseline = useMemo(() => {
+    const pickFromRow = (row: CoachSpecialtyRow): { dur: number | null; rate: string } => {
+      const pairs: Array<[number, number | null]> = [
+        [15, row.minutes_15],
+        [30, row.minutes_30],
+        [60, row.minutes_60],
+        [120, row.minutes_120],
+      ];
+      for (const [mins, val] of pairs) {
+        if (val != null) return { dur: mins, rate: String(val) };
+      }
+      if (row.tokens_per_hour != null) {
+        return { dur: 60, rate: String(row.tokens_per_hour) };
+      }
+      return { dur: null, rate: "" };
+    };
+
+    const durs: Array<number | null> = [];
+    const rts: string[] = [];
+    for (let i = 0; i < specRows.length; i++) {
+      const picked = pickFromRow(specRows[i]);
+      durs.push(picked.dur);
+      rts.push(picked.rate);
+    }
+    return { durs, rts };
+  }, [specRows]);
+
+  const isDirty = useMemo(() => {
+    if (specRows.length === 0) return false; // nothing to save
+    if (durations.length !== specRows.length || rates.length !== specRows.length) return true;
+    for (let i = 0; i < specRows.length; i++) {
+      if (durations[i] !== baseline.durs[i]) return true;
+      const a = String(rates[i] ?? "").trim();
+      const b = String(baseline.rts[i] ?? "").trim();
+      if (a !== b) return true;
+    }
+    return false;
+  }, [durations, rates, baseline, specRows.length]);
   const [defaultSessionLength, setDefaultSessionLength] = useState<number | null>(null);
   const [prevDefaultSessionLength, setPrevDefaultSessionLength] = useState<number | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingDefault, setPendingDefault] = useState<number | null>(null);
-  const [specRows, setSpecRows] = useState<CoachSpecialtyRow[]>([]);
   const [newSpecParent, setNewSpecParent] = useState("");
   const [newSpecVariant, setNewSpecVariant] = useState("");
   const [newSpecDuration, setNewSpecDuration] = useState<string>("none");
@@ -136,7 +176,19 @@ export default function CoachPage() {
   const [addVariantName, setAddVariantName] = useState<string>("");
   const [addVariantDuration, setAddVariantDuration] = useState<string>("none");
   const [addVariantRate, setAddVariantRate] = useState<string>("");
+  // Global composer for adding a new Group + first Offering
+  const [showAddComposer, setShowAddComposer] = useState<boolean>(false);
   const [selectedBrand, setSelectedBrand] = useState<string>(brandKey);
+  // Toast state and helper
+  type Toast = { id: number; message: string; variant?: "success" | "error" | "info" };
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  function addToast(message: string, variant: Toast["variant"] = "info") {
+    const id = Date.now() + Math.random();
+    setToasts((ts) => [...ts, { id, message, variant }]);
+    setTimeout(() => {
+      setToasts((ts) => ts.filter((t) => t.id !== id));
+    }, 3000);
+  }
   // Keep the brand dropdown in sync with the URL segment. When the route changes
   // (e.g., /fiton/coach -> /gameon/coach), reset the selected brand and clear
   // any staged duration/rate edits to avoid cross-brand bleed/overwrites.
@@ -145,6 +197,7 @@ export default function CoachPage() {
     // Clear staged edits; the prefill effect will repopulate after refetch
     setDurations([]);
     setRates([]);
+    setShowAddComposer(false);
     void (async () => { await refetchSpecialties(); })();
   }, [brandKey]);
   const brandOptions = Object.keys(brands || {}).filter(b => b !== "skillery");
@@ -159,6 +212,19 @@ export default function CoachPage() {
     codeon: "CodeOn",
     cookon: "CookOn",
     moneyon: "MoneyOn",
+  };
+
+  // Brand-aware examples for Group/Offering placeholders
+  const exampleMap: Record<string, { group: string; offering: string }> = {
+    gameon:  { group: "Dead by Daylight", offering: "Co-Op Play" },
+    fiton:   { group: "Yoga",             offering: "1:1 Coaching" },
+    styleon: { group: "Hair",             offering: "Styling" },
+    jamon:   { group: "Guitar",           offering: "Beginner Lessons" },
+    learnon: { group: "Algebra",          offering: "Homework Help" },
+    growon:  { group: "Tomatoes",         offering: "Planting Guide" },
+    codeon:  { group: "React",            offering: "Code Review" },
+    cookon:  { group: "Italian",          offering: "Pasta Workshop" },
+    moneyon: { group: "Budgeting",        offering: "1:1 Coaching" },
   };
 
   // auth
@@ -335,14 +401,17 @@ export default function CoachPage() {
         .eq("specialty", row.specialty);
       if (error) {
         console.error("rename parent error:", error.message, { row });
+        addToast("Couldn't rename group", "error");
         return;
       }
     }
+    addToast("Group renamed", "success");
     cancelEditParent();
     await refetchSpecialties();
   }
 
   function startAddVariant(parent: string) {
+    setShowAddComposer(false);
     setAddingParent(parent);
     setAddVariantName("");
     setAddVariantDuration("none");
@@ -384,8 +453,10 @@ export default function CoachPage() {
     const { error } = await supabase.from("coach_specialties").insert(payload);
     if (error) {
       console.error("add variant insert error:", error.message);
+      addToast("Couldn't add offering", "error");
       return;
     }
+    addToast("Offering added", "success");
     cancelAddVariant();
     await refetchSpecialties();
   }
@@ -430,6 +501,7 @@ export default function CoachPage() {
       .eq("specialty", a.specialty);
     if (err1) {
       console.error("reorder update error (first)", err1.message);
+      addToast("Couldn't update order", "error");
       return;
     }
     const { error: err2 } = await supabase
@@ -440,8 +512,10 @@ export default function CoachPage() {
       .eq("specialty", b.specialty);
     if (err2) {
       console.error("reorder update error (second)", err2.message);
+      addToast("Couldn't update order", "error");
       return;
     }
+    addToast("Order updated", "success");
     await refetchSpecialties();
   }
 
@@ -486,8 +560,10 @@ export default function CoachPage() {
     const { error } = await supabase.from("coach_specialties").insert(payload);
     if (error) {
       console.error("copy specialty insert error:", error.message);
+      addToast("Couldn't copy offering", "error");
       return;
     }
+    addToast("Offering copied", "success");
     await refetchSpecialties();
   }
 
@@ -532,13 +608,16 @@ export default function CoachPage() {
 
     if (error) {
       console.error("add specialty insert error:", error.message);
+      addToast("Couldn't add specialty", "error");
       return;
     }
 
+    addToast("Specialty added", "success");
     setNewSpecParent("");
     setNewSpecVariant("");
     setNewSpecDuration("none");
     setNewSpecRate("");
+    setShowAddComposer(false);
     await refetchSpecialties();
   }
 
@@ -573,9 +652,11 @@ export default function CoachPage() {
 
     if (error) {
       console.error("rename specialty error:", error.message);
+      addToast("Couldn't rename offering", "error");
       return;
     }
 
+    addToast("Offering renamed", "success");
     cancelEditSpecialty();
     await refetchSpecialties();
   }
@@ -593,8 +674,10 @@ export default function CoachPage() {
 
     if (error) {
       console.error("delete parent specialties error:", error.message);
+      addToast("Couldn't delete group", "error");
       return;
     }
+    addToast("Group deleted", "success");
     await refetchSpecialties();
   }
 
@@ -614,14 +697,17 @@ export default function CoachPage() {
 
     if (error) {
       console.error("delete specialty error:", error.message);
+      addToast("Couldn't delete offering", "error");
       return;
     }
 
+    addToast("Offering deleted", "success");
     await refetchSpecialties();
   }
 
   async function handleSaveChanges() {
     if (!coach?.id) return;
+    let updatedCount = 0;
 
     for (let i = 0; i < specRows.length; i++) {
       const dur = durations[i];
@@ -644,7 +730,15 @@ export default function CoachPage() {
         .eq("specialty", row.specialty);
       if (error) {
         console.error("save patch error:", error.message, { i, row });
+      } else {
+        updatedCount += 1;
       }
+    }
+
+    if (updatedCount === 0) {
+      addToast("Nothing to save", "info");
+    } else {
+      addToast("Changes saved", "success");
     }
 
     await refetchSpecialties();
@@ -868,7 +962,7 @@ export default function CoachPage() {
                       Pending
                     </Badge>
                   </div>
-                  <span className="text-body font-body text-subtext-color">60 min Speedrun coaching session</span>
+                  <span className="text-body font-body text-subtext-color">60 min coaching session</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button variant="neutral-secondary" icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
@@ -894,7 +988,7 @@ export default function CoachPage() {
                       Pending
                     </Badge>
                   </div>
-                  <span className="text-body font-body text-subtext-color">60 min Speedrun coaching session</span>
+                  <span className="text-body font-body text-subtext-color">60 min coaching session</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button variant="neutral-secondary" icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
@@ -929,7 +1023,22 @@ export default function CoachPage() {
                     <Select.Item key={b} value={b}>{brandLabelMap[b] || b}</Select.Item>
                   ))}
                 </Select>
-                <Button icon={<FeatherSave />} onClick={() => { void handleSaveChanges(); }}>
+                <Button
+                  variant="brand-secondary"
+                  icon={<FeatherPlus />}
+                  onClick={() => {
+                    setShowAddComposer((s) => !s);
+                    if (!showAddComposer) {
+                      setNewSpecParent("");
+                      setNewSpecVariant("");
+                      setNewSpecDuration("none");
+                      setNewSpecRate("");
+                    }
+                  }}
+                >
+                  {showAddComposer ? "Close" : "+ Add New Group"}
+                </Button>
+                <Button icon={<FeatherSave />} onClick={() => { void handleSaveChanges(); }} disabled={!isDirty}>
                   Save Changes
                 </Button>
               </div>
@@ -938,21 +1047,90 @@ export default function CoachPage() {
               <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
                 <Alert
                   title="Set your rates and session durations"
-                  description="Configure your rates and available durations for each specialty and category. "
+                  description="Configure your rates and durations. Create one Group (e.g., Dead by Daylight) and add multiple Offerings (e.g., Speedrun, Build, Co‑Op) under it."
                   actions={<IconButton icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} />}
                 />
                 <div className="w-full border-b border-solid border-neutral-border pb-3">
                   <div className="text-body-bold font-body-bold text-default-font">
                     Specialties for {brandLabelMap[selectedBrand] || selectedBrand}
                   </div>
-                <div className="hidden md:grid w-full grid-cols-[2fr_1fr_1fr_auto] gap-x-8 mt-2 text-caption font-caption text-subtext-color">
-                  <span className="text-left">Specialty</span>
-                  <span className="text-left">Duration</span>
-                  <span className="text-left">Rate</span>
-                  <span className="text-right">Actions</span>
+                <div className="hidden md:grid w-full grid-cols-[220px_260px_160px_140px_auto] gap-x-8 mt-2 text-body-bold font-body-bold text-default-font">
+                  <div className="pl-2">Group</div>
+                  <div className="pl-2">Offering</div>
+                  <div className="pl-2">Duration</div>
+                  <div className="pl-2">Rate</div>
+                  <div className="text-right pr-2">Actions</div>
                 </div>
                 </div>
                 <div className="flex w-full flex-col items-start gap-6">
+                  {showAddComposer ? (
+                    <div className="grid w-full grid-cols-[220px_260px_160px_140px_auto] gap-x-8 items-center py-2">
+                      {/* Col 1: Group */}
+                      <div>
+                        <TextField className="h-auto w-full" label="" helpText="">
+                          <TextField.Input
+                            placeholder={`Group (e.g., ${exampleMap[selectedBrand]?.group ?? "Category"})`}
+                            value={newSpecParent}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSpecParent(e.target.value)}
+                          />
+                        </TextField>
+                      </div>
+                      {/* Col 2: Offering */}
+                      <div>
+                        <TextField className="h-auto w-full" label="" helpText="">
+                          <TextField.Input
+                            placeholder={`Offering (e.g., ${exampleMap[selectedBrand]?.offering ?? "Service"})`}
+                            value={newSpecVariant}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSpecVariant(e.target.value)}
+                          />
+                        </TextField>
+                      </div>
+                      {/* Col 3: Duration */}
+                      <div className="max-w-full">
+                        <Select
+                          className="h-auto w-full"
+                          label=""
+                          placeholder="Duration"
+                          helpText=""
+                          value={newSpecDuration}
+                          onValueChange={(value: string) => setNewSpecDuration(value)}
+                        >
+                          <Select.Item value="none">Select duration</Select.Item>
+                          {DURATION_OPTIONS.map((opt) => (
+                            <Select.Item key={opt.value} value={String(opt.value)}>{opt.label}</Select.Item>
+                          ))}
+                        </Select>
+                      </div>
+                      {/* Col 4: Rate */}
+                      <div className="max-w-full">
+                        <TextField className="h-auto w-full" label="" helpText="" icon={<FeatherDollarSign />}>
+                          <TextField.Input
+                            placeholder="0.00"
+                            value={newSpecRate}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSpecRate(e.target.value)}
+                          />
+                        </TextField>
+                      </div>
+                      {/* Col 5: Actions */}
+                      <div className="hidden md:flex items-center justify-end">
+                        <Button
+                          variant="brand-secondary"
+                          icon={<FeatherPlus />}
+                          onClick={() => { void handleAddSpecialty(); }}
+                          disabled={!newSpecParent.trim() || !newSpecVariant.trim() || newSpecDuration === "none" || !Number.isFinite(Number(newSpecRate))}
+                        >
+                          Add group
+                        </Button>
+                        <Button
+                          variant="neutral-secondary"
+                          onClick={() => setShowAddComposer(false)}
+                          className="ml-2"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : null}
                   {groupedSpecs.map((group) => (
                     <div key={group.parent} className="w-full">
                       <div className="flex items-center py-2">
@@ -987,7 +1165,7 @@ export default function CoachPage() {
                                 icon={<FeatherPlus />}
                                 onClick={() => startAddVariant(group.parent)}
                               >
-                                Add variant
+                                Add offering
                               </Button>
                               <Button
                                 size="small"
@@ -1004,14 +1182,19 @@ export default function CoachPage() {
 
                       <div className="flex w-full flex-col items-start gap-3">
                         {group.items.map(({ row, index, variant }) => (
-                          <div key={`${row.specialty}-${index}`} className="grid w-full grid-cols-[2fr_1fr_1fr_auto] gap-x-8 items-center py-2">
-                            {/* Name column */}
+                          <div key={`${row.specialty}-${index}`} className="grid w-full grid-cols-[220px_260px_160px_140px_auto] gap-x-8 items-center py-2">
+                            {/* Col 1: Group */}
+                            <div className="text-body font-body text-default-font">
+                              {parseSpecialtyName(row.specialty).parent}
+                            </div>
+
+                            {/* Col 2: Offering (editable) */}
                             <div className="flex items-center gap-2">
                               {editingIdx === index ? (
                                 <>
                                   <TextField className="h-auto" label="" helpText="">
                                     <TextField.Input
-                                      placeholder="Variant name"
+                                      placeholder="Offering name"
                                       value={editingName}
                                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingName(e.target.value)}
                                     />
@@ -1035,8 +1218,8 @@ export default function CoachPage() {
                               )}
                             </div>
 
-                            {/* Duration column */}
-                            <div>
+                            {/* Duration column (unchanged) */}
+                            <div className="max-w-full">
                               <Select
                                 className="h-auto w-full"
                                 label=""
@@ -1065,8 +1248,8 @@ export default function CoachPage() {
                               </Select>
                             </div>
 
-                            {/* Rate column */}
-                            <div>
+                            {/* Rate column (unchanged) */}
+                            <div className="max-w-full">
                               <TextField className="h-auto w-full" label="" helpText="" icon={<FeatherDollarSign />}>
                                 <TextField.Input
                                   placeholder="0.00"
@@ -1084,7 +1267,7 @@ export default function CoachPage() {
                               </TextField>
                             </div>
 
-                            {/* Actions column */}
+                            {/* Actions column (unchanged) */}
                             <div className="hidden md:flex items-center justify-end">
                               {(() => {
                                 const pos = group.items.findIndex(it => it.index === index);
@@ -1121,19 +1304,21 @@ export default function CoachPage() {
                         ))}
                       </div>
                       {addingParent === group.parent ? (
-                        <div className="grid w-full grid-cols-[2fr_1fr_1fr_auto] gap-x-8 items-center pt-2">
-                          {/* Name column */}
+                        <div className="grid w-full grid-cols-[220px_260px_160px_140px_auto] gap-x-8 items-center pt-2">
+                          {/* Col 1: Group (static) */}
+                          <div className="text-body font-body text-default-font">{group.parent}</div>
+                          {/* Col 2: Offering */}
                           <div>
                             <TextField className="h-auto w-full" label="" helpText="">
                               <TextField.Input
-                                placeholder="Variant name"
+                                placeholder={`Offering (e.g., ${exampleMap[selectedBrand]?.offering ?? "Service"})`}
                                 value={addVariantName}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddVariantName(e.target.value)}
                               />
                             </TextField>
                           </div>
                           {/* Duration column */}
-                          <div>
+                          <div className="max-w-full">
                             <Select
                               className="h-auto w-full"
                               label=""
@@ -1149,7 +1334,7 @@ export default function CoachPage() {
                             </Select>
                           </div>
                           {/* Rate column */}
-                          <div>
+                          <div className="max-w-full">
                             <TextField className="h-auto w-full" label="" helpText="" icon={<FeatherDollarSign />}>
                               <TextField.Input
                                 placeholder="0.00"
@@ -1181,62 +1366,6 @@ export default function CoachPage() {
                       ) : null}
                     </div>
                   ))}
-                </div>
-                <div className="flex w-full items-center gap-4 py-2">
-                  <div className="flex w-48 flex-none items-center gap-2">
-                    <TextField className="h-auto w-full" label="" helpText="">
-                      <TextField.Input
-                        placeholder="Parent (e.g., Hair)"
-                        value={newSpecParent}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSpecParent(e.target.value)}
-                      />
-                    </TextField>
-                  </div>
-                  <div className="flex items-center gap-4 grow">
-                    <div className="flex flex-col items-start gap-2 w-full">
-                      <TextField className="h-auto w-full" label="" helpText="">
-                        <TextField.Input
-                          placeholder="Variant (e.g., Styling)"
-                          value={newSpecVariant}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSpecVariant(e.target.value)}
-                        />
-                      </TextField>
-                    </div>
-                    <div className="flex flex-col items-start gap-2 w-full">
-                      <Select
-                        className="h-auto w-full"
-                        label=""
-                        placeholder="Duration"
-                        helpText=""
-                        value={newSpecDuration}
-                        onValueChange={(value: string) => setNewSpecDuration(value)}
-                      >
-                        <Select.Item value="none">Select duration</Select.Item>
-                        {DURATION_OPTIONS.map((opt) => (
-                          <Select.Item key={opt.value} value={String(opt.value)}>{opt.label}</Select.Item>
-                        ))}
-                      </Select>
-                    </div>
-                    <div className="flex flex-col items-start gap-2 w-full">
-                      <TextField className="h-auto w-full" label="" helpText="" icon={<FeatherDollarSign />}>
-                        <TextField.Input
-                          placeholder="0.00"
-                          value={newSpecRate}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSpecRate(e.target.value)}
-                        />
-                      </TextField>
-                    </div>
-                    <div className="flex items-center">
-                      <Button
-                        variant="brand-secondary"
-                        icon={<FeatherPlus />}
-                        onClick={() => { void handleAddSpecialty(); }}
-                        disabled={!newSpecParent.trim() || !newSpecVariant.trim() || newSpecDuration === "none" || !Number.isFinite(Number(newSpecRate))}
-                      >
-                        Add specialty
-                      </Button>
-                    </div>
-                  </div>
                 </div>
                 <div className="flex items-start gap-6">
                   <span className="text-body-bold font-body-bold text-default-font">Default Session Length</span>
@@ -1433,6 +1562,19 @@ export default function CoachPage() {
             </div>
           </div>
         </div>
+      </div>
+      {/* Toasts */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2">
+        {toasts.map((t) => (
+          <div
+            key={t.id}
+            className={`rounded-md px-4 py-3 shadow-lg text-body font-body ${
+              t.variant === "success" ? "bg-success-600 text-white" : t.variant === "error" ? "bg-danger-600 text-white" : "bg-neutral-900 text-white"
+            }`}
+          >
+            {t.message}
+          </div>
+        ))}
       </div>
     </DefaultPageLayout>
   );
