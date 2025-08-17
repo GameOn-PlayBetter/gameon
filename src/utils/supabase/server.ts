@@ -15,7 +15,11 @@ export function createClient() {
         getAll: () => cookieStore.getAll(),
         setAll: (all) => {
           for (const { name, value, ...options } of all) {
-            cookieStore.set(name, value, options as any);
+            // strip out maxAge and expires if they exist, making cookies session-only
+            const rest: any = { ...options };
+            delete rest.maxAge;
+            delete rest.expires;
+            cookieStore.set(name, value, rest);
           }
         },
       },

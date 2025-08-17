@@ -16,4 +16,15 @@ npm run dev
 
 ## Learn More
 
-Once running, you can Install Subframe locally by "syncing" Subframe with your Starter Kit. This is achieved by running the Subframe [Sync Command](https://docs.subframe.com/installation)
+
+## Supabase Client Conventions
+
+- **Server-side (API routes, server components, server actions)**  
+  Use `src/utils/supabase/server.ts` (SSR client with `@supabase/ssr` + Next.js cookies).
+
+- **Client-side (React client components, hooks, IdleLogout, UI auth/logout)**  
+  Use `src/lib/supabase/server.ts` (browser client with `@supabase/supabase-js`).
+
+**Rule of thumb:**  
+- Server code → `utils/supabase/server.ts`  
+- Client code → `lib/supabase/server.ts`
