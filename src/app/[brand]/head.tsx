@@ -19,6 +19,12 @@ export default function Head() {
       <title>{title}</title>
       <meta name="description" content={description} />
 
+      {/* Favicons */}
+      <link rel="icon" href="/favicon.ico" sizes="any" />
+      <link rel="apple-touch-icon" href="/favicon.png" />
+      <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+      <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png" />
+
       {/* Open Graph */}
       <meta property="og:type" content="website" />
       <meta property="og:url" content={`https://skillery.co/${brandKey}`} />
