@@ -3,11 +3,18 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
   <!-- Home / Landing Page -->
+  <!-- Home / Landing Page -->
   <url>
     <loc>https://skillery.co/</loc>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://skillery.co/favicon.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://skillery.co/favicon-192.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://skillery.co/favicon-512.png</image:loc>
     </image:image>
   </url>
 
