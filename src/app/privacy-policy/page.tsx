@@ -6,6 +6,8 @@ import { useParams, notFound } from "next/navigation";
 import { brands } from "@/lib/brands";
 import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
 import LegalPageWrapper from "@/ui/components/LegalPageWrapper";
+
+
 import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
 
 export default function PrivacyPolicyPage() {

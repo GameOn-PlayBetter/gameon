@@ -19,23 +19,43 @@ export default function BrandHeader({ currentBrand }: { currentBrand?: string })
   const router = useRouter();
   const supabase = createClient();
 
+  const [queryBrand, setQueryBrand] = useState<string | null>(null);
+  useEffect(() => {
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      const b = sp.get("brand");
+      setQueryBrand(b ? b.toLowerCase().trim() : null);
+    } catch {
+      setQueryBrand(null);
+    }
+  }, []);
+
   const pathname = usePathname() || "";
   const segments = pathname.split("/").filter(Boolean);
+  const isLoginRoute = segments[0]?.toLowerCase() === "login";
   const theme = useBrandTheme();
   // Prefer prop, then /[brand]/... or /brands/[brand]/..., else theme name
   const urlBrand =
     segments[0]?.toLowerCase() === "brands"
       ? segments[1]?.toLowerCase()
       : segments[0]?.toLowerCase();
+
   let brandSlug =
-    currentBrand?.toLowerCase() ||
-    urlBrand ||
-    theme?.name?.toLowerCase() ||
+    (queryBrand && queryBrand.trim()) ||
+    (currentBrand?.toLowerCase() || "").trim() ||
+    (urlBrand || "").trim() ||
+    (theme?.name?.toLowerCase() || "").trim() ||
     "skillery";
 
   // Resolve a reliable brand config
   const resolvedConfig = getBrandConfig?.(brandSlug) || brands[brandSlug as keyof typeof brands];
   const config = resolvedConfig || theme;
+
+  useEffect(() => {
+    try {
+      document.documentElement.setAttribute("data-brand", brandSlug);
+    } catch {}
+  }, [brandSlug]);
 
   useEffect(() => {
     let role: string | null = null;
@@ -113,6 +133,7 @@ export default function BrandHeader({ currentBrand }: { currentBrand?: string })
           className="flex items-center"
         >
           <Image
+            key={brandSlug}
             src={
               (config as any)?.headerLogo ||
               (config as any)?.navLogo ||
@@ -190,15 +211,30 @@ export default function BrandHeader({ currentBrand }: { currentBrand?: string })
                 </DropdownMenu.Portal>
               </DropdownMenu.Root>
             ) : (
-              <button
-                onClick={() => setShowLoginModal(true)}
-                className="hover:underline focus:outline-none"
-              >
-                Login
-              </button>
+              isLoginRoute ? (
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="hover:underline focus:outline-none"
+                >
+                  Login
+                </button>
+              ) : null
             )}
 
-            {/* ✅ Apply to Coach opens Google Form in a new tab */}
+            {/* Student Waitlist (replaces Sign Up during prelaunch) */}
+            {(config as any)?.forms?.waitlistUrl && (
+              <a
+                href={(config as any).forms.waitlistUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-2 px-4 py-2 rounded-md transition"
+                style={{ backgroundColor: btnPrimary, color: "white" }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = btnPrimaryHv)}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = btnPrimary)}
+              >
+                Student Waitlist
+              </a>
+            )}
             <a
               href={
                 brandSlug === "gameon"
@@ -227,15 +263,11 @@ export default function BrandHeader({ currentBrand }: { currentBrand?: string })
               rel="noopener noreferrer"
               className="ml-2 px-4 py-2 rounded-md transition"
               style={{
-                backgroundColor: config.colors.button,
+                backgroundColor: btnPrimary,
                 color: "white",
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = config.colors.buttonHover)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = config.colors.button)
-              }
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = btnPrimaryHv)}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = btnPrimary)}
             >
               Apply to Coach
             </a>
