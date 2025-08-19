@@ -9,13 +9,13 @@ export default function CookiePolicyPage() {
     <BrandThemeProvider brandName="skillery">
       {/* Force the entire page (and any legal header area) to Skillery navy */}
       <style jsx global>{`
-        html, body, main { background-color: #0F1E30 !important; }
-        .brand-header, header, [data-legal-header] { background-color: #0F1E30 !important; }
+        html, body, main { background-color: #0A0F18 !important; }
+        .brand-header, header, [data-legal-header] { background-color: #0A0F18 !important; }
       `}</style>
       <BrandPageLayout brandName="skillery">
         <div
           style={{
-            backgroundColor: "#0F1E30",
+            backgroundColor: "#0A0F18",
             color: "white",
             minHeight: "100vh",
             padding: "2rem",
@@ -56,7 +56,6 @@ export default function CookiePolicyPage() {
             <p>Questions? Contact us at yo@skillery.co</p>
 
             <footer className="mt-16 text-sm text-white/80">
-              © {new Date().getFullYear()} Skillery, LLC. All rights reserved.
             </footer>
           </div>
         </div>

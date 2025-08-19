@@ -12,13 +12,13 @@ export default function SafetyGuidelinesPage() {
     <BrandThemeProvider brandName="skillery">
       {/* Force Skillery navy across this page */}
       <style jsx global>{`
-        html, body, main { background-color: #0F1E30 !important; }
+        html, body, main { background-color: #0A0F18 !important; }
       `}</style>
 
       <BrandPageLayout brandName="skillery">
         <div
           style={{
-            backgroundColor: "#0F1E30",
+            backgroundColor: "#0A0F18",
             color: "white",
             minHeight: "100vh",
             padding: "2rem",

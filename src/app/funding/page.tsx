@@ -111,7 +111,7 @@ export default function FundingPage() {
     (tokens && tokens.pageBackground) ||
     (colors as any)?.primary ||
     (colors as any)?.background ||
-    "#0F1E30";
+    "#0A0F18";
   const headerBg = (tokens && tokens.headerBackground) || pageBg;
   const footerBg = "transparent";
 

@@ -87,11 +87,12 @@ legalLinks: [
   { label: "Cookie Policy", href: "/cookie-policy" },
   { label: "Safety Guidelines", href: "/safety-guidelines" },
   { label: "Coach Eligibility", href: "/coach-requirements-eligibility" },
-  { label: "Contact", href: "//contact" },
-  { label: "Terms of Service", href: "/terms-of-service" }, // optional if added
+  { label: "Contact", href: "/contact" },
+  { label: "Terms of Service", href: "/terms-of-service" }, 
 ],
     colors: {
-      primary: "#0F1E30",
+      primary: "#0A0F18",
+      pageBackground: "#0A0F18",
       border: "border-white/30",
       glow: "#FF9C00",
       button: "#FF6B00",
@@ -100,7 +101,9 @@ legalLinks: [
       hover: "#FF9C00",
     },
     tokens: {
-      footerBackground: "#0F1E30",
+      pageBackground: "#0A0F18",
+      headerBackground: "#0A0F18",
+      footerBackground: "#0A0F18",
     },
     footerOverrides: {
       borderClass: "border-white/10",

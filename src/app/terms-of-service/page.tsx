@@ -13,11 +13,11 @@ export default function TermsOfServicePage() {
     <BrandThemeProvider brandName="skillery">
       {/* Force Skillery navy across the entire page */}
       <style jsx global>{`
-        html, body, main { background-color: #0F1E30 !important; }
+        html, body, main { background-color: #0A0F18 !important; }
       `}</style>
 
       <BrandPageLayout brandName="skillery">
-        <div className="min-h-screen" style={{ backgroundColor: "#0F1E30", color: "white" }}>
+        <div className="min-h-screen" style={{ backgroundColor: "#0A0F18", color: "white" }}>
           <div className="w-full max-w-4xl mx-auto px-6 py-12">
             <h1 className="text-4xl font-bold mb-6">Terms of Service</h1>
             <p className="mb-6 text-lg">
@@ -69,7 +69,7 @@ export default function TermsOfServicePage() {
 
             <h2 className="text-2xl font-semibold mt-8 mb-2">7. Contact Us</h2>
             <ul className="list-disc pl-6 space-y-2 text-lg">
-              <li>If you have any questions or concerns about these terms, please contact us at yo@skillery.co</li>
+              <li>If you have any questions or concerns about these terms, please contact us at yo@skillery.co.</li>
             </ul>
           </div>
         </div>

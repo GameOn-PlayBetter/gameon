@@ -75,17 +75,7 @@ export default function BrandPageLayout({
       : "");
 
   const isSkillery = (brandName || "").toLowerCase() === "skillery";
-
-  const resolvedBackground =
-    brandName === "skillery" ? "transparent" : backgroundColor;
-
-  const footerColor = isSkillery
-    ? ((colors as any)?.pageBackground || (colors as any)?.background || "#0A0A0A")
-    : ((colors as any)?.footerBackground ||
-       (colors as any)?.pageBackground ||
-       (colors as any)?.background ||
-       (colors as any)?.primary ||
-       resolvedBackground);
+  const SKILLERY_BG = "#0A0F18";
 
   // ✅ Canonical fix
   const pathname = usePathname() || "/";
@@ -108,6 +98,28 @@ export default function BrandPageLayout({
       ? `https://skillery.co/${slug}`
       : null;
 
+  // Force Skillery pages to the exact Skillery blue, leave everything else untouched
+  const applySkilleryOverride = isSkillery;
+
+  const resolvedBackground = applySkilleryOverride ? SKILLERY_BG : backgroundColor;
+
+  const footerColor = applySkilleryOverride
+    ? SKILLERY_BG
+    : ((colors as any)?.footerBackground ||
+       (colors as any)?.pageBackground ||
+       (colors as any)?.background ||
+       (colors as any)?.primary ||
+       resolvedBackground);
+
+  const globalCss = applySkilleryOverride
+    ? `
+      html, body, main { background-color: ${SKILLERY_BG} !important; }
+      header, .brand-header, [data-legal-header] { background-color: ${SKILLERY_BG} !important; }
+    `
+    : `
+      html, body { background-color: ${resolvedBackground} !important; }
+    `;
+
   return (
     <div
       className="min-h-screen w-full flex flex-col overflow-x-hidden"
@@ -122,9 +134,7 @@ export default function BrandPageLayout({
         </Head>
       )}
 
-      <style jsx global>{`
-        html, body { background-color: ${resolvedBackground} !important; }
-      `}</style>
+      <style jsx global>{globalCss}</style>
 
       <BrandedHeader currentBrand={brandName} />
 

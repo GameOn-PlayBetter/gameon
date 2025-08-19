@@ -160,9 +160,7 @@ export default function Page() {
       <div
         className="min-h-screen w-full relative z-0"
         style={{
-          backgroundImage: "linear-gradient(to bottom, #0A0F18, #000000)",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
+          backgroundColor: "#0A0F18",
           fontFamily: "sans-serif",
         }}
       >
@@ -192,7 +190,7 @@ export default function Page() {
                       <a
                         key={brand.name}
                         href={brand.href}
-                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EF5716] transition-shadow duration-300"
+                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-black/30 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EF5716] transition-shadow duration-300"
                       >
                         <img
                           className="h-64 w-full flex-none object-cover"
@@ -214,7 +212,7 @@ export default function Page() {
                     ) : (
                       <div
                         key={brand.name}
-                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-brand-50 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EE9E3A] transition-shadow duration-300"
+                        className="flex flex-col items-start overflow-hidden rounded-[32px] bg-black/30 shadow-[0_0_20px_#FF9C00] hover:shadow-[0_0_30px_#EE9E3A] transition-shadow duration-300"
                       >
                         <img
                           className="h-64 w-full flex-none object-cover"

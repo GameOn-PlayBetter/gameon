@@ -9,10 +9,10 @@ export default function ContactPage() {
     <BrandThemeProvider brandName="skillery">
       {/* Force Skillery navy across this page */}
       <style jsx global>{`
-        html, body, main { background-color: #0F1E30 !important; }
+        html, body, main { background-color: #0A0F18 !important; }
       `}</style>
       <BrandPageLayout brandName="skillery">
-        <div className="w-full min-h-screen" style={{ backgroundColor: "#0F1E30", color: "white" }}>
+        <div className="w-full min-h-screen" style={{ backgroundColor: "#0A0F18", color: "white" }}>
           <div className="max-w-4xl mx-auto px-6 py-16">
             <h1 className="text-3xl font-bold mb-6">Contact</h1>
             <p className="mb-6">
