@@ -1,85 +1,80 @@
-/* eslint-disable @next/next/no-img-element */
+// src/app/privacy-policy/page.tsx
 "use client";
 
 import React from "react";
-import { useParams, notFound } from "next/navigation";
-import { brands } from "@/lib/brands";
 import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
-import LegalPageWrapper from "@/ui/components/LegalPageWrapper";
-
-
 import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
+import { brands } from "@/lib/brands";
 
 export default function PrivacyPolicyPage() {
-  // ✅ Grab brand from URL or default to "gameon"
-  const params = useParams() || {};
-  const brand = (params as Record<string, string | string[]>).brand;
-
-  const brandKey = Array.isArray(brand)
-    ? brand[0].toLowerCase()
-    : brand?.toLowerCase() || "gameon";
-
-  const brandConfig = brands[brandKey as keyof typeof brands];
-  if (!brandConfig) return notFound();
-
-  // ✅ Safe background fallback
-  const colors = brandConfig.colors;
-  const backgroundColor =
-    (colors as any).primary || (colors as any).background || "#000000";
-
-  const email = "skilleryllc@gmail.com";
-
+  const logo = brands?.skillery?.logo as string | undefined;
   return (
-    <BrandThemeProvider brandName={brandKey}>
-      <BrandPageLayout brandName={brandKey}>
-        <LegalPageWrapper>
-          <div
-            className="flex-grow w-full max-w-4xl mx-auto px-6 py-12 text-white"
-            style={{ backgroundColor }}
-          >
-            <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
-            <p className="mb-6 text-lg">
-              {brandConfig.companyName} is committed to protecting your privacy.
-              This policy outlines what data we collect, how we use it, and your
-              rights as a user.
+    <BrandThemeProvider brandName="skillery">
+      <style jsx global>{`
+        html, body, main {
+          background-color: #0F1E30 !important;
+        }
+      `}</style>
+      <BrandPageLayout brandName="skillery">
+        <div
+          style={{
+            backgroundColor: "#0F1E30",
+            color: "white",
+            minHeight: "100vh",
+            padding: "2rem",
+          }}
+        >
+
+          <div className="max-w-4xl mx-auto prose prose-invert">
+            <h1>Privacy Policy</h1>
+            <p>
+              Skillery, LLC ("Skillery") is committed to protecting your privacy. This policy applies to Skillery and all its brands, including GameOn, LearnOn, JamOn, FixOn, GrowOn, FitOn, CodeOn, CookOn, StyleOn, and MoneyOn.
             </p>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-2">1. Data Collection</h2>
-            <ul className="list-disc pl-6 space-y-2 text-lg">
+            <h2>1. Data Collection</h2>
+            <ul>
               <li>We collect basic account details (email, username, avatar).</li>
-              <li>Session recordings are stored for safety and review purposes.</li>
-              <li>We log platform activity for quality and support reasons.</li>
+              <li>Session recordings may be stored for safety and review.</li>
+              <li>We log platform activity for quality and support purposes.</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-2">2. Data Usage</h2>
-            <ul className="list-disc pl-6 space-y-2 text-lg">
-              <li>
-                We use your data to facilitate sessions, improve safety, and
-                optimize performance.
-              </li>
-              <li>
-                We do not sell or share personal data with third parties for
-                advertising.
-              </li>
+            <h2>2. Data Usage</h2>
+            <ul>
+              <li>We use your data to facilitate sessions, improve safety, and optimize performance.</li>
+              <li>We do not sell or share your personal data with third parties for advertising.</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold mt-8 mb-2">3. Your Rights</h2>
-            <ul className="list-disc pl-6 space-y-2 text-lg">
-              <li>
-                You can request to view, correct, or delete your data at any
-                time.
-              </li>
-              <li>
-                You may opt out of marketing communications via your account
-                settings.
-              </li>
+            <h2>3. Your Rights</h2>
+            <ul>
+              <li>You can request to view, correct, or delete your data at any time.</li>
+              <li>You may opt out of marketing communications via your account settings.</li>
             </ul>
 
-            <p className="mt-8 text-sm text-gray-400">
-              For questions or requests related to privacy, contact us at {email}
+            <h2>Children’s Privacy (COPPA)</h2>
+            <p>
+              We are committed to protecting the privacy of children under 13 and complying with the Children’s Online Privacy Protection Act (COPPA). We obtain verifiable parental consent before collecting personal information from children under 13. Parents or guardians may review, delete, or refuse further collection of their child’s information at any time by contacting us.
             </p>
+
+            <h2>Security</h2>
+            <p>
+              We implement reasonable security measures to protect personal information from unauthorized access or disclosure.
+            </p>
+
+            <h2>Changes to This Policy</h2>
+            <p>
+              We may update this Privacy Policy from time to time. We encourage you to review it periodically.
+            </p>
+
+            <h2>Contact</h2>
+            <p>
+              For questions or requests related to privacy, contact us at yo@skillery.co.
+            </p>
+
+            <footer className="mt-16 text-sm text-white/80">
+              © {new Date().getFullYear()} Skillery, LLC. All rights reserved.
+            </footer>
           </div>
-        </LegalPageWrapper>
+        </div>
       </BrandPageLayout>
     </BrandThemeProvider>
   );

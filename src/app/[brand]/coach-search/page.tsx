@@ -46,7 +46,7 @@ function PlayerProfilePage() {
   useEffect(() => {
     async function fetchCoaches() {
       try {
-        const res = await fetch(`/api/coaches?brand=${pathBrand}`);
+        const res = await fetch(`/api/coaches?brandName=${pathBrand}`);
         const data = await res.json();
         setCoaches(data);
       } catch (err) {

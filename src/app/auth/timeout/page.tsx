@@ -31,7 +31,7 @@ function TimeoutInner() {
     queryBrand ?? (Array.isArray(pathBrand) ? pathBrand[0] : (pathBrand as string | undefined)) ?? 'gameon';
   const brand = brandRaw.toLowerCase();
 
-  const href = scope === 'admin' ? '/login?next=/admin' : `/login?brand=${brand}`;
+  const href = scope === 'admin' ? '/login?next=/admin' : `/login?brandName=${brand}`;
   const btn = scope === 'admin' ? 'Go to Admin Login' : 'Go to Login';
 
   return (
@@ -39,7 +39,7 @@ function TimeoutInner() {
       <p className="text-sm text-zinc-200">You were signed out due to inactivity.</p>
       <button
         onClick={() => {
-          const dest = scope === 'admin' ? '/login?next=/admin' : `/login?brand=${brand}`;
+          const dest = scope === 'admin' ? '/login?next=/admin' : `/login?brandName=${brand}`;
           try {
             window.location.assign(dest);
           } catch {

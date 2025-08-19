@@ -172,7 +172,7 @@ function PlayerProfilePage() {
     let isMounted = true;
     (async () => {
       try {
-        const res = await fetch(`/api/coaches?brand=${encodeURIComponent(brandSeg ?? "")}`);
+        const res = await fetch(`/api/coaches?brandName=${encodeURIComponent(brandSeg ?? "")}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (isMounted && Array.isArray(data)) setCoaches(data);

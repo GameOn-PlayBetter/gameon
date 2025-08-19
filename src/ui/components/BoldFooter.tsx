@@ -139,27 +139,66 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
 
     const hoverColor = brandColors.button || "#FF00C8";
 
-    // Split legal links into rows of 4
+    // Split legal links into rows of 3 (prevents wrapping with fixed width)
     const legalRows: { label: string; href: string }[][] = [];
-    for (let i = 0; i < brandLegal.length; i += 4) {
-      legalRows.push(brandLegal.slice(i, i + 4));
+    for (let i = 0; i < brandLegal.length; i += 3) {
+      legalRows.push(brandLegal.slice(i, i + 3));
     }
-// ✅ Safe link handler: prevents /brand/brand/path
+// ✅ Safe link handler: prevents /brand/brand/path and fixes Skillery root routing
 const formatHref = (href: string) => {
-  if (!brandName) return href;
-
-  // ✅ For Skillery, always use root-level pages
-  if (brandName.toLowerCase() === "skillery") {
-    return href;  // <-- no brand prefix
+  // Normalize legacy bad links like "http://contact/" → "/contact"
+  if (/^https?:\/\/contact\/?$/i.test(href)) {
+    href = "/contact";
   }
 
-  // ✅ Any other brand only prepends if not already included
-  if (href.startsWith(`/${brandName}`) || href.startsWith("/brand")) {
-    return href;
+  // Start with a clean leading-slash path
+  let path = href.startsWith('/') ? href : `/${href}`;
+  // Drop trailing slashes for comparisons
+  path = path.replace(/\/+$/g, '');
+
+  // Resolve brand context and whether we're on Skillery
+  const rawBrand = (brandName ?? (theme as any)?.brandName ?? (theme as any)?.companyName ?? '').toString();
+  const b = rawBrand.toLowerCase().trim();
+  const isSkilleryBrand = b.includes('skillery');
+
+  // Known brand slugs
+  const brandSlugs = [
+    'gameon','learnon','jamon','fixon','growon','fiton','codeon','cookon','styleon','moneyon'
+  ];
+
+  // ✅ Hard override for Contact on Skillery root: return absolute URL at runtime
+  if (isSkilleryBrand && path === '/contact') {
+    if (typeof window !== 'undefined' && window.location && window.location.origin) {
+      return `${window.location.origin}/contact`;
+    }
+    return '/contact';
   }
 
-  return `/${brandName}${href}`;
+  if (isSkilleryBrand) {
+    // On Skillery root, drop any leading brand segment: /{brand}/x -> /x
+    const parts = path.split('/').filter(Boolean);
+    if (parts.length > 1 && brandSlugs.includes(parts[0].toLowerCase())) {
+      return `/${parts.slice(1).join('/')}`;
+    }
+    return path || '/';
+  }
+
+  // Non‑Skillery: ensure current brand prefix exists exactly once
+  const current = brandSlugs.includes(b) ? b : b.split(' ')[0];
+  if (path.startsWith(`/${current}/`)) return path; // already branded
+  if (path === `/${current}`) return path;          // brand root
+  if (path === '/') return `/${current}`;           // root → /brand
+
+  // If the path already carries ANOTHER brand, leave it (cross‑linking allowed)
+  const parts = path.split('/').filter(Boolean);
+  if (parts.length > 0 && brandSlugs.includes(parts[0].toLowerCase())) {
+    return path;
+  }
+
+  return `/${current}${path}`; // prefix once
 };
+
+    const isSkilleryExact = brandName === "skillery";
 
     return (
       <div
@@ -191,26 +230,16 @@ const formatHref = (href: string) => {
           </div>
 
           {/* Middle: Legal Links */}
-          <div className="flex flex-col gap-4 w-full md:w-1/3 text-lg">
-            {legalRows.map((row, idx) => (
-              <div
-                key={idx}
-                className="flex flex-wrap gap-x-6 gap-y-2 text-white justify-center"
-              >
-                {row.map((link: { label: string; href: string }) => (
+          <div className="w-full md:w-1/3 text-sm">
+            {legalRows.slice(0, 2).map((row, idx) => (
+              <div key={idx} className="grid grid-cols-3 gap-x-6 gap-y-2 mb-3 text-center">
+                {row.map((item) => (
                   <Link
-                    key={link.label}
-                    href={formatHref(link.href)}
-                    className="transition"
-                    style={{ color: "white", transition: "color 0.3s" }}
-                    onMouseOver={(e) => {
-                      (e.target as HTMLElement).style.color = hoverColor;
-                    }}
-                    onMouseOut={(e) => {
-                      (e.target as HTMLElement).style.color = "white";
-                    }}
+                    key={item.label}
+                    href={formatHref(item.href)}
+                    className="whitespace-nowrap leading-tight tracking-tight"
                   >
-                    {link.label}
+                    {item.label}
                   </Link>
                 ))}
               </div>

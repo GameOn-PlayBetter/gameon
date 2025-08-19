@@ -1,56 +1,35 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React from "react";
-import { useParams, notFound } from "next/navigation";
-import { brands } from "@/lib/brands";
 import BrandPageLayout from "@/ui/layouts/BrandPageLayout";
-import LegalPageWrapper from "@/ui/components/LegalPageWrapper";
 import { BrandThemeProvider } from "@/app/context/BrandThemeContext";
 
 export default function ContactPage() {
-  // ✅ Safe handling for strictNullChecks
-  const params = useParams() || {};
-  const brand = (params as Record<string, string | string[]>).brand;
-
-  const brandKey = Array.isArray(brand)
-    ? brand[0].toLowerCase()
-    : brand?.toLowerCase() || "gameon";
-
-  const brandConfig = brands[brandKey as keyof typeof brands];
-  if (!brandConfig) return notFound();
-
-  const colors = brandConfig.colors;
-  const backgroundColor =
-    (colors as any).primary || (colors as any).background || "#000000";
-  const email = "skilleryllc@gmail.com";
-
   return (
-    <BrandThemeProvider brandName={brandKey}>
-      <BrandPageLayout brandName={brandKey}>
-        <LegalPageWrapper>
-          <div
-            className="flex flex-col min-h-screen w-full"
-            style={{ backgroundColor }}
-          >
-            <div className="flex-grow w-full max-w-4xl px-6 py-12 text-white mx-auto">
-              <h1 className="text-4xl font-bold mb-8">Contact Us</h1>
+    <BrandThemeProvider brandName="skillery">
+      {/* Force Skillery navy across this page */}
+      <style jsx global>{`
+        html, body, main { background-color: #0F1E30 !important; }
+      `}</style>
+      <BrandPageLayout brandName="skillery">
+        <div className="w-full min-h-screen" style={{ backgroundColor: "#0F1E30", color: "white" }}>
+          <div className="max-w-4xl mx-auto px-6 py-16">
+            <h1 className="text-3xl font-bold mb-6">Contact</h1>
+            <p className="mb-6">
+              We’d love to hear from you. For questions or support related to Skillery and all brands under the Skillery umbrella, reach us here:
+            </p>
 
-              <div className="space-y-6 text-lg">
-                <p>
-                  Have questions, feedback, or need help? We’d love to hear from you.
-                </p>
-
-                <p>Reach out any time at {email}</p>
-
-                <p>
-                  We typically respond within 24–48 hours. For urgent moderation or
-                  safety issues, please use the in-app report tools.
-                </p>
+            <div className="space-y-4">
+              <div>
+                <h2 className="text-xl font-semibold">General Inquiries</h2>
+                <p className="mt-1">yo@skillery.co</p>
               </div>
             </div>
+
+            <div className="mt-12 text-sm text-white/80">
+            </div>
           </div>
-        </LegalPageWrapper>
+        </div>
       </BrandPageLayout>
     </BrandThemeProvider>
   );
