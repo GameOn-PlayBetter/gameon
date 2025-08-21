@@ -64,10 +64,10 @@ export default function Page({ params }: { params: { brand: string } }) {
       const end = start + PAGE_SIZE - 1;
 
       let queryBuilder = supabase
-        .from("content")
-        .select("id, title, image_url, category, tokens, brand, is_active, created_at")
+        .from("catalog_items")
+        .select("id, title, image_url, category, tokens, brand, active, created_at, coaches_count")
         .eq("brand", brandName)
-        .eq("is_active", true);
+        .eq("active", true);
 
       if (query && query.trim().length > 0) {
         queryBuilder = queryBuilder.ilike("title", `%${query.trim()}%`);
@@ -122,19 +122,19 @@ export default function Page({ params }: { params: { brand: string } }) {
     async function loadOptions() {
       // categories
       const { data: catRows } = await supabase
-        .from("content")
+        .from("catalog_items")
         .select("category")
         .eq("brand", brandName)
-        .eq("is_active", true)
+        .eq("active", true)
         .not("category", "is", null);
       const cats = Array.from(new Set((catRows || []).map(r => r.category))).sort();
 
       // tokens (distinct)
       const { data: tokRows } = await supabase
-        .from("content")
+        .from("catalog_items")
         .select("tokens")
         .eq("brand", brandName)
-        .eq("is_active", true)
+        .eq("active", true)
         .not("tokens", "is", null);
       const toks = Array.from(new Set((tokRows || []).map(r => r.tokens))).filter(n => typeof n === 'number').sort((a: number, b: number) => a - b);
 
