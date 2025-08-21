@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { Badge } from "@/ui/components/Badge";
 import { FeatherShield } from "@subframe/core";
@@ -97,6 +97,12 @@ export default function CoachPage() {
 
   const [coach, setCoach] = useState<CoachFromDB | null>(null);
   const [loadingCoach, setLoadingCoach] = useState(true);
+
+  // Founder cosmetics flags + avatar sizing
+  const [hasFounderFrame, setHasFounderFrame] = useState<boolean>(false);
+  const [hasFounderBadge, setHasFounderBadge] = useState<boolean>(false);
+  const avatarBoxRef = useRef<HTMLDivElement | null>(null);
+  const [avatarSizePx, setAvatarSizePx] = useState<number>(0);
 
   // ---- Unified durations + state ----
   const DURATION_OPTIONS = [
@@ -286,6 +292,43 @@ export default function CoachPage() {
       cancelled = true;
     };
   }, [authChecked, userId, brandKey, supabase]);
+
+  // Load user cosmetics for this signed-in user (global; not brand-scoped)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (!userId) return;
+      const { data, error } = await supabase
+        .from("user_cosmetics")
+        .select("cosmetic_type, cosmetic_value")
+        .eq("user_id", userId);
+      if (error || cancelled) return;
+      let fFrame = false;
+      let fBadge = false;
+      (data ?? []).forEach((r: any) => {
+        if (r.cosmetic_type === "frame" && r.cosmetic_value === "founder-frame") fFrame = true;
+        if (r.cosmetic_type === "badge" && r.cosmetic_value === "founder-badge") fBadge = true;
+      });
+      setHasFounderFrame(fFrame);
+      setHasFounderBadge(fBadge);
+    })();
+    return () => { cancelled = true; };
+  }, [userId, supabase]);
+
+  // Observe avatar box size to scale frame slightly larger than the avatar
+  useEffect(() => {
+    if (!avatarBoxRef.current) return;
+    const el = avatarBoxRef.current;
+    const setSize = () => {
+      const rect = el.getBoundingClientRect();
+      const size = Math.min(rect.width, rect.height);
+      setAvatarSizePx(size);
+    };
+    setSize();
+    const ro = new ResizeObserver(setSize);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // fetch coach_specialties for this coach and brand (scoped)
   useEffect(() => {
@@ -813,20 +856,44 @@ export default function CoachPage() {
 
   return (
     <DefaultPageLayout style={{ backgroundColor }}>
-      <div className="flex w-full flex-col items-start px-12 pt-24 pb-12 min-h-[60vh]">
+      <div className="flex w-full flex-col items-start px-8 pt-12 pb-8 min-h-[80vh] max-w-[1200px] mx-auto">
         <div className="flex w-full flex-col items-start gap-8 pb-6">
           <div className="flex w-full flex-wrap items-start gap-4">
-            <div className="flex h-36 w-36 flex-none flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-100 relative">
-              {loadingCoach ? (
-                <div className="h-36 w-36 animate-pulse rounded-full bg-neutral-200" />
-              ) : coach?.avatar_url ? (
+            <div className="flex flex-col items-center">
+              <div ref={avatarBoxRef} className="relative h-36 w-36 rounded-full overflow-visible">
+                {loadingCoach ? (
+                  <div className="h-36 w-36 animate-pulse rounded-full bg-neutral-200" />
+                ) : coach?.avatar_url ? (
+                  <img
+                    className="absolute inset-0 h-36 w-36 object-cover rounded-full"
+                    src={coach.avatar_url}
+                    alt={coach?.display_name ?? "Coach avatar"}
+                  />
+                ) : (
+                  <div className="h-36 w-36 flex items-center justify-center rounded-full bg-neutral-200" />
+                )}
+                {hasFounderFrame && (
+                  <div
+                    className="pointer-events-none select-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 aspect-square"
+                    style={{
+                      width: avatarSizePx ? avatarSizePx * 1.30 : "11rem",
+                      height: avatarSizePx ? avatarSizePx * 1.30 : "11rem",
+                    }}
+                  >
+                    <img
+                      src="/assets/cosmetics/founder/frame.png"
+                      alt="Founder Frame"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                )}
+              </div>
+              {hasFounderBadge && (
                 <img
-                  className="h-36 w-36 flex-none object-cover absolute"
-                  src={coach.avatar_url}
-                  alt={coach?.display_name ?? "Coach avatar"}
+                  src="/assets/cosmetics/founder/badge.png"
+                  alt="Founder Badge"
+                  className="mt-3 h-[72px] w-[72px] object-contain"
                 />
-              ) : (
-                <div className="h-36 w-36 flex items-center justify-center rounded-full bg-neutral-200" />
               )}
             </div>
             <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-6 pt-4">
@@ -859,7 +926,7 @@ export default function CoachPage() {
               <div className="flex w-full flex-wrap items-start gap-6">
                 <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
                   <span className="text-body-bold font-body-bold text-default-font">Total Sessions</span>
-                  <span className="line-clamp-1 w-full text-caption font-caption text-brand-500">
+                  <span className="line-clamp-1 w-full text-body-bold font-body-bold text-brand-500">
                     {loadingCoach ? (
                       <span className="inline-block h-4 w-10 animate-pulse rounded bg-neutral-200" />
                     ) : (
@@ -869,11 +936,11 @@ export default function CoachPage() {
                 </div>
                 <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
                   <span className="text-body-bold font-body-bold text-default-font">Success Rate</span>
-                  <span className="line-clamp-1 w-full text-caption font-caption text-brand-600">94%</span>
+                  <span className="line-clamp-1 w-full text-body-bold font-body-bold text-brand-600">94%</span>
                 </div>
                 <div className="flex grow shrink-0 basis-0 flex-col items-start gap-1">
                   <span className="text-body-bold font-body-bold text-default-font">Languages</span>
-                  <span className="line-clamp-1 w-full text-caption font-caption text-subtext-color">
+                  <span className="line-clamp-1 w-full text-body font-body text-subtext-color">
                     {loadingCoach ? (
                       <span className="inline-block h-4 w-24 animate-pulse rounded bg-neutral-200" />
                     ) : coach?.languages?.length ? (
@@ -903,17 +970,17 @@ export default function CoachPage() {
           <div className="flex w-full flex-wrap items-start gap-6">
             <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
               <div className="flex w-full items-center gap-2">
-                <IconWithBackground icon={<FeatherDollarSign />} />
-                <span className="text-heading-3 font-heading-3 text-default-font">Current Month Earnings</span>
+                <IconWithBackground size="large" icon={<FeatherDollarSign />} />
+                <span className="text-2xl font-bold text-default-font">Current Month Earnings</span>
               </div>
               <div className="flex w-full flex-col items-start">
-                <span className="text-heading-1 font-heading-1 text-brand-500">$146.25</span>
+                <span className="text-3xl font-bold text-brand-500">$146.25</span>
                 <div className="flex w-full items-center gap-2 py-4">
-                  <span className="line-clamp-1 w-24 flex-none text-caption-bold font-caption-bold text-default-font">
+                  <span className="line-clamp-1 w-24 flex-none text-body-bold font-body-bold text-default-font">
                     Target
                   </span>
                   <Progress value={85} />
-                  <span className="line-clamp-1 w-12 flex-none text-caption font-caption text-brand-500 text-right">
+                  <span className="line-clamp-1 w-12 flex-none text-body-bold font-body-bold text-brand-500 text-right">
                     85%
                   </span>
                 </div>
@@ -921,26 +988,26 @@ export default function CoachPage() {
             </div>
             <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
               <div className="flex w-full items-center gap-2">
-                <IconWithBackground icon={<FeatherTrendingUp />} />
-                <span className="text-heading-3 font-heading-3 text-default-font">Previous Month Earnings</span>
+                <IconWithBackground size="large" icon={<FeatherTrendingUp />} />
+                <span className="text-2xl font-bold text-default-font">Previous Month Earnings</span>
               </div>
               <div className="flex w-full flex-col items-start gap-2">
-                <span className="text-heading-1 font-heading-1 text-brand-600">$3,156.00</span>
-                <span className="text-caption font-caption text-success-600">Final</span>
+                <span className="text-3xl font-bold text-brand-600">$3,156.00</span>
+                <span className="text-body font-body text-success-600">Final</span>
               </div>
             </div>
           </div>
 
           <div className="flex w-full flex-col items-start gap-4">
             <div className="flex w-full items-center justify-between">
-              <span className="text-heading-3 font-heading-3 text-default-font">Pending Requests</span>
+              <span className="text-2xl font-bold text-default-font">Pending Requests</span>
             </div>
             <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
               <Alert
                 variant="warning"
                 icon={<FeatherAlertTriangle />}
                 title="Connect Stripe to accept bookings"
-                description="You need to connect your Stripe account before you can start accepting booking requests."
+                description={<span className="text-body font-body">You need to connect your Stripe account before you can start accepting booking requests.</span>}
                 actions={
                   <Button icon={<FeatherCreditCard />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
                     Connect Stripe
@@ -956,7 +1023,7 @@ export default function CoachPage() {
                 </Avatar>
                 <div className="flex flex-col items-start gap-1 grow">
                   <div className="flex items-center gap-2">
-                    <span className="text-heading-3 font-heading-3 text-default-font">Alex Chen</span>
+                    <span className="text-xl font-bold text-default-font">Alex Chen</span>
                     {specialties[0] ? <Badge>{specialties[0]}</Badge> : null}
                     <Badge variant="warning" icon={<FeatherClock />}>
                       Pending
@@ -982,7 +1049,7 @@ export default function CoachPage() {
                 </Avatar>
                 <div className="flex flex-col items-start gap-1 grow">
                   <div className="flex items-center gap-2">
-                    <span className="text-heading-3 font-heading-3 text-default-font">Mandy Lopez</span>
+                    <span className="text-xl font-bold text-default-font">Mandy Lopez</span>
                     {(specialties[1] ?? specialties[0]) ? <Badge>{specialties[1] ?? specialties[0]}</Badge> : null}
                     <Badge variant="warning" icon={<FeatherClock />}>
                       Pending
@@ -991,12 +1058,12 @@ export default function CoachPage() {
                   <span className="text-body font-body text-subtext-color">60 min coaching session</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="neutral-secondary" icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                    Decline
-                  </Button>
-                  <Button disabled={true} icon={<FeatherCheck />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
-                    Accept
-                  </Button>
+              <Button variant="neutral-secondary" icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} className="px-4 py-2 text-base">
+                Decline
+              </Button>
+              <Button disabled={true} icon={<FeatherCheck />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} className="px-4 py-2 text-base">
+                Accept
+              </Button>
                 </div>
               </div>
             </div>
@@ -1004,7 +1071,7 @@ export default function CoachPage() {
 
           <div className="flex w-full flex-col items-start gap-4">
             <div className="flex w-full items-center justify-between gap-3">
-              <span className="text-heading-3 font-heading-3 text-default-font">Rate Configuration</span>
+              <span className="text-2xl font-bold text-default-font">Rate Configuration</span>
               <div className="flex items-center gap-2">
                 <Select
                   className="h-auto w-48"
@@ -1035,10 +1102,11 @@ export default function CoachPage() {
                       setNewSpecRate("");
                     }
                   }}
+                  className="px-4 py-2 text-base"
                 >
                   {showAddComposer ? "Close" : "+ Add New Group"}
                 </Button>
-                <Button icon={<FeatherSave />} onClick={() => { void handleSaveChanges(); }} disabled={!isDirty}>
+                <Button icon={<FeatherSave />} onClick={() => { void handleSaveChanges(); }} disabled={!isDirty} className="px-4 py-2 text-base">
                   Save Changes
                 </Button>
               </div>
@@ -1047,7 +1115,7 @@ export default function CoachPage() {
               <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
                 <Alert
                   title="Set your rates and session durations"
-                  description="Configure your rates and durations. Create one Group (e.g., Dead by Daylight) and add multiple Offerings (e.g., Speedrun, Build, Co‑Op) under it."
+                  description={<span className="text-body font-body">Configure your rates and durations for this brand.</span>}
                   actions={<IconButton icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} />}
                 />
                 <div className="w-full border-b border-solid border-neutral-border pb-3">
@@ -1113,21 +1181,22 @@ export default function CoachPage() {
                       </div>
                       {/* Col 5: Actions */}
                       <div className="hidden md:flex items-center justify-end">
-                        <Button
-                          variant="brand-secondary"
-                          icon={<FeatherPlus />}
-                          onClick={() => { void handleAddSpecialty(); }}
-                          disabled={!newSpecParent.trim() || !newSpecVariant.trim() || newSpecDuration === "none" || !Number.isFinite(Number(newSpecRate))}
-                        >
-                          Add group
-                        </Button>
-                        <Button
-                          variant="neutral-secondary"
-                          onClick={() => setShowAddComposer(false)}
-                          className="ml-2"
-                        >
-                          Cancel
-                        </Button>
+                          <Button
+                            variant="brand-secondary"
+                            icon={<FeatherPlus />}
+                            onClick={() => { void handleAddSpecialty(); }}
+                            disabled={!newSpecParent.trim() || !newSpecVariant.trim() || newSpecDuration === "none" || !Number.isFinite(Number(newSpecRate))}
+                            className="px-4 py-2 text-base"
+                          >
+                            Add group
+                          </Button>
+                          <Button
+                            variant="neutral-secondary"
+                            onClick={() => setShowAddComposer(false)}
+                            className="ml-2 px-4 py-2 text-base"
+                          >
+                            Cancel
+                          </Button>
                       </div>
                     </div>
                   ) : null}
@@ -1164,6 +1233,7 @@ export default function CoachPage() {
                                 variant="neutral-secondary"
                                 icon={<FeatherPlus />}
                                 onClick={() => startAddVariant(group.parent)}
+                                className="px-4 py-2 text-base"
                               >
                                 Add offering
                               </Button>
@@ -1172,6 +1242,7 @@ export default function CoachPage() {
                                 variant="neutral-secondary"
                                 icon={<FeatherTrash />}
                                 onClick={() => { void handleDeleteParent(group.parent); }}
+                                className="px-4 py-2 text-base"
                               >
                                 Delete group
                               </Button>
@@ -1199,10 +1270,10 @@ export default function CoachPage() {
                                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingName(e.target.value)}
                                     />
                                   </TextField>
-                                  <Button size="small" icon={<FeatherSave />} onClick={() => saveEditSpecialty(index)}>
+                                  <Button size="small" icon={<FeatherSave />} onClick={() => saveEditSpecialty(index)} className="px-4 py-2 text-base">
                                     Save
                                   </Button>
-                                  <Button size="small" variant="neutral-secondary" icon={<FeatherX />} onClick={cancelEditSpecialty}>
+                                  <Button size="small" variant="neutral-secondary" icon={<FeatherX />} onClick={cancelEditSpecialty} className="px-4 py-2 text-base">
                                     Cancel
                                   </Button>
                                 </>
@@ -1350,6 +1421,7 @@ export default function CoachPage() {
                               variant="brand-secondary"
                               onClick={() => { void addVariantToParent(group.parent); }}
                               disabled={!addVariantName.trim() || addVariantDuration === "none" || !Number.isFinite(Number(addVariantRate))}
+                              className="px-4 py-2 text-base"
                             >
                               Add
                             </Button>
@@ -1357,7 +1429,7 @@ export default function CoachPage() {
                               size="small"
                               variant="neutral-secondary"
                               onClick={cancelAddVariant}
-                              className="ml-2"
+                              className="ml-2 px-4 py-2 text-base"
                             >
                               Cancel
                             </Button>
@@ -1397,7 +1469,7 @@ export default function CoachPage() {
                 {confirmOpen ? (
                   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
                     <div className="w-full max-w-md rounded-lg border border-neutral-border bg-default-background p-6 shadow-2xl">
-                      <span className="block text-heading-3 font-heading-3 text-default-font mb-2">Overwrite durations?</span>
+                      <span className="block text-3xl font-bold text-default-font mb-2">Overwrite durations?</span>
                       <p className="text-body text-subtext-color mb-4">
                         Are you sure you want to overwrite all specialties to{" "}
                         <span className="font-semibold text-default-font">
@@ -1434,8 +1506,8 @@ export default function CoachPage() {
 
           <div className="flex w-full flex-col items-start gap-4">
             <div className="flex w-full items-center justify-between">
-              <span className="text-heading-3 font-heading-3 text-default-font">Calendar Integration</span>
-              <Button variant="brand-secondary" icon={<FeatherCalendar />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+              <span className="text-2xl font-bold text-default-font">Calendar Integration</span>
+              <Button variant="brand-secondary" icon={<FeatherCalendar />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} className="px-4 py-2 text-base">
                 Sync Calendar
               </Button>
             </div>
@@ -1443,7 +1515,7 @@ export default function CoachPage() {
               <div className="flex w-full items-center gap-4">
                 <IconWithBackground size="large" icon={<FeatherCalendar />} square={true} />
                 <div className="flex flex-col items-start gap-1 grow">
-                  <span className="text-heading-3 font-heading-3 text-default-font">Google Calendar</span>
+                  <span className="text-2xl font-bold text-default-font">Google Calendar</span>
                   <span className="text-body font-body text-subtext-color">Manage your coaching availability</span>
                 </div>
                 <Badge variant="success" icon={<FeatherCheck />}>
@@ -1452,7 +1524,7 @@ export default function CoachPage() {
               </div>
               <Alert
                 title="Your calendar is synced"
-                description="Players can now book sessions during your available time slots"
+                description={<span className="text-body font-body">Players can now book sessions during your available time slots.</span>}
                 actions={<IconButton icon={<FeatherX />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} />}
               />
               <div className="flex w-full items-center gap-4" />
@@ -1461,7 +1533,7 @@ export default function CoachPage() {
 
           <div className="flex w-full flex-col items-start gap-4">
             <div className="flex w-full items-center justify-between">
-              <span className="text-heading-3 font-heading-3 text-default-font">Recent Sessions</span>
+              <span className="text-2xl font-bold text-default-font">Recent Sessions</span>
               <div className="flex items-center gap-2">
                 <Button variant="neutral-secondary" icon={<FeatherSearch />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
                   Search Recordings
@@ -1521,10 +1593,10 @@ export default function CoachPage() {
                 </Table.Cell>
                 <Table.Cell>
                   <div className="flex items-center gap-2">
-                    <Button variant="neutral-secondary" size="small" icon={<FeatherPlay />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                    <Button variant="neutral-secondary" size="small" icon={<FeatherPlay />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} className="px-4 py-2 text-base">
                       Watch
                     </Button>
-                    <Button variant="neutral-secondary" size="small" icon={<FeatherFlag />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                    <Button variant="neutral-secondary" size="small" icon={<FeatherFlag />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} className="px-4 py-2 text-base">
                       Report
                     </Button>
                   </div>
@@ -1535,27 +1607,27 @@ export default function CoachPage() {
 
           <div className="flex w-full flex-col items-start gap-4">
             <div className="flex w-full items-center justify-between">
-              <span className="text-heading-3 font-heading-3 text-default-font">Support &amp; Help</span>
+              <span className="text-2xl font-bold text-default-font">Support &amp; Help</span>
             </div>
             <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
               <div className="flex w-full items-center gap-4">
                 <IconWithBackground size="large" icon={<FeatherHelpCircle />} square={true} />
                 <div className="flex flex-col items-start gap-1 grow">
-                  <span className="text-heading-3 font-heading-3 text-default-font">Need assistance?</span>
+                  <span className="text-2xl font-bold text-default-font">Need assistance?</span>
                   <span className="text-body font-body text-subtext-color">Get help with your coaching account or report issues</span>
                 </div>
               </div>
               <div className="flex w-full flex-wrap items-start gap-4">
-                <Button variant="neutral-primary" icon={<FeatherTicket />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                <Button variant="neutral-primary" icon={<FeatherTicket />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} className="px-4 py-2 text-base">
                   Submit a ticket
                 </Button>
-                <Button variant="neutral-primary" icon={<FeatherBook />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                <Button variant="neutral-primary" icon={<FeatherBook />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} className="px-4 py-2 text-base">
                   Coach Code of Conduct
                 </Button>
-                <Button variant="neutral-primary" icon={<FeatherHelpCircle />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                <Button variant="neutral-primary" icon={<FeatherHelpCircle />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} className="px-4 py-2 text-base">
                   FAQs
                 </Button>
-                <Button variant="neutral-primary" icon={<FeatherFlag />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}>
+                <Button variant="neutral-primary" icon={<FeatherFlag />} onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}} className="px-4 py-2 text-base">
                   Report a player
                 </Button>
               </div>

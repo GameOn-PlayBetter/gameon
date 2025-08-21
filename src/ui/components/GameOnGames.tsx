@@ -159,7 +159,7 @@ const sectionTitle =
           ))}
         </div>
       </div>
-      <a href={formUrl} target="_blank" rel="noopener noreferrer">
+      <a href={`/${brandKey}/all`}>
 <Button
   size="large"
   icon={<FeatherArrowRightCircle />}

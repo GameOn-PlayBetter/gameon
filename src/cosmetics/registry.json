@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "frames": {
+    "founder": {
+      "title": "Founder Frame",
+      "brandScope": "global",
+      "asset": "/assets/cosmetics/founder/frame.png",
+      "thumb": "/assets/cosmetics/founder/frame.png",
+      "animated": false,
+      "equipSlot": "frame",
+      "freeForEarlySupporters": true
+    }
+  },
+  "badges": {
+    "founder": {
+      "title": "Founder Badge",
+      "brandScope": "global",
+      "asset": "/assets/cosmetics/founder/badge.png",
+      "thumb": "/assets/cosmetics/founder/badge.png",
+      "animated": false,
+      "equipSlot": "badge",
+      "freeForEarlySupporters": true
+    }
+  }
+}

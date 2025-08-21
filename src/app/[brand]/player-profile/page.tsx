@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { Badge } from "@/ui/components/Badge";
 import { Button } from "@/ui/components/Button";
@@ -116,6 +116,10 @@ function PlayerProfilePage() {
   const [skills, setSkills] = useState<any[]>([]);
   const [feedbackRows, setFeedbackRows] = useState<any[]>([]);
   const [ownedBadges, setOwnedBadges] = useState<any[]>([]);
+  const [hasFounderFrame, setHasFounderFrame] = useState<boolean>(false);
+  const [hasFounderBadge, setHasFounderBadge] = useState<boolean>(false);
+  const avatarBoxRef = useRef<HTMLElement | HTMLDivElement | null>(null);
+  const [avatarSizePx, setAvatarSizePx] = useState<number>(0);
   const [recentSessions, setRecentSessions] = useState<any[]>([]);
   const [upcomingSessions, setUpcomingSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -165,6 +169,22 @@ function PlayerProfilePage() {
     setReportOpen(false);
   }
   // ========================================
+
+  // Observe the avatar box size so the frame scales slightly larger than the avatar
+  useEffect(() => {
+    if (!avatarBoxRef.current) return;
+    const el = avatarBoxRef.current;
+    const setSize = () => {
+      const rect = el.getBoundingClientRect();
+      // pick the smaller of width/height to stay circular
+      const size = Math.min(rect.width, rect.height);
+      setAvatarSizePx(size);
+    };
+    setSize();
+    const ro = new ResizeObserver(setSize);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // ====== Fetch real coaches for placeholders ======
   const [coaches, setCoaches] = useState<CoachLite[]>([]);
@@ -305,6 +325,25 @@ function PlayerProfilePage() {
           });
         }
 
+        // X) User cosmetics (global, not brand-scoped)
+        const { data: ucRows, error: ucErr } = await sb
+          .from("user_cosmetics")
+          .select("cosmetic_type, cosmetic_value")
+          .eq("user_id", uid);
+        if (ucErr) {
+          console.warn("user_cosmetics load error", ucErr.message);
+        }
+        let _hasFounderFrame = false;
+        let _hasFounderBadge = false;
+        (ucRows ?? []).forEach((r: any) => {
+          if (r.cosmetic_type === "frame" && r.cosmetic_value === "founder-frame") _hasFounderFrame = true;
+          if (r.cosmetic_type === "badge" && r.cosmetic_value === "founder-badge") _hasFounderBadge = true;
+        });
+        if (isMounted) {
+          setHasFounderFrame(_hasFounderFrame);
+          setHasFounderBadge(_hasFounderBadge);
+        }
+
         if (!isMounted) return;
         setSummary({
           ...(sum as any),
@@ -349,12 +388,38 @@ function PlayerProfilePage() {
           <div className="flex w-full flex-col items-start pb-2">
           <div className="flex w-full flex-col items-start gap-6 px-12 pt-6 pb-4">
             <div className="flex w-full flex-wrap items-start gap-4">
-              <div className="flex h-36 w-36 flex-none flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-brand-100 relative cursor-pointer">
-                <img
-                  className="h-36 w-36 flex-none object-cover absolute"
-                  src={summary?.avatar_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(summary?.display_name ?? "Player")}`}
-                />
-                <div className="flex items-center justify-center bg-neutral-0 group:hover .group-hover:opacity-70 absolute inset-0 opacity-0" />
+              <div className="flex flex-col items-center">
+                <div ref={avatarBoxRef as any} className="relative" style={{ width: "9rem", height: "9rem" }}>
+                  <Avatar
+                    image={summary?.avatar_url ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(summary?.display_name ?? "Player")}`}
+                    size="x-large"
+                    className="h-36 w-36"
+                  >
+                    {(summary?.display_name ?? "P").toString().slice(0,1)}
+                  </Avatar>
+                  {hasFounderFrame && (
+                    <div
+                      className="pointer-events-none select-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 aspect-square"
+                      style={{
+                        width: avatarSizePx ? avatarSizePx * 1.30 : "11rem",
+                        height: avatarSizePx ? avatarSizePx * 1.30 : "11rem",
+                      }}
+                    >
+                      <img
+                        src="/assets/cosmetics/founder/frame.png"
+                        alt="Founder Frame"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  )}
+                </div>
+                {hasFounderBadge && (
+                  <img
+                    src="/assets/cosmetics/founder/badge.png"
+                    alt="Founder Badge"
+                    className="mt-3 h-[72px] w-[72px] object-contain"
+                  />
+                )}
               </div>
               <div className="flex min-w-[160px] grow shrink-0 basis-0 flex-col items-start gap-6 pt-4">
                 <div className="flex w-full items-center justify-between">
@@ -507,8 +572,15 @@ function PlayerProfilePage() {
                         Buy Badges
                       </Button>
                     </div>
-                    {ownedBadges.length > 0 ? (
+                    {(ownedBadges.length > 0 || hasFounderBadge) ? (
                       <div className="flex w-full flex-wrap items-start gap-2">
+                        {hasFounderBadge && (
+                          <LargeBadge
+                            icon={<img src="/assets/cosmetics/founder/badge.png" alt="Founder" className="h-4 w-4" />}
+                          >
+                            Founder
+                          </LargeBadge>
+                        )}
                         {ownedBadges.map((b) => (
                           <LargeBadge key={b.badge_id} icon={<FeatherAward />}>
                             {b.badges?.name ?? b.badges?.slug ?? "Badge"}
