@@ -111,6 +111,7 @@ export default function BrandPageLayout({
        (colors as any)?.primary ||
        resolvedBackground);
 
+
   const globalCss = applySkilleryOverride
     ? `
       html, body, main { background-color: ${SKILLERY_BG} !important; }

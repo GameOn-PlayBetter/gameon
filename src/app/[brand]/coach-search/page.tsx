@@ -39,6 +39,7 @@ function PlayerProfilePage() {
   const pathname = usePathname();
   const pathBrand = pathname?.split("/")[1] || "skillery";
   const brandConfig = brands[pathBrand] || brands["skillery"];
+  const overlay = brandConfig.overlay ?? "rgba(0,0,0,0.35)";
 
   const [allCoaches, setAllCoaches] = useState<Coach[]>([]);
   const [coaches, setCoaches] = useState<Coach[]>([]);
@@ -168,7 +169,23 @@ function PlayerProfilePage() {
       </div>
 
       <DefaultPageLayout>
-        <div className="container max-w-none flex h-full w-full flex-col items-start gap-12 bg-transparent py-12">
+<style jsx global>{`
+  html, body {
+    background: ${brandConfig.pageBackground} !important;
+  }
+  footer {
+    background: ${brandConfig.footerBackground ?? brandConfig.pageBackground} !important;
+  }
+`}</style>
+  <div
+    aria-hidden
+    className="fixed inset-0 -z-10"
+    style={{ background: brandConfig.pageBackground }}
+  />
+        <div
+  className="container max-w-none flex h-full w-full flex-col items-start gap-12 py-12"
+  style={{ background: brandConfig.pageBackground }}
+>
           <div className="flex w-full flex-col items-center justify-center gap-6">
             <div className="flex w-full max-w-[576px] flex-col items-center justify-center gap-6">
               <div className="flex w-full flex-col items-center justify-center gap-2">
@@ -225,7 +242,7 @@ function PlayerProfilePage() {
                     </Button>
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Portal>
-                    <DropdownMenu.Content align="start" className="bg-black/40">
+                    <DropdownMenu.Content align="start" style={{ background: overlay }}>
                       <ToggleGroup
                         className="h-auto w-full flex-col flex-none"
                         value={category}
@@ -259,7 +276,7 @@ function PlayerProfilePage() {
                     </Button>
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Portal>
-                    <DropdownMenu.Content align="start" className="bg-black/40">
+                    <DropdownMenu.Content align="start" style={{ background: overlay }}>
                       <ToggleGroup
                         className="h-auto w-full flex-col flex-none"
                         value={coachingType}
@@ -297,7 +314,7 @@ function PlayerProfilePage() {
                       </Button>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Portal>
-                      <DropdownMenu.Content align="start" className="bg-black/40">
+                      <DropdownMenu.Content align="start" style={{ background: overlay }}>
                         <ToggleGroup
                           className="h-auto w-full flex-col flex-none"
                           value={minTokens === "" ? "" : String(minTokens)}
@@ -343,7 +360,7 @@ function PlayerProfilePage() {
                       </Button>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Portal>
-                      <DropdownMenu.Content align="start" className="bg-black/40">
+                      <DropdownMenu.Content align="start" style={{ background: overlay }}>
                         <ToggleGroup
                           className="h-auto w-full flex-col flex-none"
                           value={maxTokens === "" ? "" : String(maxTokens)}
@@ -388,7 +405,8 @@ function PlayerProfilePage() {
                   coaches.map((coach) => (
                     <div
                       key={coach.display_name}
-                      className="flex flex-col items-start gap-4 rounded-md border border-solid border-neutral-border bg-black/40 px-4 py-4"
+                      className="flex flex-col items-start gap-4 rounded-md border border-solid border-neutral-border px-4 py-4"
+                      style={{ background: overlay }}
                     >
                       <div className="flex w-full items-start justify-between">
                         <div className="flex items-center gap-4">

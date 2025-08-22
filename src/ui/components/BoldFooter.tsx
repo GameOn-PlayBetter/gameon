@@ -215,7 +215,7 @@ const formatHref = (href: string) => {
           (isSkillery || isNavyFooter) ? "border-white/5" : "border-neutral-100",
           className
         )}
-        style={{ backgroundColor: finalFooterBackground, color: "white" }}
+style={{ backgroundColor: "inherit", color: "white" }}
         ref={ref}
         {...otherProps}
       >
