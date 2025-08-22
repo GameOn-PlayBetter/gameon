@@ -36,8 +36,9 @@ const AlertRoot = React.forwardRef<HTMLElement, AlertRootProps>(
     return (
       <div
         className={SubframeUtils.twClassNames(
-          "group/3a65613d flex w-full flex-col items-start gap-2 rounded-md border border-solid border-neutral-200 bg-neutral-50 pl-4 pr-3 py-3",
+          "group/3a65613d flex w-full flex-col items-start gap-2 rounded-md pl-4 pr-3 py-3",
           {
+            "border border-solid border-neutral-border bg-[rgba(0,0,0,0.4)] backdrop-blur": variant === "neutral",
             "border border-solid border-warning-100 bg-warning-50":
               variant === "warning",
             "border border-solid border-success-100 bg-success-50":

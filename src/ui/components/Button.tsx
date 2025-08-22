@@ -45,6 +45,11 @@ const ButtonRoot = React.forwardRef<HTMLElement, ButtonRootProps>(
     }: ButtonRootProps,
     ref
   ) {
+    const isPrevNext =
+      typeof children === "string" &&
+      (children.trim() === "Previous" || children.trim() === "Next");
+    const isPrevious = typeof children === "string" && children.trim() === "Previous";
+    const isNext = typeof children === "string" && children.trim() === "Next";
     return (
       <button
         className={SubframeUtils.twClassNames(
@@ -52,6 +57,8 @@ const ButtonRoot = React.forwardRef<HTMLElement, ButtonRootProps>(
           {
             "h-6 w-auto flex-row flex-nowrap gap-1 px-2 py-0": size === "small",
             "h-10 w-auto px-4 py-0": size === "large",
+            "bg-black/40 text-white":
+              variant === "brand-tertiary" || variant === "brand-secondary",
             "bg-transparent hover:bg-[#ffffff29] active:bg-[#ffffff3d]":
               variant === "inverse",
             "bg-transparent hover:bg-error-50 active:bg-error-100":
@@ -66,10 +73,8 @@ const ButtonRoot = React.forwardRef<HTMLElement, ButtonRootProps>(
               variant === "neutral-secondary",
             "bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-100":
               variant === "neutral-primary",
-            "bg-transparent hover:bg-brand-50 active:bg-brand-100":
-              variant === "brand-tertiary",
-            "bg-brand-50 hover:bg-brand-100 active:bg-brand-50":
-              variant === "brand-secondary",
+            "bg-brand-50 hover:bg-brand-100 active:bg-brand-50": isPrevious,
+            "bg-[rgba(0,0,0,0.4)] hover:bg-[rgba(0,0,0,0.4)] border border-neutral-border text-white": isNext,
           },
           className
         )}

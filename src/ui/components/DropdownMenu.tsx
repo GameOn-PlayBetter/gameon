@@ -84,7 +84,21 @@ const DropdownDivider = React.forwardRef<HTMLElement, DropdownDividerProps>(
 const Root = SubframeDropdownMenu.Root;
 const Trigger = SubframeDropdownMenu.Trigger;
 const Portal = SubframeDropdownMenu.Portal;
-const Content = SubframeDropdownMenu.Content;
+const Content = React.forwardRef<HTMLElement, React.ComponentProps<typeof SubframeDropdownMenu.Content>>(function Content(
+  { className, ...otherProps },
+  ref
+) {
+  return (
+    <SubframeDropdownMenu.Content
+      ref={ref as any}
+      {...otherProps}
+      className={SubframeUtils.twClassNames(
+        "rounded-md border border-neutral-border bg-[rgba(0,0,0,0.4)] backdrop-blur p-1 shadow-lg",
+        className
+      )}
+    />
+  );
+});
 
 // ==========================
 // Composite Export

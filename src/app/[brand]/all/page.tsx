@@ -20,10 +20,32 @@ import {
 import React, { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
+
+// Force Supabase Storage images to 16:9 with CDN transforms (no letterboxing)
+function transformSupabaseImage(url: string | null | undefined, w = 960, h = 540) {
+  const src = (url ?? "").trim();
+  if (!src) return "https://placehold.co/960x540";
+  try {
+    const u = new URL(src);
+    // Only rewrite Supabase Storage public object URLs
+    if (u.hostname.includes("supabase.co") && u.pathname.includes("/storage/v1/object/public/")) {
+      u.pathname = u.pathname.replace("/storage/v1/object/public/", "/storage/v1/render/image/public/");
+      u.searchParams.set("width", String(w));
+      u.searchParams.set("height", String(h));
+      u.searchParams.set("resize", "cover"); // crop to fill (no black bars)
+      u.searchParams.set("quality", "85");
+      return u.toString();
+    }
+    return src;
+  } catch {
+    return src;
+  }
+}
 
 export default function Page({ params }: { params: { brand: string } }) {
   const brandName = params?.brand?.toLowerCase?.() ?? "";
@@ -35,6 +57,7 @@ export default function Page({ params }: { params: { brand: string } }) {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [coachName, setCoachName] = useState<string | null>(null);
 
   const PAGE_SIZE = 9;
   const [page, setPage] = useState(0);
@@ -116,6 +139,29 @@ export default function Page({ params }: { params: { brand: string } }) {
 
   useEffect(() => { setItems([]); setPage(0); setHasMore(true); }, [brandName]);
 
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        const user = userData?.user;
+        if (!user || !isMounted) return;
+        const { data: coachRow } = await supabase
+          .from("coaches")
+          .select("display_name")
+          .eq("auth_user_id", user.id)
+          .limit(1)
+          .maybeSingle();
+        if (!isMounted) return;
+        const name = coachRow?.display_name || user.user_metadata?.full_name || user.email || null;
+        setCoachName(name);
+      } catch (_) {
+        // leave coachName as null on error
+      }
+    })();
+    return () => { isMounted = false; };
+  }, []);
+
   // load filter options for this brand
   useEffect(() => {
     let isMounted = true;
@@ -156,16 +202,19 @@ export default function Page({ params }: { params: { brand: string } }) {
   return (
     <BrandThemeProvider brandName={brandName}>
       <BrandPageLayout brandName={brandName}>
-        <div className="flex w-full flex-col items-start">
+<div className="soften-panels flex w-full flex-col items-start">
           <div className="flex w-full items-center justify-between border-b border-solid border-neutral-border px-8 py-4">
-            <span className="text-heading-2 font-heading-2 text-default-font">Browse</span>
+            <span className="text-xl font-bold text-default-font">
+  {coachName ?? "BROWSE"}
+</span>
             <TextField className="w-64" variant="filled" icon={<FeatherSearch />}>
               <TextField.Input placeholder="Search..." value={query} onChange={(e: any) => setQuery(e.target.value)} />
             </TextField>
           </div>
           <div className="flex w-full flex-col gap-6 p-6">
-            <Alert 
-              variant="neutral" 
+            <Alert
+              variant="neutral"
+              className="!bg-[rgba(0,0,0,0.4)] !border !border-neutral-border backdrop-blur"
               icon={<FeatherInfo />}
               title="Most Popular"
               description="Showing the most active items. Use filters to refine."
@@ -190,7 +239,7 @@ export default function Page({ params }: { params: { brand: string } }) {
                       {selectedCategory ?? "All Categories"}
                     </Button>
                     {openCat && (
-                      <div className="mt-2 max-h-64 w-full overflow-auto rounded-md border border-neutral-border bg-[rgba(0,0,0,0.6)] backdrop-blur p-2 z-10">
+                      <div className="mt-2 max-h-64 w-full overflow-auto rounded-md border border-neutral-border bg-[rgba(0,0,0,0.4)] backdrop-blur p-2 z-10">
                         <div>
                           <div
                             key="all-categories"
@@ -244,7 +293,7 @@ export default function Page({ params }: { params: { brand: string } }) {
                         Min Tokens{minTokens !== null ? `: ${minTokens}` : ""}
                       </Button>
                       {openMin && (
-                        <div className="absolute mt-2 max-h-64 w-full overflow-auto rounded-md border border-neutral-border bg-[rgba(0,0,0,0.6)] backdrop-blur p-2 z-10">
+                        <div className="absolute mt-2 max-h-64 w-full overflow-auto rounded-md border border-neutral-border bg-[rgba(0,0,0,0.4)] backdrop-blur p-2 z-10">
                           <div>
                             <div
                               key="min-any"
@@ -285,7 +334,7 @@ export default function Page({ params }: { params: { brand: string } }) {
                         Max Tokens{maxTokens !== null ? `: ${maxTokens}` : ""}
                       </Button>
                       {openMax && (
-                        <div className="absolute mt-2 max-h-64 w-full overflow-auto rounded-md border border-neutral-border bg-[rgba(0,0,0,0.6)] backdrop-blur p-2 z-10">
+                        <div className="absolute mt-2 max-h-64 w-full overflow-auto rounded-md border border-neutral-border bg-[rgba(0,0,0,0.4)] backdrop-blur p-2 z-10">
                           <div>
                             <div
                               key="max-any"
@@ -370,8 +419,15 @@ export default function Page({ params }: { params: { brand: string } }) {
                     <div className="col-span-full text-center text-gray-400 text-xl py-12">No results found.</div>
                   )}
                   {!loading && !error && items.map((item) => (
-                    <div key={item.id} className="flex flex-col gap-4 rounded-lg border border-solid border-neutral-border p-4">
-                      <img className="h-48 w-full rounded-md object-cover" src={item.image_url || "https://placehold.co/600x400"} alt={item.title} />
+                    <div key={item.id} className="flex flex-col gap-4 rounded-lg border border-solid border-neutral-border p-4" style={{ boxShadow: "0 0 20px rgba(255, 255, 255, 0.6)" }}>
+                      <div className="aspect-[16/9] w-full overflow-hidden rounded-md">
+                        <img
+                          src={transformSupabaseImage(item.image_url, 960, 540)}
+                          alt={item.title}
+                          loading="lazy"
+                          className="h-full w-full object-cover object-center"
+                        />
+                      </div>
                       <div className="flex flex-col gap-2">
                         <span className="text-heading-3 font-heading-3 text-default-font">{item.title}</span>
                         <div className="flex gap-2">

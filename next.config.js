@@ -9,6 +9,15 @@ const nextConfig = {
       },
     ]
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lwpvjfokhjkmjruvqosq.supabase.co',
+        pathname: '/storage/v1/object/public/brand-images/**',
+      },
+    ],
+  },
 }
 
 module.exports = nextConfig

@@ -968,7 +968,7 @@ export default function CoachPage() {
         {/* Rest unchanged */}
         <div className="flex w-full flex-col items-start gap-12 py-12">
           <div className="flex w-full flex-wrap items-start gap-6">
-            <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
+            <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-white/30 bg-black/20 px-6 py-6">
               <div className="flex w-full items-center gap-2">
                 <IconWithBackground size="large" icon={<FeatherDollarSign />} />
                 <span className="text-2xl font-bold text-default-font">Current Month Earnings</span>
@@ -986,7 +986,7 @@ export default function CoachPage() {
                 </div>
               </div>
             </div>
-            <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-brand-primary bg-neutral-50 px-6 py-6">
+            <div className="flex min-w-[240px] grow shrink-0 basis-0 flex-col items-start gap-4 rounded-md border border-solid border-white/30 bg-black/20 px-6 py-6">
               <div className="flex w-full items-center gap-2">
                 <IconWithBackground size="large" icon={<FeatherTrendingUp />} />
                 <span className="text-2xl font-bold text-default-font">Previous Month Earnings</span>
@@ -1002,7 +1002,7 @@ export default function CoachPage() {
             <div className="flex w-full items-center justify-between">
               <span className="text-2xl font-bold text-default-font">Pending Requests</span>
             </div>
-            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
+            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-white/30 bg-black/20 px-6 py-6">
               <Alert
                 variant="warning"
                 icon={<FeatherAlertTriangle />}
@@ -1112,7 +1112,7 @@ export default function CoachPage() {
               </div>
             </div>
             <div className="flex w-full flex-col items-start gap-4">
-              <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
+              <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-white/30 bg-black/20 px-6 py-6">
                 <Alert
                   title="Set your rates and session durations"
                   description={<span className="text-body font-body">Configure your rates and durations for this brand.</span>}
@@ -1467,8 +1467,8 @@ export default function CoachPage() {
                   ))}
                 </Select>
                 {confirmOpen ? (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-                    <div className="w-full max-w-md rounded-lg border border-neutral-border bg-default-background p-6 shadow-2xl">
+<div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.4)]">
+                    <div className="w-full max-w-md rounded-lg border border-neutral-border bg-[rgba(0,0,0,0.4)] backdrop-blur p-6 shadow-2xl">
                       <span className="block text-3xl font-bold text-default-font mb-2">Overwrite durations?</span>
                       <p className="text-body text-subtext-color mb-4">
                         Are you sure you want to overwrite all specialties to{" "}
@@ -1511,7 +1511,7 @@ export default function CoachPage() {
                 Sync Calendar
               </Button>
             </div>
-            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
+            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-white/30 bg-black/20 px-6 py-6">
               <div className="flex w-full items-center gap-4">
                 <IconWithBackground size="large" icon={<FeatherCalendar />} square={true} />
                 <div className="flex flex-col items-start gap-1 grow">
@@ -1549,14 +1549,14 @@ export default function CoachPage() {
             <Table
               header={
                 <Table.HeaderRow>
-                  <Table.HeaderCell>Session Date</Table.HeaderCell>
-                  <Table.HeaderCell>Player</Table.HeaderCell>
-                  <Table.HeaderCell>Game</Table.HeaderCell>
-                  <Table.HeaderCell>Duration</Table.HeaderCell>
-                  <Table.HeaderCell>Status</Table.HeaderCell>
-                  <Table.HeaderCell>Rating</Table.HeaderCell>
-                  <Table.HeaderCell>Earnings</Table.HeaderCell>
-                  <Table.HeaderCell>Actions</Table.HeaderCell>
+                  <Table.HeaderCell className="!text-white !text-base !font-semibold">Session Date</Table.HeaderCell>
+                  <Table.HeaderCell className="!text-white !text-base !font-semibold">Player</Table.HeaderCell>
+                  <Table.HeaderCell className="!text-white !text-base !font-semibold">Game</Table.HeaderCell>
+                  <Table.HeaderCell className="!text-white !text-base !font-semibold">Duration</Table.HeaderCell>
+                  <Table.HeaderCell className="!text-white !text-base !font-semibold">Status</Table.HeaderCell>
+                  <Table.HeaderCell className="!text-white !text-base !font-semibold">Rating</Table.HeaderCell>
+                  <Table.HeaderCell className="!text-white !text-base !font-semibold">Earnings</Table.HeaderCell>
+                  <Table.HeaderCell className="!text-white !text-base !font-semibold">Actions</Table.HeaderCell>
                 </Table.HeaderRow>
               }
             >
@@ -1609,7 +1609,7 @@ export default function CoachPage() {
             <div className="flex w-full items-center justify-between">
               <span className="text-2xl font-bold text-default-font">Support &amp; Help</span>
             </div>
-            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-neutral-border bg-neutral-50 px-6 py-6">
+            <div className="flex w-full flex-col items-start gap-6 rounded-md border border-solid border-white/30 bg-black/20 px-6 py-6">
               <div className="flex w-full items-center gap-4">
                 <IconWithBackground size="large" icon={<FeatherHelpCircle />} square={true} />
                 <div className="flex flex-col items-start gap-1 grow">

@@ -79,3 +79,79 @@ html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+/* === Soften aggressive black panels sitewide === */
+:root {
+  --soft-black-alpha: 0.68; /* tweak between 0.5 and 0.75 as needed */
+}
+/* Tailwind-style dark backgrounds often used for cards/boxes */
+.bg-black,
+.bg-neutral-950,
+.bg-neutral-900,
+.bg-zinc-950,
+.bg-zinc-900 {
+  background-color: rgba(0, 0, 0, var(--soft-black-alpha)) !important;
+}
+
+/* Additional common dark utilities to soften */
+.bg-gray-950,
+.bg-gray-900,
+.bg-gray-800,
+.bg-slate-950,
+.bg-slate-900,
+.bg-slate-800,
+.bg-stone-950,
+.bg-stone-900,
+.bg-stone-800,
+.bg-zinc-800,
+.bg-neutral-800 {
+  background-color: rgba(0, 0, 0, var(--soft-black-alpha)) !important;
+}
+
+/* Opacity variants like bg-black/100, bg-neutral-900/95, etc. */
+[class*="bg-black/"],
+[class*="bg-neutral-950/"],
+[class*="bg-neutral-900/"],
+[class*="bg-neutral-800/"],
+[class*="bg-zinc-950/"],
+[class*="bg-zinc-900/"],
+[class*="bg-zinc-800/"],
+[class*="bg-gray-950/"],
+[class*="bg-gray-900/"],
+[class*="bg-gray-800/"],
+[class*="bg-slate-950/"],
+[class*="bg-slate-900/"],
+[class*="bg-slate-800/"],
+[class*="bg-stone-950/"],
+[class*="bg-stone-900/"],
+[class*="bg-stone-800/"] {
+  background-color: rgba(0, 0, 0, var(--soft-black-alpha)) !important;
+}
+
+/* Escaped classnames compiled from arbitrary values like bg-[#000] or bg-[#000000] */
+[class*="bg-["] {
+  background-color: rgba(0,0,0,var(--soft-black-alpha)) !important;
+}
+
+/* Explicit slash-escaped 100% opacity utilities */
+[class*="/100"] {
+  background-color: rgba(0,0,0,var(--soft-black-alpha)) !important;
+}
+
+/* === Scoped softening for this page only === */
+.soften-panels :where(
+  .bg-black,
+  .bg-neutral-950, .bg-neutral-900, .bg-neutral-800,
+  .bg-zinc-950, .bg-zinc-900, .bg-zinc-800,
+  .bg-gray-950, .bg-gray-900, .bg-gray-800,
+  .bg-slate-950, .bg-slate-900, .bg-slate-800,
+  .bg-stone-950, .bg-stone-900, .bg-stone-800,
+  [class*="bg-black/"], [class*="bg-neutral-9"], [class*="bg-zinc-9"],
+  [class*="bg-gray-9"], [class*="bg-slate-9"], [class*="bg-stone-9"],
+  [class~="bg-\\[\\#000\\]"], [class~="bg-\\[\\#000000\\]"],
+  [class~="bg-\\[black\\]"], [class~="bg-\\[rgb(0,0,0)\\]"],
+  [style*="background-color:#000"], [style*="background-color: #000"],
+  [style*="background-color:rgb(0,0,0)"], [style*="background:#000"], [style*="background: #000"]
+){
+  background-color: rgba(0,0,0,var(--soft-black-alpha)) !important;
+}

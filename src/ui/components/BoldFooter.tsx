@@ -133,7 +133,15 @@ const BoldFooterRoot = React.forwardRef<HTMLDivElement, BoldFooterRootProps>(
       palette.primary ??
       "#0A0A0A";
 
-    const finalFooterBackground = (isSkillery ? "transparent" : footerBackground);
+    const finalFooterBackground = isSkillery
+      ? "transparent"
+      : brandTokens.footerBackground ??
+        brandTokens.pageBackground ??
+        palette.footerBackground ??
+        palette.pageBackground ??
+        palette.background ??
+        palette.primary ??
+        "#0A0A0A";
 
     const isNavyFooter = (footerBackground || "").toLowerCase() === "#0f1e30";
 
