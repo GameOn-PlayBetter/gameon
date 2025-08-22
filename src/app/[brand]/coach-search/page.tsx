@@ -11,8 +11,8 @@ import {
   FeatherStar,
   FeatherChevronLeft,
   FeatherHeart,
-  FeatherTrendingUp,
-  FeatherTag,
+  FeatherSliders,
+  FeatherDisc,
 } from "@subframe/core";
 
 import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
@@ -365,13 +365,13 @@ function PlayerProfilePage() {
                   <SubframeCore.DropdownMenu.Portal>
                     <SubframeCore.DropdownMenu.Content align="end" className="text-white p-2" style={{ background: "#000", color: "#fff", minWidth: "260px" }}>
                       <SubframeCore.DropdownMenu.Item onSelect={() => setSort("default")}>
-                        <div className="flex items-center gap-2"><FeatherTrendingUp /><span>Default</span></div>
+                        <div className="flex items-center gap-2"><FeatherSliders /><span>Default</span></div>
                       </SubframeCore.DropdownMenu.Item>
                       <SubframeCore.DropdownMenu.Item onSelect={() => setSort("tokens_asc")}>
-                        <div className="flex items-center gap-2"><FeatherTag /><span>Tokens: Low to High</span></div>
+                        <div className="flex items-center gap-2"><FeatherDisc /><span>Tokens: Low to High</span></div>
                       </SubframeCore.DropdownMenu.Item>
                       <SubframeCore.DropdownMenu.Item onSelect={() => setSort("tokens_desc")}>
-                        <div className="flex items-center gap-2"><FeatherTag /><span>Tokens: High to Low</span></div>
+                        <div className="flex items-center gap-2"><FeatherDisc /><span>Tokens: High to Low</span></div>
                       </SubframeCore.DropdownMenu.Item>
                     </SubframeCore.DropdownMenu.Content>
                   </SubframeCore.DropdownMenu.Portal>
