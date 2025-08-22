@@ -11,12 +11,14 @@ import {
   FeatherStar,
   FeatherChevronLeft,
   FeatherHeart,
+  FeatherTrendingUp,
+  FeatherTag,
 } from "@subframe/core";
 
 import DefaultPageLayout from "@/ui/layouts/DefaultPageLayout";
 import { TextField } from "@/ui/components/TextField";
 import { ToggleGroup } from "@/ui/components/ToggleGroup";
-import { DropdownMenu } from "@/ui/components/DropdownMenu";
+import * as SubframeCore from "@subframe/core";
 import { Button } from "@/ui/components/Button";
 import { Slider } from "@/ui/components/Slider";
 import { Avatar } from "@/ui/components/Avatar";
@@ -55,6 +57,8 @@ function PlayerProfilePage() {
   const [minTokens, setMinTokens] = useState<number | "">("");
   const [maxTokens, setMaxTokens] = useState<number | "">("");
   const [tokensRange, setTokensRange] = useState<{ min: number; max: number }>({ min: 0, max: 0 });
+  // Sort state (visual ordering only; data source unchanged)
+  const [sort, setSort] = useState<"default" | "tokens_asc" | "tokens_desc">("default");
 
   // Fetch all coaches and derive filter options
   useEffect(() => {
@@ -139,6 +143,18 @@ function PlayerProfilePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, coachingType, minTokens, maxTokens, allCoaches, search]);
 
+  // Derive sorted list for display (no data changes)
+  const sortedCoaches = React.useMemo(() => {
+    const arr = [...coaches];
+    if (sort === "tokens_asc") {
+      return arr.sort((a, b) => (a.tokens_per_hour ?? Infinity) - (b.tokens_per_hour ?? Infinity));
+    }
+    if (sort === "tokens_desc") {
+      return arr.sort((a, b) => (b.tokens_per_hour ?? -Infinity) - (a.tokens_per_hour ?? -Infinity));
+    }
+    return arr; // default order
+  }, [coaches, sort]);
+
   // Handlers
   function handleClearFilters() {
     setCategory("");
@@ -186,31 +202,11 @@ function PlayerProfilePage() {
   className="container max-w-none flex h-full w-full flex-col items-start gap-12 py-12"
   style={{ background: brandConfig.pageBackground }}
 >
-          <div className="flex w-full flex-col items-center justify-center gap-6">
-            <div className="flex w-full max-w-[576px] flex-col items-center justify-center gap-6">
-              <div className="flex w-full flex-col items-center justify-center gap-2">
-                <FeatherGamepad className="text-heading-1 font-heading-1 text-default-font" />
-                <span className="w-full text-heading-1 font-heading-1 text-default-font text-center">
-                  {`Find Your Perfect ${brandConfig.name} Coach`}
-                </span>
-                <span className="text-body font-body text-subtext-color text-center">
-                  {brandConfig.description}
-                </span>
-              </div>
-              <TextField
-                className="h-auto w-full flex-none"
-                variant="filled"
-                label=""
-                helpText=""
-                icon={<FeatherSearch />}
-              >
-                <TextField.Input
-                  placeholder="Search by game, expertise, or coaching style"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </TextField>
-            </div>
+          <div className="flex w-full items-center justify-between border-b border-solid border-neutral-border px-8 py-4">
+            <span className="text-xl font-bold text-default-font">BROWSE</span>
+            <TextField className="w-64" variant="filled" icon={<FeatherSearch />}> 
+              <TextField.Input placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+            </TextField>
           </div>
 
           <div className="flex w-full items-start gap-8">
@@ -227,8 +223,8 @@ function PlayerProfilePage() {
                   Clear
                 </span>
                 {/* Categories / Games */}
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger asChild={true}>
+                <SubframeCore.DropdownMenu.Root>
+                  <SubframeCore.DropdownMenu.Trigger asChild={true}>
                     <Button
                       className="h-8 w-full flex-none"
                       style={{ width: "260px" }}
@@ -240,29 +236,23 @@ function PlayerProfilePage() {
                         ? category
                         : "All Categories"}
                     </Button>
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Portal>
-                    <DropdownMenu.Content align="start" style={{ background: overlay }}>
-                      <ToggleGroup
-                        className="h-auto w-full flex-col flex-none"
-                        value={category}
-                        onValueChange={(val) => setCategory(val === category ? "" : val)}
-                      >
-                        <ToggleGroup.Item icon={null} value="">
-                          All Categories
-                        </ToggleGroup.Item>
+                  </SubframeCore.DropdownMenu.Trigger>
+                  <SubframeCore.DropdownMenu.Portal>
+                    <SubframeCore.DropdownMenu.Content side="bottom" sideOffset={6} align="start" className="text-white p-2" style={{ background: "#000", color: "#fff", zIndex: 9999 }}>
+                      <div className="max-h-64 overflow-auto min-w-[260px]">
+                        <SubframeCore.DropdownMenu.Item className="text-white hover:bg-[rgba(255,255,255,0.06)]" onSelect={() => setCategory("")}>All Categories</SubframeCore.DropdownMenu.Item>
                         {categoryOptions.map((cat) => (
-                          <ToggleGroup.Item icon={null} value={cat} key={cat}>
+                          <SubframeCore.DropdownMenu.Item key={cat} className="text-white hover:bg-[rgba(255,255,255,0.06)]" onSelect={() => setCategory(cat)}>
                             {cat}
-                          </ToggleGroup.Item>
+                          </SubframeCore.DropdownMenu.Item>
                         ))}
-                      </ToggleGroup>
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Portal>
-                </DropdownMenu.Root>
+                      </div>
+                    </SubframeCore.DropdownMenu.Content>
+                  </SubframeCore.DropdownMenu.Portal>
+                </SubframeCore.DropdownMenu.Root>
                 {/* Coaching Type */}
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger asChild={true}>
+                <SubframeCore.DropdownMenu.Root>
+                  <SubframeCore.DropdownMenu.Trigger asChild={true}>
                     <Button
                       className="h-8 w-full flex-none"
                       style={{ width: "260px" }}
@@ -274,31 +264,25 @@ function PlayerProfilePage() {
                         ? coachingType
                         : "Coaching Type"}
                     </Button>
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Portal>
-                    <DropdownMenu.Content align="start" style={{ background: overlay }}>
-                      <ToggleGroup
-                        className="h-auto w-full flex-col flex-none"
-                        value={coachingType}
-                        onValueChange={(val) => setCoachingType(val === coachingType ? "" : val)}
-                      >
-                        <ToggleGroup.Item icon={null} value="">
-                          All Types
-                        </ToggleGroup.Item>
+                  </SubframeCore.DropdownMenu.Trigger>
+                  <SubframeCore.DropdownMenu.Portal>
+                    <SubframeCore.DropdownMenu.Content side="bottom" sideOffset={6} align="start" className="text-white p-2" style={{ background: "#000", color: "#fff", zIndex: 9999 }}>
+                      <div className="max-h-64 overflow-auto min-w-[260px]">
+                        <SubframeCore.DropdownMenu.Item className="text-white hover:bg-[rgba(255,255,255,0.06)]" onSelect={() => setCoachingType("")}>All Types</SubframeCore.DropdownMenu.Item>
                         {coachingTypeOptions.map((tag) => (
-                          <ToggleGroup.Item icon={null} value={tag} key={tag}>
+                          <SubframeCore.DropdownMenu.Item key={tag} className="text-white hover:bg-[rgba(255,255,255,0.06)]" onSelect={() => setCoachingType(tag)}>
                             {tag}
-                          </ToggleGroup.Item>
+                          </SubframeCore.DropdownMenu.Item>
                         ))}
-                      </ToggleGroup>
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Portal>
-                </DropdownMenu.Root>
+                      </div>
+                    </SubframeCore.DropdownMenu.Content>
+                  </SubframeCore.DropdownMenu.Portal>
+                </SubframeCore.DropdownMenu.Root>
                 {/* Min/Max Tokens as side-by-side dropdowns */}
                 <div className="flex flex-row gap-2 w-full" style={{ width: "260px" }}>
                   {/* Min Tokens Dropdown */}
-                  <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild={true}>
+                  <SubframeCore.DropdownMenu.Root>
+                    <SubframeCore.DropdownMenu.Trigger asChild={true}>
                       <Button
                         className="h-8 w-full flex-1"
                         style={{ minWidth: "130px", width: "130px" }}
@@ -312,39 +296,25 @@ function PlayerProfilePage() {
                           ? `Min: ${minTokens}`
                           : "Min Tokens"}
                       </Button>
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Portal>
-                      <DropdownMenu.Content align="start" style={{ background: overlay }}>
-                        <ToggleGroup
-                          className="h-auto w-full flex-col flex-none"
-                          value={minTokens === "" ? "" : String(minTokens)}
-                          onValueChange={(val) => {
-                            setMinTokens(val === "" ? "" : Number(val));
-                          }}
-                        >
-                          <ToggleGroup.Item icon={null} value="">
-                            Any Min
-                          </ToggleGroup.Item>
-                          {Array.from(
-                            new Set(
-                              allCoaches
-                                .map((c) => c.tokens_per_hour)
-                                .filter((t): t is number => typeof t === "number")
-                            )
-                          )
-                            .sort((a, b) => a - b)
+                    </SubframeCore.DropdownMenu.Trigger>
+                    <SubframeCore.DropdownMenu.Portal>
+                      <SubframeCore.DropdownMenu.Content side="bottom" sideOffset={6} align="start" className="text-white p-2" style={{ background: "#000", color: "#fff", zIndex: 9999 }}>
+                        <div className="max-h-64 overflow-auto min-w-[200px]">
+                          <SubframeCore.DropdownMenu.Item className="text-white hover:bg-[rgba(255,255,255,0.06)]" onSelect={() => setMinTokens("")}>Any Min</SubframeCore.DropdownMenu.Item>
+                          {Array.from(new Set(allCoaches.map((c) => c.tokens_per_hour).filter((t) => typeof t === "number")))
+                            .sort((a, b) => (a as number) - (b as number))
                             .map((val) => (
-                              <ToggleGroup.Item icon={null} value={String(val)} key={val}>
-                                {val}
-                              </ToggleGroup.Item>
+                              <SubframeCore.DropdownMenu.Item key={String(val)} className="text-white hover:bg-[rgba(255,255,255,0.06)]" onSelect={() => setMinTokens(Number(val))}>
+                                {String(val)}
+                              </SubframeCore.DropdownMenu.Item>
                             ))}
-                        </ToggleGroup>
-                      </DropdownMenu.Content>
-                    </DropdownMenu.Portal>
-                  </DropdownMenu.Root>
+                        </div>
+                      </SubframeCore.DropdownMenu.Content>
+                    </SubframeCore.DropdownMenu.Portal>
+                  </SubframeCore.DropdownMenu.Root>
                   {/* Max Tokens Dropdown */}
-                  <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild={true}>
+                  <SubframeCore.DropdownMenu.Root>
+                    <SubframeCore.DropdownMenu.Trigger asChild={true}>
                       <Button
                         className="h-8 w-full flex-1"
                         style={{ minWidth: "130px", width: "130px" }}
@@ -358,36 +328,22 @@ function PlayerProfilePage() {
                           ? `Max: ${maxTokens}`
                           : "Max Tokens"}
                       </Button>
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Portal>
-                      <DropdownMenu.Content align="start" style={{ background: overlay }}>
-                        <ToggleGroup
-                          className="h-auto w-full flex-col flex-none"
-                          value={maxTokens === "" ? "" : String(maxTokens)}
-                          onValueChange={(val) => {
-                            setMaxTokens(val === "" ? "" : Number(val));
-                          }}
-                        >
-                          <ToggleGroup.Item icon={null} value="">
-                            Any Max
-                          </ToggleGroup.Item>
-                          {Array.from(
-                            new Set(
-                              allCoaches
-                                .map((c) => c.tokens_per_hour)
-                                .filter((t): t is number => typeof t === "number")
-                            )
-                          )
-                            .sort((a, b) => a - b)
+                    </SubframeCore.DropdownMenu.Trigger>
+                    <SubframeCore.DropdownMenu.Portal>
+                      <SubframeCore.DropdownMenu.Content side="bottom" sideOffset={6} align="start" className="text-white p-2" style={{ background: "#000", color: "#fff", zIndex: 9999 }}>
+                        <div className="max-h-64 overflow-auto min-w-[200px]">
+                          <SubframeCore.DropdownMenu.Item className="text-white hover:bg-[rgba(255,255,255,0.06)]" onSelect={() => setMaxTokens("")}>Any Max</SubframeCore.DropdownMenu.Item>
+                          {Array.from(new Set(allCoaches.map((c) => c.tokens_per_hour).filter((t) => typeof t === "number")))
+                            .sort((a, b) => (a as number) - (b as number))
                             .map((val) => (
-                              <ToggleGroup.Item icon={null} value={String(val)} key={val}>
-                                {val}
-                              </ToggleGroup.Item>
+                              <SubframeCore.DropdownMenu.Item key={String(val)} className="text-white hover:bg-[rgba(255,255,255,0.06)]" onSelect={() => setMaxTokens(Number(val))}>
+                                {String(val)}
+                              </SubframeCore.DropdownMenu.Item>
                             ))}
-                        </ToggleGroup>
-                      </DropdownMenu.Content>
-                    </DropdownMenu.Portal>
-                  </DropdownMenu.Root>
+                        </div>
+                      </SubframeCore.DropdownMenu.Content>
+                    </SubframeCore.DropdownMenu.Portal>
+                  </SubframeCore.DropdownMenu.Root>
                 </div>
               </div>
             </div>
@@ -399,14 +355,36 @@ function PlayerProfilePage() {
                   {loading ? "Loading..." : `${coaches.length} coaches found`}
                 </span>
               </div>
+              <div className="flex w-full items-center justify-end">
+                <SubframeCore.DropdownMenu.Root>
+                  <SubframeCore.DropdownMenu.Trigger asChild={true}>
+                    <Button className="h-8 flex-none" variant="neutral-secondary" iconRight={<FeatherChevronDown />}> 
+                      Sort by: {sort === "default" ? "Default" : sort === "tokens_asc" ? "Tokens: Low to High" : "Tokens: High to Low"}
+                    </Button>
+                  </SubframeCore.DropdownMenu.Trigger>
+                  <SubframeCore.DropdownMenu.Portal>
+                    <SubframeCore.DropdownMenu.Content align="end" className="text-white p-2" style={{ background: "#000", color: "#fff", minWidth: "260px" }}>
+                      <SubframeCore.DropdownMenu.Item onSelect={() => setSort("default")}>
+                        <div className="flex items-center gap-2"><FeatherTrendingUp /><span>Default</span></div>
+                      </SubframeCore.DropdownMenu.Item>
+                      <SubframeCore.DropdownMenu.Item onSelect={() => setSort("tokens_asc")}>
+                        <div className="flex items-center gap-2"><FeatherTag /><span>Tokens: Low to High</span></div>
+                      </SubframeCore.DropdownMenu.Item>
+                      <SubframeCore.DropdownMenu.Item onSelect={() => setSort("tokens_desc")}>
+                        <div className="flex items-center gap-2"><FeatherTag /><span>Tokens: High to Low</span></div>
+                      </SubframeCore.DropdownMenu.Item>
+                    </SubframeCore.DropdownMenu.Content>
+                  </SubframeCore.DropdownMenu.Portal>
+                </SubframeCore.DropdownMenu.Root>
+              </div>
 
               <div className="w-full items-start gap-4 grid grid-cols-3">
                 {!loading &&
-                  coaches.map((coach) => (
+                  sortedCoaches.map((coach) => (
                     <div
                       key={coach.display_name}
-                      className="flex flex-col items-start gap-4 rounded-md border border-solid border-neutral-border px-4 py-4"
-                      style={{ background: overlay }}
+                      className="flex flex-col items-start gap-4 rounded-lg border border-solid border-neutral-border p-4"
+                      style={{ background: overlay, boxShadow: "0 0 20px rgba(255,255,255,0.6)" }}
                     >
                       <div className="flex w-full items-start justify-between">
                         <div className="flex items-center gap-4">
