@@ -3,10 +3,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import React, { ReactNode } from "react";
 
-
 export const metadata: Metadata = {
   title: "Skillery",
   description: "Unlock Your Potential",
+  metadataBase: new URL("https://skillery.co"), // 👈 added line
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
